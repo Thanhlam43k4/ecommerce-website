@@ -9,6 +9,9 @@ const authRoutes = require('./src/routes/auth.routes.js');
 const productRoutes = require('./src/routes/product.routes');
 const cartRoutes = require('./src/routes/cart.routes');
 const orderRoutes = require("./src/routes/order.routes");
+const userRoutes = require('./src/routes/user.routes.js');
+const adminRoutes = require('./src/routes/admin.routes.js');
+
 
 
 
@@ -20,6 +23,9 @@ app.use(bodyParser.json());
 
 
 app.use("/api/auth",authRoutes);
+app.use("/api/users",userRoutes);
+app.use("/api/admin",adminRoutes);
+
 
 app.get("/",(req,res) =>{
   res.send("Uet Store API is running....")

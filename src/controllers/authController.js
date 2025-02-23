@@ -14,7 +14,7 @@ const register = async(req,res) =>{
 
     // check email is exsisted
     const existingUser = await User.findByEmail(email);
-    
+
     if(existingUser) return res.status(400).json({message:"Email is existed!! Please login"});
 
 
@@ -39,9 +39,11 @@ const login = async(req,res) =>{
 
     // Find user with email
     const user = await User.findByEmail(email);
-    if(!user) return res.status(400).json({message: "User isn't existed"})
 
 
+    if(!user){
+      return res.status(400).json({message: "User isn't existed"})
+    }
     // Compare password
     const isMatch = await bcrypt.compare(password,user.password);
 
@@ -49,10 +51,14 @@ const login = async(req,res) =>{
     
     const token = jwt.sign({userId: user.id, role: user.role}, SECRET_KEY,{expiresIn: "1h"});
 
+    res.status(200).json({msg : "Login successfully!!"});
+
   } catch(err){
     res.status(500).json({message: "Error from server!!",err});
   }
 };
+
+
 
 
 module.exports = {register, login};
