@@ -11,7 +11,17 @@ const Product = {
       throw err;
     }
   },
+  getById: async(id) =>{
+    const sql = "SELECT * FROM products WHERE id = ?";
+    try{
+      const [rows] = await db.promise().execute(sql,[id])
+      return rows.length ? rows[0] : null;
+    } catch (err){
 
+      console.log('Error: ',err);
+      throw err;
+    }
+  },
   create: async(productData) =>{
     const {name, description,price,stock,image_urls,category_id,seller_id} = productData;
     const sql = `INSERT INTO products (id, name, description, price, stock, image_urls, category_id, seller_id) 

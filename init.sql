@@ -12,7 +12,7 @@ CREATE TABLE users (
 );
 
 CREATE TABLE categories (
-    id CHAR(36) PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) UNIQUE NOT NULL,
     description TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -20,13 +20,13 @@ CREATE TABLE categories (
 );
 
 CREATE TABLE products (
-    id CHAR(36) PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(200) NOT NULL,
     description TEXT,
     price DECIMAL(10,2) NOT NULL,
     stock INT NOT NULL DEFAULT 0,
     image_urls TEXT, 
-    category_id CHAR(36),
+    category_id INT,
     seller_id INT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -35,7 +35,7 @@ CREATE TABLE products (
 );
 
 CREATE TABLE orders (
-    id CHAR(36) PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     buyer_id INT,
     total_price DECIMAL(10,2) NOT NULL,
     status ENUM('pending', 'confirmed', 'shipped', 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
@@ -50,9 +50,9 @@ CREATE TABLE orders (
 );
 
 CREATE TABLE order_items (
-    id CHAR(36) PRIMARY KEY,
-    order_id CHAR(36),
-    product_id CHAR(36),
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id INT,
+    product_id INT,
     quantity INT NOT NULL DEFAULT 1,
     price DECIMAL(10,2) NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -61,8 +61,8 @@ CREATE TABLE order_items (
 );
 
 CREATE TABLE reviews (
-    id CHAR(36) PRIMARY KEY,
-    product_id CHAR(36),
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    product_id INT,
     buyer_id INT,
     rating INT CHECK (rating BETWEEN 1 AND 5),
     comment TEXT,
@@ -72,7 +72,7 @@ CREATE TABLE reviews (
 );
 
 CREATE TABLE chatbot_messages (
-    id CHAR(36) PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT,
     message TEXT NOT NULL,
     response TEXT NOT NULL,
@@ -81,9 +81,9 @@ CREATE TABLE chatbot_messages (
 );
 
 CREATE TABLE cart_items (
-    cart_id INT AUTO_INCREMENT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
-    product_id CHAR(36) NOT NULL,
+    product_id INT NOT NULL,
     quantity INT NOT NULL DEFAULT 1,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,

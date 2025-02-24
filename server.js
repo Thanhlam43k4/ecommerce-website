@@ -25,13 +25,13 @@ app.use(bodyParser.json());
 app.use("/api/auth",authRoutes);
 app.use("/api/users",userRoutes);
 app.use("/api/admin",adminRoutes);
+app.use("/api/products",productRoutes);
+app.use("/api/orders",orderRoutes);
 
 
 app.get("/",(req,res) =>{
   res.send("Uet Store API is running....")
 })
-
-
 
 app.listen(PORT, () =>{
   console.log(`✅ Server đang chạy tại http://localhost:${PORT}`);
