@@ -1,0 +1,355 @@
+/* Định dạng chung */
+*,ul{
+    margin: 0;
+    padding: 0;
+}
+a{
+    text-decoration: none;
+}
+body {
+    font-family: Arial, sans-serif;
+}
+:root{
+    --black: #000;
+    --primaryColor: #ff3368;
+}
+
+.navbar-nav {
+    right: 400px;
+}
+
+/*header*/
+header{width: 100%; padding: 16px 0}
+.nav-item{margin:0 12px;}
+.link-menu{width: 300;}
+.nav-link{color: var(--black); font-size: 14px; text-transform: capitalize; }
+.nav-icons {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+.nav-icons a{margin-left: 22px}
+.nav-icons a i{color:var(--black) !important}
+.cart-icon span{display: inline-block;width: 14px; height: 14px; border-radius: 100%; 
+    background: red; color: white;font-size: 10px; text-align: center; line-height: 14px;
+    position: relative; top: -10px; right: 2px}
+
+.sub-menu{
+    position: absolute;
+    background: var(--primaryColor);
+    padding: 22px;
+    border-radius: 4px;
+    list-style: none;
+    width: 140px;
+    text-align: center;
+    top: 54px;
+    visibility: hidden;
+    transform: translateY(-10px);
+}
+.sub-menu li a{ color: #fff !important; line-height: 2; z-index: 3;}
+.nav-item:hover .sub-menu{transform: translateY(0);visibility: visible;; transition: 0.5s;z-index: 3}
+.sub-menu li:hover {
+    background-color: rgba(16, 238, 120, 0.2); /* Màu nền khi hover */
+    border-radius: 4px;
+    z-index: 3
+}
+
+/*search icon*/
+/* Container bọc ô tìm kiếm */
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+/* Ẩn ô nhập liệu ban đầu */
+.search-box {
+    width: 0;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+    transition: width 0.4s ease-in-out, padding 0.4s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Khi hover vào search-container, mở rộng ô tìm kiếm */
+.search-container:hover .search-box {
+
+    width: 200px;
+    padding: 8px 15px;
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Icon tìm kiếm */
+.search-container i {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #333;
+    font-size: 18px;
+}
+
+
+/*user icon*/
+/* Căn chỉnh icon */
+.nav-icons {
+    display: flex;
+    align-items: center;
+}
+
+.nav-icons a {
+    margin-left: 10px;
+    font-size: 20px;
+    color: black;
+    padding: 5px;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hiệu ứng khi di chuột vào icon người dùng */
+.user-menu {
+    position: relative;
+    display: inline-block;
+}
+
+.user-icon {
+    display: inline-block;
+    padding: 0px;
+    border-radius: 20px;
+    transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+.user-icon:hover {
+    background-color: #ff9800;
+    color: white ;
+}
+
+/* Submenu user */
+.sub-menu-user {
+    position: absolute;
+    background: var(--primaryColor);
+    padding: 10px;
+    border-radius: 4px;
+    list-style: none;
+    width: 130px;
+    text-align: center;
+    top: 38px;
+    visibility: hidden;
+    transform: translateY(-10px);
+    
+}
+
+
+.sub-menu-user li a {
+    color: #fff !important; line-height: 2; z-index: 3; font-size: 15;
+}
+
+.user-menu:hover .sub-menu-user{transform: translateY(0);visibility: visible;
+    transition: 1s;z-index: 3}
+
+.sub-menu-user li:hover {
+    background-color: rgba(16, 238, 120, 0.2); /* Màu nền khi hover */
+    border-radius: 4px;
+    z-index: 3
+}
+
+
+
+
+/* Navbar */
+.navbar {
+    padding: 15px;
+}
+
+/* Categories */
+.category-box {
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    background-color: #f8f9fa;
+}
+
+.category-box:hover, 
+.category-box:active {
+    background-color: #ff9800;
+    color: white;
+    transform: scale(1.05);
+}
+
+.category-box i {
+    color: #333;
+    transition: color 0.3s ease;
+}
+
+.category-box:hover i {
+    color: white;
+}
+
+/*browser category*/
+/* Hiệu ứng tiêu đề */
+h4.fw-bold{
+    position: relative;
+    display: inline-block;
+    padding: 5px 10px;
+    transition: transform 0.3s ease-in-out;
+    z-index: 1;
+}
+
+/* Tạo nền cam hẹp ban đầu */
+h4.fw-bold::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 5px; /* Thanh cam ban đầu có chiều rộng nhỏ */
+    height: 100%;
+    background-color: #ff9800; /* Nền cam */
+    transition: width 0.4s ease-in-out;
+    z-index: -1;
+    border-radius: 5px;
+}
+
+/* Khi hover vào -> phóng to nhẹ và mở rộng nền cam */
+h4.fw-bold:hover {
+    transform: scale(1.1);
+}
+
+h4.fw-bold:hover::before, .row:hover ~ h4.fw-bold::before {
+    width: 100%; /* Mở rộng ra toàn bộ */
+}
+
+
+
+/* Best Selling Products */
+/* Container chính */
+.best-selling-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Đẩy "View All" sang phải */
+    position: relative;
+    padding: 10px 0;
+}
+
+/* Phần bên trái (This Month + Best Selling Products) */
+.left-section {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Text "This Month" */
+.highlight-text {
+    position: relative;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ff3368; /* Màu cam */
+    padding: 5px 15px;
+    border-radius: 5px;
+    transition: color 0.3s ease-in-out;
+    z-index: 2;
+    width: fit-content;
+}
+
+/* Thanh cam nền mở rộng */
+.highlight-text::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 100%;
+    background-color: #ff3368; /* Màu cam */
+    transition: width 0.4s ease-in-out;
+    z-index: -1;
+    border-radius: 5px;
+}
+
+/* Tiêu đề "Best Selling Products" */
+.best-selling-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 5px; /* Đẩy xuống dưới */
+    transition: 0.3s;
+}
+
+/* Nút View All */
+.view-all-btn {
+    background-color: #ff3368;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.view-all-btn:hover {
+    background-color: #e62e5b;
+}
+
+/* Hiệu ứng khi hover vào Best Selling Products */
+.best-selling-header:hover .highlight-text {
+    color: white; /* Đổi màu chữ thành trắng */
+}
+
+.best-selling-header:hover .highlight-text::before {
+    width: 100%; /* Mở rộng nền cam */
+}
+
+
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+/* Đưa các nút điều hướng lên góc phải */
+.carousel-controls {
+    position: relative;
+    top: 80px;
+   
+    display: auto;;
+    gap: 0px; 
+}
+
+/* Tùy chỉnh kiểu dáng nút điều hướng */
+.carousel-control-prev,
+.carousel-control-next {
+    background-color: rgba(255, 255, 255, 0.8); /* Nền trắng mờ */
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+/* Hiệu ứng hover */
+.carousel-control-prev:hover,
+.carousel-control-next:hover {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+/* Mũi tên màu đen */
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+    filter: invert(100%); /* Đổi màu icon thành đen */
+}
+
+
+
+/* Responsive */
+@media (max-width: 768px) {
+    .category-box {
+        margin-bottom: 10px;
+    }
+}

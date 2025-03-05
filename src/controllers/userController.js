@@ -1,5 +1,6 @@
 
-const User = require("../models/user.model")
+// const User = require("../models/user.model")
+// const User = require("../model/User")
 
 // Get me with jwt 
 const getMe = async(req,res) =>{
