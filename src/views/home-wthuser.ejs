@@ -14,7 +14,7 @@
 
 <body>
        
-       <header><%- include('partials/header') %></header> 
+       <header><%- include('partials/header-wthuser') %></header> 
     
     <!-- Categories -->
     <div class="container mt-5">
@@ -74,10 +74,6 @@
                                 <div class="col-md-3">
                                     <div class="card p-3">
                                         <img src="https://via.placeholder.com/150" class="card-img-top" alt="Product">
-                                        <div class="icon-group"  >
-                                            <span class="icon-circle"><i class="fa fa-heart"></i></span>
-                                            <span class="icon-circle" onclick="viewProduct('<%= 11 %>')"><i class="fa fa-eye"></i></span>
-                                        </div>
                                         <div class="card-body text-center">
                                             <h6>RTX 5080 16G Venus</h6>
                                             <p>$10</p>
@@ -90,89 +86,67 @@
                     </div>
                 <% } %>
             </div>
-
-            
         </div>
+        
         
 
     </div>
 
-   <!-- Explore Our Products -->
-   <div class="container mt-5">
+    <!-- Explore Our Products -->
+    <div class="container mt-5">
         
-    <div class="best-selling-header">
-        <div class="left-section">
-            <span class="highlight-text">This Month</span>
-            <h2 class="best-selling-title">Explore Our Products</h2>
+        <div class="best-selling-header">
+            <div class="left-section">
+                <span class="highlight-text">This Month</span>
+                <h2 class="best-selling-title">Explore Our Products</h2>
+            </div>
+            <button class="view-all-btn">View All</button>
         </div>
-        <button class="view-all-btn">View All</button>
-    </div>
-    
-    <div id="productCarousel1" class="carousel slide">
-        <!-- Điều hướng ở góc phải trên cùng -->
-        <div class="carousel-controls">
-            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel1" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            </button>
-            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel1" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            </button>
-            
-        </div>
-    
-        <!-- Nội dung carousel -->
-        <div class="carousel-inner">
-            <% for (let i = 0; i < 10; i += 4) { %> <!-- Hiển thị 4 sản phẩm mỗi slide -->
-                <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
-                    <div class="row">
-                        <% for (let j = i; j < i + 4 && j < 10; j++) { %>
-                            <div class="col-md-3">
-                                <div class="card p-3">
-                                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="Product">
-                                    <div class="icon-group"  >
-                                        <span class="icon-circle"><i class="fa fa-heart"></i></span>
-                                        <span class="icon-circle" onclick="viewProduct('<%= 11 %>')"><i class="fa fa-eye"></i></span>
-                                    </div>
-                                    <div class="card-body text-center">
-                                        <h6>RTX 5080 16G Venus</h6>
-                                        <p>$10</p>
-                                        <p class="text-warning">★★★★★ (65)</p>
+        
+        <div id="productCarousel1" class="carousel slide">
+            <!-- Điều hướng ở góc phải trên cùng -->
+            <div class="carousel-controls">
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel1" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                </button>
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel1" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                </button>
+                
+            </div>
+        
+            <!-- Nội dung carousel -->
+            <div class="carousel-inner">
+                <% for (let i = 0; i < 10; i += 4) { %> <!-- Hiển thị 4 sản phẩm mỗi slide -->
+                    <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+                        <div class="row">
+                            <% for (let j = i; j < i + 4 && j < 10; j++) { %>
+                                <div class="col-md-3">
+                                    <div class="card p-3">
+                                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Product">
+                                        <div class="card-body text-center">
+                                            <h6>RTX 5080 16G Venus</h6>
+                                            <p>$10</p>
+                                            <p class="text-warning">★★★★★ (65)</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        <% } %>
+                            <% } %>
+                        </div>
                     </div>
-                </div>
-            <% } %>
+                <% } %>
+            </div>
         </div>
-    </div>
-    
-    
+        
+        
 
-</div>
+    </div>
 
     
 
 
     <footer><%- include('partials/footer') %></footer> 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script>
-        function addToWishlist(productId) {
-            fetch('/wishlist/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ productId })
-            })
-            .then(response => response.json())
-            .then(data => alert(data.message))
-            .catch(error => console.error('Error:', error));
-        }
     
-        function viewProduct(productId) {
-            window.location.href = `/user/${productId}`;
-        }
-    </script>
 </body>
 </html>

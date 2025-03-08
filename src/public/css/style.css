@@ -345,6 +345,37 @@ h4.fw-bold:hover::before, .row:hover ~ h4.fw-bold::before {
     filter: invert(100%); /* Đổi màu icon thành đen */
 }
 
+.icon-group {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    gap: 5px;
+}
+.icon-circle {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+.icon-circle i {
+    font-size: 16px;
+    color: #333;
+    transition: color 0.3s ease;
+}
+.icon-circle:hover {
+    background-color: orange;
+}
+.icon-circle:hover i {
+    color: white;
+}
+
 
 
 /* Responsive */
