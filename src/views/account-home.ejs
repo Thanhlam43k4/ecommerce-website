@@ -65,23 +65,25 @@
                 
             </div>
         
-            <!-- Nội dung carousel -->
             <div class="carousel-inner">
-                <% for (let i = 0; i < 10; i += 4) { %> <!-- Hiển thị 4 sản phẩm mỗi slide -->
+                <% for (let i = 0; i < products.length; i += 4) { %> <!-- Hiển thị 4 sản phẩm mỗi slide -->
                     <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
                         <div class="row">
-                            <% for (let j = i; j < i + 4 && j < 10; j++) { %>
+                            <% for (let j = i; j < i + 4 && j < products.length; j++) { %>
                                 <div class="col-md-3">
                                     <div class="card p-3">
-                                        <img src="https://via.placeholder.com/150" class="card-img-top" alt="Product">
-                                        <div class="icon-group"  >
+                                        <img src="<%= products[j].image_urls %>" class="card-img-top" alt="<%= products[j].name %>">
+                                        <div class="icon-group">
                                             <span class="icon-circle"><i class="fa fa-heart"></i></span>
-                                            <span class="icon-circle" onclick="viewProduct('<%= 11 %>')"><i class="fa fa-eye"></i></span>
+                                            <span class="icon-circle" onclick="viewProduct('<%= products[j].id %>')"><i class="fa fa-eye"></i></span>
                                         </div>
                                         <div class="card-body text-center">
-                                            <h6>RTX 5080 16G Venus</h6>
-                                            <p>$10</p>
-                                            <p class="text-warning">★★★★★ (65)</p>
+                                            <h6><%= products[j].name %></h6>
+                                            <p>$<%= products[j].price %></p>
+                                            <p class="text-warning">
+                                                <%= '★'.repeat(products[j].stock % 5) + '☆'.repeat(5 - products[j].stock % 5) %> 
+                                                (<%= products[j].reviews_count %>)
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
@@ -90,11 +92,8 @@
                     </div>
                 <% } %>
             </div>
-
-            
         </div>
         
-
     </div>
 
    <!-- Explore Our Products -->
@@ -103,40 +102,42 @@
     <div class="best-selling-header">
         <div class="left-section">
             <span class="highlight-text">This Month</span>
-            <h2 class="best-selling-title">Explore Our Products</h2>
+            <h2 class="best-selling-title">Best Selling Products</h2>
         </div>
         <button class="view-all-btn">View All</button>
     </div>
     
-    <div id="productCarousel1" class="carousel slide">
+    <div id="productCarousel11" class="carousel slide">
         <!-- Điều hướng ở góc phải trên cùng -->
         <div class="carousel-controls">
-            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel1" data-bs-slide="next">
+            <button class="carousel-control-next" type="button" data-bs-target="#productCarousel11" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
             </button>
-            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel1" data-bs-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel11" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             </button>
             
         </div>
     
-        <!-- Nội dung carousel -->
         <div class="carousel-inner">
-            <% for (let i = 0; i < 10; i += 4) { %> <!-- Hiển thị 4 sản phẩm mỗi slide -->
+            <% for (let i = 0; i < products.length; i += 4) { %> <!-- Hiển thị 4 sản phẩm mỗi slide -->
                 <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
                     <div class="row">
-                        <% for (let j = i; j < i + 4 && j < 10; j++) { %>
+                        <% for (let j = i; j < i + 4 && j < products.length; j++) { %>
                             <div class="col-md-3">
                                 <div class="card p-3">
-                                    <img src="https://via.placeholder.com/150" class="card-img-top" alt="Product">
-                                    <div class="icon-group"  >
+                                    <img src="<%= products[j].image_urls %>" class="card-img-top" alt="<%= products[j].name %>">
+                                    <div class="icon-group">
                                         <span class="icon-circle"><i class="fa fa-heart"></i></span>
-                                        <span class="icon-circle" onclick="viewProduct('<%= 11 %>')"><i class="fa fa-eye"></i></span>
+                                        <span class="icon-circle" onclick="viewProduct('<%= products[j].id %>')"><i class="fa fa-eye"></i></span>
                                     </div>
                                     <div class="card-body text-center">
-                                        <h6>RTX 5080 16G Venus</h6>
-                                        <p>$10</p>
-                                        <p class="text-warning">★★★★★ (65)</p>
+                                        <h6><%= products[j].name %></h6>
+                                        <p>$<%= products[j].price %></p>
+                                        <p class="text-warning">
+                                            <%= '★'.repeat(products[j].stock % 5) + '☆'.repeat(5 - products[j].stock % 5) %> 
+                                            (<%= products[j].reviews_count %>)
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -145,10 +146,7 @@
                 </div>
             <% } %>
         </div>
-    </div>
-    
-    
-
+    </div> 
 </div>
 
     
