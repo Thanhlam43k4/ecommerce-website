@@ -36,9 +36,32 @@ app.use("/api/products",productRoutes);
 app.use("/api/orders",orderRoutes);
 app.use("/api/reviews",reviewRoutes);
 
-app.get("/",(req,res) =>{
-  res.render("account-home");
+app.get("/", async (req, res) => {
+  try {
+    // Gọi API để lấy danh sách sản phẩm
+    const response = await fetch(`http://localhost:${PORT}/api/products`);
+    const products = await response.json();
+
+    // Render trang và truyền danh sách sản phẩm
+    res.render("home", { products, user: req.user});
+  } catch (error) {
+    console.error("Lỗi khi lấy danh sách sản phẩm:", error);
+    res.render("home", { products: [], user: req.user}); // Nếu lỗi thì truyền mảng rỗng
+  }
+});
+
+
+app.get("/login", async(req,res) => {
+
+  res.render("login", {user: req.user});
+
 })
+
+
+app.get("/signup", async(req,res) =>{
+  res.render("signup");
+})
+
 
 app.listen(PORT, () =>{
   console.log(`✅ Server đang chạy tại http://localhost:${PORT}`);
