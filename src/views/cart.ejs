@@ -1,19 +1,15 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
+    <title>Cart</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-  
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <link rel="stylesheet" type="text/css" href="/css/cart_style.css">
 </head>
 <body>
-
     <header><%- include('partials/header') %></header>
     
     <div class="container my-5">
@@ -37,25 +33,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <% let cartItems = [
-                        { name: "LCD Monitor", price: 650, quantity: 1, image: "https://via.placeholder.com/50" },
-                        { name: "H1 Gamepad", price: 550, quantity: 2, image: "https://via.placeholder.com/50" }
-                    ]; 
-    
-                    let totalAmount = 0;
-                    %>
+                    <% let totalAmount = 0; %>
                     <% cartItems.forEach(item => { 
-                        let subtotal = item.price * item.quantity;
+                        let subtotal = item.product_price * item.quantity;
                         totalAmount += subtotal;
                     %>
                     <tr>
                         <td>
-                            <img src="<%= item.image %>" alt="product" class="me-2" style="width: 50px;">
-                            <%= item.name %>
+                            <img src="<%= item.product_image %>" alt="product" class="me-2" style="width: 50px;">
+                            <%= item.product_name %>
                         </td>
-                        <td>$<%= item.price.toFixed(2) %></td>
+                        <td>$<%= item.product_price.toFixed(2) %></td>
                         <td>
-                            <select class="form-select w-auto d-inline" onchange="updateSubtotal(this, '<%= item.price %>')">
+                            <select class="form-select w-auto d-inline" onchange="updateSubtotal(this, '<%= item.product_price %>')">
                                 <% for (let i = 1; i <= 10; i++) { %>
                                     <option value="<%= i %>" <%= i === item.quantity ? 'selected' : '' %>><%= i %></option>
                                 <% } %>
@@ -89,72 +79,35 @@
                     <p>Shipping: Free</p>
                     <hr>
                     <p><strong>Total: <span id="grand-total">$<%= totalAmount.toFixed(2) %></span></strong></p>
-                    <button class="btn btn-danger w-100">Proceed to Checkout</button>
+                    <form action="cart/checkout" method="GET" >
+                        <button type="submit" class="btn btn-danger w-100">Proceed to Checkout</button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 
-
-
-
-
-
-    <!-- Chat Box -->
-<div class="chat-box">
-    <div class="chat-header">
-        <span>Chat Support</span>
-        <button class="close-chat">&times;</button>
-    </div>
-    <div class="chat-body">
-        <div class="chat-messages"></div>
-    </div>
-    <div class="chat-footer">
-        <input type="text" class="chat-input" placeholder="Type a message...">
-        <button class="send-btn">Send</button>
-    </div>
-</div>
-
-<!-- Chat Icon -->
-<div class="chat-icon">
-    <img src="/images/chat-icon.png" alt="Chat" />
-</div>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const chatIcon = document.querySelector(".chat-icon");
-        const chatBox = document.querySelector(".chat-box");
-        const closeChat = document.querySelector(".close-chat");
-    
-        chatIcon.addEventListener("click", function () {
-            chatBox.style.display = "flex";
-        });
-    
-        closeChat.addEventListener("click", function () {
-            chatBox.style.display = "none";
-        });
-    });
-    </script>
     
 
-    
     <script>
-    function updateSubtotal(selectElement, price) {
-        let quantity = parseInt(selectElement.value);
-        let subtotalCell = selectElement.closest("tr").querySelector(".subtotal");
-        let newSubtotal = quantity * price;
-        subtotalCell.innerText = `$${newSubtotal.toFixed(2)}`;
-    
-        updateTotal();
-    }
-    
-    function updateTotal() {
-        let total = 0;
-        document.querySelectorAll(".subtotal").forEach(cell => {
-            total += parseFloat(cell.innerText.replace("$", ""));
-        });
-        document.getElementById("total").innerText = `$${total.toFixed(2)}`;
-        document.getElementById("grand-total").innerText = `$${total.toFixed(2)}`;
-    }
+        
+
+        function updateSubtotal(selectElement, price) {
+            let quantity = parseInt(selectElement.value);
+            let subtotalCell = selectElement.closest("tr").querySelector(".subtotal");
+            let newSubtotal = quantity * price;
+            subtotalCell.innerText = `$${newSubtotal.toFixed(2)}`;
+            updateTotal();
+        }
+        
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll(".subtotal").forEach(cell => {
+                total += parseFloat(cell.innerText.replace("$", ""));
+            });
+            document.getElementById("total").innerText = `$${total.toFixed(2)}`;
+            document.getElementById("grand-total").innerText = `$${total.toFixed(2)}`;
+        }
     </script>
     
     <footer><%- include('partials/footer') %></footer> 
