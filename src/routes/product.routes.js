@@ -18,6 +18,7 @@ router.put('/:id',authenticate,authorizeSeller,productController.updateProduct);
 
 router.delete('/:id',authenticate,authorizeSeller,productController.deleteProduct);
 
+router.get('/category/:categoryId', productController.getProductsByCategory);
 
 
 module.exports = router;

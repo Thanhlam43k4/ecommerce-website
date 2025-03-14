@@ -13,6 +13,7 @@ const orderRoutes = require("./src/routes/order.routes");
 const userRoutes = require('./src/routes/user.routes.js');
 const adminRoutes = require('./src/routes/admin.routes.js');
 const reviewRoutes = require('./src/routes/review.routes.js');
+const categoryModel = require('./src/models/category.models.js'); // Điều chỉnh đường dẫn nếu cần
 
 
 
@@ -20,7 +21,8 @@ const reviewRoutes = require('./src/routes/review.routes.js');
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-
+app.use(express.urlencoded({ extended: true })); // Cho form data
+app.use(express.json()); // Cho dữ liệu JSON
 app.use(cors());
 app.use(bodyParser.json());
 app.set("views",path.join(__dirname,"src/views"))
@@ -51,16 +53,38 @@ app.get("/", async (req, res) => {
 });
 
 
-app.get("/login", async(req,res) => {
-
-  res.render("login", {user: req.user});
-
+app.get('/contact', async (req,res) =>{
+  res.render('contact', {user: req.user})
 })
 
-
-app.get("/signup", async(req,res) =>{
-  res.render("signup");
+app.get('/about',async(req,res) =>{
+  res.render('about', {user: req.user})
 })
+
+app.get('/')
+
+
+app.get('/category/:categoryId', async (req, res) => {
+  const categoryId = req.params.categoryId;
+  try {
+    // Gọi API để lấy danh sách sản phẩm theo danh mục
+    const response = await fetch(`http://localhost:${PORT}/api/products/category/${categoryId}`);
+    const products = await response.json();
+    console.log(products)
+    // Lấy tên danh mục từ cơ sở dữ liệu hoặc định nghĩa sẵn
+    const categoryName = await categoryModel.getCatNameById(categoryId);
+
+    const finalCategoryName = categoryName || 'Danh mục không tồn tại';
+    
+    // Render trang và truyền danh sách sản phẩm cùng tên danh mục
+    res.render('products_by_categories', { products, categoryName });
+  } catch (error) {
+    console.error('Lỗi khi lấy danh sách sản phẩm theo danh mục:', error);
+    res.render('products_by_categories', { products: [], categoryName: 'Danh mục không tồn tại' });
+  }
+});
+
+
 
 
 app.listen(PORT, () =>{

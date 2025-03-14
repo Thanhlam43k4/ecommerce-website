@@ -17,28 +17,22 @@
 
 <body>
 
-    <header><%- include('partials/header-wthuser') %></header>
+    <header><%- include('partials/header') %></header>
     <div class="signup-bg">
         <div class="signup-body">
             <h2 class="text-center mb-4">Đăng Ký</h2>
 
-            <form action="/register" method="POST">
+            <form action="/api/auth/register" method="POST">
                 <div class="mb-3">
                     <div class="signup-form-group">
-                        <input type="text" name="username" class="signup-form" placeholder=" " required>
-                        <label class="signup-label">Username</label>
+                        <input type="text" name="name" class="signup-form" placeholder=" " required> 
+                        <label class="signup-label">Name</label>
                     </div>
                 </div>
                 <div class="mb-3">
                     <div class="signup-form-group">
                         <input type="email" name="email" class="signup-form" placeholder=" " required>
                         <label class="signup-label">Email</label>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="signup-form-group">
-                        <input type="text" name="phone" class="signup-form" placeholder=" " required>
-                        <label class="signup-label">Phone number</label>
                     </div>
                 </div>
                 <div class="mb-3">

@@ -14,6 +14,7 @@ const authenticate = (req, res, next) => {
     next();
   } catch (error) {
     res.status(401).json({ message: "Invalid token" });
+    return res.redirect("/login");
   }
 };
 
