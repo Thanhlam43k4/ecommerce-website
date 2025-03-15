@@ -419,11 +419,22 @@ h4.fw-bold:hover::before, .row:hover ~ h4.fw-bold::before {
     color: #333;
     transition: color 0.3s ease;
 }
-.icon-circle:hover {
-    background-color: orange;
+/* Hover chỉ hoạt động khi chưa click */
+.icon-circle:hover:not(.clicked) {
+    background-color: rgba(255, 0, 21, 0.879);
 }
-.icon-circle:hover i {
+
+.icon-circle:hover:not(.clicked) i {
     color: white;
+}
+
+/* Trạng thái khi đã click */
+.icon-circle.clicked {
+    background-color: white;
+}
+
+.icon-circle.clicked i {
+    color: red;
 }
 
 
