@@ -17,6 +17,11 @@
 <body>
 
     <header><%- include('partials/header') %></header>
+    <% if (errorMessage) { %>
+        <div class="alert alert-danger text-center" role="alert">
+            <%= errorMessage %>
+        </div>
+    <% } %>
     <!-- Categories -->
     <div class="container mt-5">
         <h4 class="fw-bold">Browse By Category</h4>
@@ -73,7 +78,7 @@
                             <% for (let j=i; j < i + 4 && j < products.length; j++) { %>
                                 <div class="col-md-3">
                                     <div class="card p-3">
-                                        <img src="/image/iphone.jpg" class="card-img-top" alt="<%= products[j].name %>">
+                                        <img src="<%= products[j].image_urls %>" class="card-img-top" alt="<%= products[j].name %>">
                                         <div class="icon-group">
                                             <span class="icon-circle"><i class="fa fa-heart"></i></span>
                                             <span class="icon-circle" onclick="viewProduct('<%= products[j].id %>')"><i
@@ -134,7 +139,7 @@
                             <% for (let j=i; j < i + 4 && j < products.length; j++) { %>
                                 <div class="col-md-3">
                                     <div class="card p-3">
-                                        <img src="/image/iphone.jpg" class="card-img-top" alt="<%= products[j].name %>">
+                                        <img src="<%= products[j].image_urls %>" class="card-img-top" alt="<%= products[j].name %>">
                                         <div class="icon-group">
                                             <span class="icon-circle"><i class="fa fa-heart"></i></span>
                                             <span class="icon-circle" onclick="viewProduct('<%= products[j].id %>')"><i
@@ -149,7 +154,6 @@
                                             <p class="text-warning">
                                                 <%= '★' .repeat(products[j].stock % 5) + '☆' .repeat(5 -
                                                     products[j].stock % 5) %>
-                                                    (<%= products[j].reviews_count %>)
                                             </p>
                                         </div>
                                     </div>
@@ -184,7 +188,7 @@
         }
 
         function viewProduct(productId) {
-            window.location.href = `/user/${productId}`;
+            window.location.href = `/product/${productId}`;
         }
     </script>
 </body>

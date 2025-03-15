@@ -2,6 +2,9 @@ const express = require('express');
 const { register, login } = require("../controllers/authController");
 const router = express.Router();
 const User = require('../models/user.model')
+const jwt = require("jsonwebtoken"); // Thêm JWT
+const bcrypt = require("bcryptjs"); // Thêm bcrypt
+
 require("dotenv").config();
 
 
@@ -37,8 +40,6 @@ router.post("/register", async (req, res) => {
   }
 });
 
-
-
 router.get("/register", (req, res) => {
   res.render("signup", { error: null, user: req.user});
 });
@@ -51,6 +52,11 @@ router.post("/login", async (req, res) => {
     if (!user) return res.status(401).json({ message: "Email không tồn tại" });
 
     const isMatch = await bcrypt.compare(password, user.password);
+
+
+
+
+    console.log(password);
     if (!isMatch) return res.status(401).json({ message: "Mật khẩu không đúng" });
 
     // Tạo token JWT
@@ -59,9 +65,13 @@ router.post("/login", async (req, res) => {
     });
 
     res.cookie("token", token, { httpOnly: true, maxAge: 3600000 }); // Lưu JWT vào cookie
+  
     res.redirect("/"); // Chuyển hướng về trang chủ
+
   } catch (error) {
+
     console.error("Lỗi đăng nhập:", error);
+
     res.status(500).json({ message: "Lỗi server" });
   }
 });
@@ -72,7 +82,11 @@ router.get("/login", async (req, res) => {
 
 })
 
+router.get("/logout", async(req,res) =>{
+  res.clearCookie("token", { httpOnly: true, secure: false, sameSite: "lax" }); // Xóa cookie token
+  res.redirect("/api/auth/login"); // Chuyển hướng về trang đăng nhập
 
+})
 module.exports = router;
 
 
