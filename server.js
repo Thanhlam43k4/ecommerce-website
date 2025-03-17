@@ -14,8 +14,8 @@ const userRoutes = require('./src/routes/user.routes.js');
 const adminRoutes = require('./src/routes/admin.routes.js');
 const reviewRoutes = require('./src/routes/review.routes.js');
 const categoryModel = require('./src/models/category.models.js'); // Điều chỉnh đường dẫn nếu cần
+const userModel = require('./src/models/user.model.js')
 const authMiddleware = require("./src/middlewares/authenticate.js");
-
 
 
 
@@ -48,7 +48,7 @@ app.get("/", authMiddleware, async (req, res) => {
     const response = await fetch(`http://localhost:${PORT}/api/products`);
     const products = await response.json();
     console.log(products);
-    res.render("home", { products, user: req.user, errorMessage: null}); // user sẽ là null nếu chưa đăng nhập
+    res.render("home", { products, user: req.user, errorMessage: null }); // user sẽ là null nếu chưa đăng nhập
 
   } catch (error) {
     console.error("Lỗi khi lấy danh sách sản phẩm:", error);
@@ -61,8 +61,7 @@ app.get('/contact', authMiddleware, async (req, res) => {
 app.get('/about', authMiddleware, async (req, res) => {
   res.render('about', { user: req.user })
 })
-
-app.get('/category/:categoryId',authMiddleware, async (req, res) => {
+app.get('/category/:categoryId', authMiddleware, async (req, res) => {
   const { categoryId } = req.params;
 
   try {
@@ -90,24 +89,52 @@ app.get('/category/:categoryId',authMiddleware, async (req, res) => {
     res.render('products_by_categories', { products: [], categoryName: 'Danh mục không tồn tại', user: req.user });
   }
 });
+app.get('/cart', authMiddleware, async (req, res) => {
 
-app.get('/cart',authMiddleware,async (req,res) =>{
-
-  if(!req.user){
-    res.render('/home',{errorMessage : 'Please login before going to your cart!!!'})
+  if (!req.user) {
+    res.render('/home', { errorMessage: 'Please login before going to your cart!!!' })
   }
-  res.render('cart', {user: req.user, cartItems :null})
+  res.render('cart', { user: req.user, cartItems: null })
 
 
 
 })
-app.get('/cart/checkout',authMiddleware,async(req,res) =>{
-  res.render('checkout',{user :req.user})
-})
-app.get('/product/:productId',authMiddleware,async(req,res) =>{
+app.get('/cart/checkout', authMiddleware, async (req, res) => {
 
-  res.render('product_info', {user : req.user, product : null})
-  
+  res.render('checkout', { user: req.user })
+})
+app.get('/product/:productId', authMiddleware, async (req, res) => {
+  try {
+    const productId = req.params.productId;
+    const response = await fetch(`http://localhost:${PORT}/api/products/${productId}`);
+    const product = await response.json();
+
+    if (response.status !== 200) {
+      throw new Error(product.message || "Không tìm thấy sản phẩm");
+    }
+
+    res.render('product_info', { user: req.user, product });
+  } catch (error) {
+    console.error("Lỗi khi lấy thông tin sản phẩm:", error.message);
+    res.render('product_info', { user: req.user, product: null, errorMessage: error.message });
+  }
+});
+
+app.get('/store',authMiddleware,async(req,res) =>{
+
+  console.log(req.user);
+
+  const products = await userModel.getProductsBySellerId(req.user.userId)
+
+  console.log(products);
+  res.render('store',{products : products, user: req.user})
+})
+
+app.get('/store/editproducts',authMiddleware, async(req,res) =>{
+
+  const products = await userModel.getProductsBySellerId(req.user.userId)
+
+  res.render('editproducts',{user: req.user,products :products})
 })
 
 app.listen(PORT, () => {

@@ -31,7 +31,7 @@ const User = {
   findById: async (id) => {
     try {
       const [rows] = await db.promise().execute("SELECT * FROM users WHERE id = ?", [id]);
-      console.log("Finding user....", rows, id);
+      console.log(rows, id);
       return rows.length > 0 ? rows[0] : null;
     } catch (err) {
       throw err;
@@ -51,6 +51,30 @@ const User = {
     try {
       const [result] = await db.promise().execute("DELETE FROM users WHERE id = ?", [id]);
       return result; // result.affectedRows sẽ cho biết có bao nhiêu dòng bị xóa
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getNumberOfProductsBySellerId: async (sellerId) => {
+    try {
+      const [rows] = await db.promise().execute(
+        "SELECT COUNT(*) AS count FROM products WHERE seller_id = ?",
+        [sellerId]
+      );
+      return rows[0].count;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getProductsBySellerId: async (sellerId) => {
+    try {
+      const [rows] = await db.promise().execute(
+        "SELECT * FROM products WHERE seller_id = ?",
+        [sellerId]
+      );
+      return rows;
     } catch (error) {
       throw error;
     }

@@ -60,7 +60,7 @@ router.post("/login", async (req, res) => {
     if (!isMatch) return res.status(401).json({ message: "Mật khẩu không đúng" });
 
     // Tạo token JWT
-    const token = jwt.sign({ userId: user.id, role: user.role }, process.env.SECRET_KEY, {
+    const token = jwt.sign({ userId: user.id, role: user.role, email: user.email, username: user.username }, process.env.SECRET_KEY, {
       expiresIn: "1h",
     });
 
