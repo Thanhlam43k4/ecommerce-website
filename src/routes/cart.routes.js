@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const cart = require('../models/cart.models.js');
 
-router.get('/cart/:userId', async (req, res) => {
+router.get('/:userId', async (req, res) => {
   try {
     const cartItems = await cart.getCartByUserId(req.params.userId);
     res.json(cartItems);
@@ -10,5 +10,7 @@ router.get('/cart/:userId', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+
+
 
 module.exports = router;

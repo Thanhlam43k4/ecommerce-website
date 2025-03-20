@@ -5,14 +5,16 @@ require("dotenv").config();
 const db = require("./src/config/db");
 const path = require("path");
 const cookieParser = require("cookie-parser");
+const axios = require('axios');
+
 //Import routes
 const authRoutes = require('./src/routes/auth.routes.js');
 const productRoutes = require('./src/routes/product.routes');
-const cartRoutes = require('./src/routes/cart.routes');
 const orderRoutes = require("./src/routes/order.routes");
 const userRoutes = require('./src/routes/user.routes.js');
 const adminRoutes = require('./src/routes/admin.routes.js');
 const reviewRoutes = require('./src/routes/review.routes.js');
+const cartRoutes = require('./src/routes/cart.routes.js')
 const categoryModel = require('./src/models/category.models.js'); // Điều chỉnh đường dẫn nếu cần
 const userModel = require('./src/models/user.model.js')
 const authMiddleware = require("./src/middlewares/authenticate.js");
@@ -39,6 +41,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/cart", cartRoutes);
 
 
 
@@ -47,8 +50,9 @@ app.get("/", authMiddleware, async (req, res) => {
   try {
     const response = await fetch(`http://localhost:${PORT}/api/products`);
     const products = await response.json();
+    const errorMessage = req.query.errorMessage || null;
     console.log(products);
-    res.render("home", { products, user: req.user, errorMessage: null }); // user sẽ là null nếu chưa đăng nhập
+    res.render("home", { products, user: req.user, errorMessage }); // user sẽ là null nếu chưa đăng nhập
 
   } catch (error) {
     console.error("Lỗi khi lấy danh sách sản phẩm:", error);
@@ -92,13 +96,24 @@ app.get('/category/:categoryId', authMiddleware, async (req, res) => {
 app.get('/cart', authMiddleware, async (req, res) => {
 
   if (!req.user) {
-    res.render('/home', { errorMessage: 'Please login before going to your cart!!!' })
+    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
   }
-  res.render('cart', { user: req.user, cartItems: null })
+  try {
+    // Gọi API để lấy dữ liệu giỏ hàng của user
 
+    const response = await axios.get(`http://localhost:${PORT}/api/cart/${req.user.userId}`);
+    const cartItems = response.data;
 
+    console.log(cartItems);
 
-})
+    res.render('cart', { user: req.user, cartItems });
+
+  } catch (error) {
+    console.error(error);
+    res.render('cart', { user: req.user, cartItems: [], errorMessage: 'Failed to load cart items' });
+  }
+});
+
 app.get('/cart/checkout', authMiddleware, async (req, res) => {
 
   res.render('checkout', { user: req.user })
@@ -120,22 +135,29 @@ app.get('/product/:productId', authMiddleware, async (req, res) => {
   }
 });
 
-app.get('/store',authMiddleware,async(req,res) =>{
+app.get('/store', authMiddleware, async (req, res) => {
 
-  console.log(req.user);
+  if (!req.user) {
+
+    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+
+  } else {
+    const products = await userModel.getProductsBySellerId(req.user.userId)
+
+    console.log(products);
+
+    res.render('store', { products: products, user: req.user })
+  }
+})
+
+app.get('/store/editproducts', authMiddleware, async (req, res) => {
 
   const products = await userModel.getProductsBySellerId(req.user.userId)
 
-  console.log(products);
-  res.render('store',{products : products, user: req.user})
+  res.render('editproducts', { user: req.user, products: products })
 })
 
-app.get('/store/editproducts',authMiddleware, async(req,res) =>{
 
-  const products = await userModel.getProductsBySellerId(req.user.userId)
-
-  res.render('editproducts',{user: req.user,products :products})
-})
 
 app.listen(PORT, () => {
   console.log(`✅ Server đang chạy tại http://localhost:${PORT}`);

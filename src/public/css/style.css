@@ -1,15 +1,19 @@
 /* Định dạng chung */
-*,ul{
+*,
+ul {
     margin: 0;
     padding: 0;
 }
-a{
+
+a {
     text-decoration: none;
 }
+
 body {
     font-family: Arial, sans-serif;
 }
-:root{
+
+:root {
     --black: #000;
     --primaryColor: #ff3368;
 }
@@ -19,22 +23,55 @@ body {
 }
 
 /*header*/
-header{width: 100%; padding: 16px 0}
-.nav-item{margin:0 12px;}
-.link-menu{width: 300;}
-.nav-link{color: var(--black); font-size: 14px; text-transform: capitalize; }
+header {
+    width: 100%;
+    padding: 16px 0
+}
+
+.nav-item {
+    margin: 0 12px;
+}
+
+.link-menu {
+    width: 300;
+}
+
+.nav-link {
+    color: var(--black);
+    font-size: 14px;
+    text-transform: capitalize;
+}
+
 .nav-icons {
     display: flex;
     align-items: center;
     position: relative;
 }
-.nav-icons a{margin-left: 22px}
-.nav-icons a i{color:var(--black) !important}
-.cart-icon span{display: inline-block;width: 14px; height: 14px; border-radius: 100%; 
-    background: red; color: white;font-size: 10px; text-align: center; line-height: 14px;
-    position: relative; top: -10px; right: 2px}
 
-.sub-menu{
+.nav-icons a {
+    margin-left: 22px
+}
+
+.nav-icons a i {
+    color: var(--black) !important
+}
+
+.cart-icon span {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 100%;
+    background: red;
+    color: white;
+    font-size: 10px;
+    text-align: center;
+    line-height: 14px;
+    position: relative;
+    top: -10px;
+    right: 2px
+}
+
+.sub-menu {
     position: absolute;
     background: var(--primaryColor);
     padding: 22px;
@@ -46,10 +83,24 @@ header{width: 100%; padding: 16px 0}
     visibility: hidden;
     transform: translateY(-10px);
 }
-.sub-menu li a{ color: #fff !important; line-height: 2; z-index: 3;}
-.nav-item:hover .sub-menu{transform: translateY(0);visibility: visible;; transition: 0.5s;z-index: 3}
+
+.sub-menu li a {
+    color: #fff !important;
+    line-height: 2;
+    z-index: 3;
+}
+
+.nav-item:hover .sub-menu {
+    transform: translateY(0);
+    visibility: visible;
+    ;
+    transition: 0.5s;
+    z-index: 3
+}
+
 .sub-menu li:hover {
-    background-color: rgba(16, 238, 120, 0.2); /* Màu nền khi hover */
+    background-color: rgba(16, 238, 120, 0.2);
+    /* Màu nền khi hover */
     border-radius: 4px;
     z-index: 3
 }
@@ -126,7 +177,7 @@ header{width: 100%; padding: 16px 0}
 
 .user-icon:hover {
     background-color: #ff9800;
-    color: white ;
+    color: white;
 }
 
 /* Submenu user */
@@ -141,19 +192,27 @@ header{width: 100%; padding: 16px 0}
     top: 38px;
     visibility: hidden;
     transform: translateY(-10px);
-    
+
 }
 
 
 .sub-menu-user li a {
-    color: #fff !important; line-height: 2; z-index: 3; font-size: 15;
+    color: #fff !important;
+    line-height: 2;
+    z-index: 3;
+    font-size: 15;
 }
 
-.user-menu:hover .sub-menu-user{transform: translateY(0);visibility: visible;
-    transition: 1s;z-index: 3}
+.user-menu:hover .sub-menu-user {
+    transform: translateY(0);
+    visibility: visible;
+    transition: 1s;
+    z-index: 3
+}
 
 .sub-menu-user li:hover {
-    background-color: rgba(16, 238, 120, 0.2); /* Màu nền khi hover */
+    background-color: rgba(16, 238, 120, 0.2);
+    /* Màu nền khi hover */
     border-radius: 4px;
     z-index: 3
 }
@@ -163,9 +222,11 @@ header{width: 100%; padding: 16px 0}
 
 /* Navbar */
 .navbar {
-    padding: 15px;
+    max-width: 100vw;
+    overflow-x: hidden;
+    padding: 12px 20px;
+    border-bottom: 2px solid #ddd;
 }
-
 /* Categories */
 .category-box {
     cursor: pointer;
@@ -173,7 +234,7 @@ header{width: 100%; padding: 16px 0}
     background-color: #f8f9fa;
 }
 
-.category-box:hover, 
+.category-box:hover,
 .category-box:active {
     background-color: #ff9800;
     color: white;
@@ -191,7 +252,7 @@ header{width: 100%; padding: 16px 0}
 
 /*browser category*/
 /* Hiệu ứng tiêu đề */
-h4.fw-bold{
+h4.fw-bold {
     position: relative;
     display: inline-block;
     padding: 5px 10px;
@@ -205,9 +266,11 @@ h4.fw-bold::before {
     position: absolute;
     left: 0;
     bottom: 0;
-    width: 5px; /* Thanh cam ban đầu có chiều rộng nhỏ */
+    width: 5px;
+    /* Thanh cam ban đầu có chiều rộng nhỏ */
     height: 100%;
-    background-color: #ff9800; /* Nền cam */
+    background-color: #ff9800;
+    /* Nền cam */
     transition: width 0.4s ease-in-out;
     z-index: -1;
     border-radius: 5px;
@@ -218,8 +281,10 @@ h4.fw-bold:hover {
     transform: scale(1.1);
 }
 
-h4.fw-bold:hover::before, .row:hover ~ h4.fw-bold::before {
-    width: 100%; /* Mở rộng ra toàn bộ */
+h4.fw-bold:hover::before,
+.row:hover~h4.fw-bold::before {
+    width: 100%;
+    /* Mở rộng ra toàn bộ */
 }
 
 
@@ -229,7 +294,8 @@ h4.fw-bold:hover::before, .row:hover ~ h4.fw-bold::before {
 .best-selling-header {
     display: flex;
     align-items: center;
-    justify-content: space-between; /* Đẩy "View All" sang phải */
+    justify-content: space-between;
+    /* Đẩy "View All" sang phải */
     position: relative;
     padding: 10px 0;
 }
@@ -246,7 +312,8 @@ h4.fw-bold:hover::before, .row:hover ~ h4.fw-bold::before {
     position: relative;
     font-size: 14px;
     font-weight: bold;
-    color: #ff3368; /* Màu cam */
+    color: #ff3368;
+    /* Màu cam */
     padding: 5px 15px;
     border-radius: 5px;
     transition: color 0.3s ease-in-out;
@@ -263,7 +330,8 @@ h4.fw-bold:hover::before, .row:hover ~ h4.fw-bold::before {
     transform: translateY(-50%);
     width: 5px;
     height: 100%;
-    background-color: #ff3368; /* Màu cam */
+    background-color: #ff3368;
+    /* Màu cam */
     transition: width 0.4s ease-in-out;
     z-index: -1;
     border-radius: 5px;
@@ -273,7 +341,8 @@ h4.fw-bold:hover::before, .row:hover ~ h4.fw-bold::before {
 .best-selling-title {
     font-size: 24px;
     font-weight: bold;
-    margin-top: 5px; /* Đẩy xuống dưới */
+    margin-top: 5px;
+    /* Đẩy xuống dưới */
     transition: 0.3s;
 }
 
@@ -295,18 +364,22 @@ h4.fw-bold:hover::before, .row:hover ~ h4.fw-bold::before {
 
 /* Hiệu ứng khi hover vào Best Selling Products */
 .best-selling-header:hover .highlight-text {
-    color: white; /* Đổi màu chữ thành trắng */
+    color: white;
+    /* Đổi màu chữ thành trắng */
 }
 
 .best-selling-header:hover .highlight-text::before {
-    width: 100%; /* Mở rộng nền cam */
+    width: 100%;
+    /* Mở rộng nền cam */
 }
 
 
 .card {
     width: 100%;
-    max-width: 300px; /* Tăng chiều rộng */
-    height: 420px; /* Chiều cao cố định */
+    max-width: 300px;
+    /* Tăng chiều rộng */
+    height: 420px;
+    /* Chiều cao cố định */
     position: relative;
     overflow: hidden;
     border-radius: 12px;
@@ -334,7 +407,7 @@ h4.fw-bold:hover::before, .row:hover ~ h4.fw-bold::before {
     left: 0px;
     bottom: 0;
     width: 100%;
-    height: 30%; 
+    height: 30%;
     background: rgba(0, 0, 0, 0.33);
     color: white;
     display: flex;
@@ -361,19 +434,22 @@ h4.fw-bold:hover::before, .row:hover ~ h4.fw-bold::before {
     font-size: 16px;
     color: #f8b400;
 }
+
 /* Đưa các nút điều hướng lên góc phải */
 .carousel-controls {
     position: relative;
     top: 80px;
-   
-    display: auto;;
-    gap: 0px; 
+
+    display: auto;
+    ;
+    gap: 0px;
 }
 
 /* Tùy chỉnh kiểu dáng nút điều hướng */
 .carousel-control-prev,
 .carousel-control-next {
-    background-color: rgba(255, 255, 255, 0.8); /* Nền trắng mờ */
+    background-color: rgba(255, 255, 255, 0.8);
+    /* Nền trắng mờ */
     border-radius: 50%;
     width: 40px;
     height: 40px;
@@ -392,7 +468,8 @@ h4.fw-bold:hover::before, .row:hover ~ h4.fw-bold::before {
 /* Mũi tên màu đen */
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-    filter: invert(100%); /* Đổi màu icon thành đen */
+    filter: invert(100%);
+    /* Đổi màu icon thành đen */
 }
 
 .icon-group {
@@ -402,6 +479,7 @@ h4.fw-bold:hover::before, .row:hover ~ h4.fw-bold::before {
     display: flex;
     gap: 5px;
 }
+
 .icon-circle {
     width: 30px;
     height: 30px;
@@ -414,11 +492,13 @@ h4.fw-bold:hover::before, .row:hover ~ h4.fw-bold::before {
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
+
 .icon-circle i {
     font-size: 16px;
     color: #333;
     transition: color 0.3s ease;
 }
+
 /* Hover chỉ hoạt động khi chưa click */
 .icon-circle:hover:not(.clicked) {
     background-color: rgba(255, 0, 21, 0.879);
@@ -443,5 +523,70 @@ h4.fw-bold:hover::before, .row:hover ~ h4.fw-bold::before {
 @media (max-width: 768px) {
     .category-box {
         margin-bottom: 10px;
+    }
+}
+
+.banner-slider {
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    position: relative;
+}
+
+.slides {
+    display: flex;
+    width: 300%;
+    /* Giữ nguyên chiều rộng */
+    transition: transform 0.5s ease-in-out;
+}
+
+.slides img {
+    width: 100vw;
+    /* Mỗi ảnh chiếm toàn bộ chiều rộng màn hình */
+    height: 350px;
+    object-fit: cover;
+}
+
+.error-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1050;
+    max-width: 350px;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    /* Tạo khoảng cách giữa nội dung và nút đóng */
+    animation: fadeInUp 0.5s ease-in-out;
+}
+
+/* Định dạng nút đóng cho dễ bấm */
+.close-toast {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    opacity: 0.8;
+    transition: opacity 0.2s ease-in-out;
+}
+
+.close-toast:hover {
+    opacity: 1;
+}
+
+/* Hiệu ứng xuất hiện */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
 }

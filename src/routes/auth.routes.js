@@ -83,7 +83,9 @@ router.get("/login", async (req, res) => {
 })
 
 router.get("/logout", async(req,res) =>{
+
   res.clearCookie("token", { httpOnly: true, secure: false, sameSite: "lax" }); // Xóa cookie token
+  
   res.redirect("/api/auth/login"); // Chuyển hướng về trang đăng nhập
 
 })

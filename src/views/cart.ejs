@@ -40,17 +40,17 @@
                             %>
                             <tr>
                                 <td>
-                                    <img src="<%= item.product_image %>" alt="product" class="me-2"
+                                    <img src="<%= item.image_urls %>" alt="product" class="me-2"
                                         style="width: 50px;">
-                                    <%= item.product_name %>
+                                    <%= item.name %>
                                 </td>
-                                <td>$<%= item.product_price.toFixed(2) %>
+                                <td><%= item.price %>
                                 </td>
                                 <td>
                                     <select class="form-select w-auto d-inline"
-                                        onchange="updateSubtotal(this, '<%= item.product_price %>')">
-                                        <% for (let i=1; i <=10; i++) { %>
-                                            <option value="<%= i %>" <%=i===item.quantity ? 'selected' : '' %>><%= i %>
+                                        onchange="updateSubtotal(this, '<%= item.price %>')">
+                                        <% for (let i=0; i <=10; i++) { %>
+                                            <option value="<%= i %>" <%=i=== item.quantity ? 'selected' : '' %>><%= i %>
                                             </option>
                                             <% } %>
                                     </select>
@@ -80,10 +80,10 @@
             </div>
             <div class="col-md-6">
                 <% if (cartItems && cartItems.length> 0) { %>
-                    <p>Subtotal: <span id="total">$<%= totalAmount.toFixed(2) %></span></p>
+                    <p>Subtotal: <span id="total">$100</span></p>
                     <p>Shipping: Free</p>
                     <hr>
-                    <p><strong>Total: <span id="grand-total">$<%= totalAmount.toFixed(2) %></span></strong></p>
+                    <p><strong>Total: <span id="grand-total">$100</span></strong></p>
                     <form action="cart/checkout" method="GET">
                         <button type="submit" class="btn btn-danger w-100">Proceed to Checkout</button>
                     </form>
