@@ -16,16 +16,17 @@ const PORT = 5000
 
 
 router.get('/', authMiddleware, async (req, res) => {
+  const errorMessage = req.query.errorMessage || null;
+
   try {
     const response = await fetch(`http://localhost:${PORT}/api/products`);
     const products = await response.json();
-    const errorMessage = req.query.errorMessage || null;
     console.log(products);
     res.render("home", { products, user: req.user, errorMessage }); // user sẽ là null nếu chưa đăng nhập
 
   } catch (error) {
     console.error("Lỗi khi lấy danh sách sản phẩm:", error);
-    res.render("home", { products: [], user: req.user });
+    res.render("home", { products: [], user: req.user, errorMessage});
   }
 })
 router.get('/contact', authMiddleware, async (req, res) => {
@@ -138,5 +139,24 @@ router.get('/whistlist',authMiddleware, async (req,res) =>{
     res.render('whistlist', { products: products, user: req.user })
   }
 })
+
+//test FE
+router.get('/userprofile', authMiddleware, async (req, res) => {
+  if (!req.user) {
+    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+  } else {
+    // Dữ liệu users
+    const users = [
+      { id: 1, username: 'admin', email: 'group11@gmail.com', password: 'admin', role: 'admin', created_at: '2025-03-05 12:44:00', updated_at: '2025-03-05 12:44:00', phone: null, address: null, city: null, postal_code: null },
+      { id: 2, username: 'dodevice', email: 'dodevice@gmail.com', password: 'dodevice', role: 'user', created_at: '2025-03-05 12:44:00', updated_at: '2025-03-05 12:44:00', phone: null, address: null, city: null, postal_code: null },
+    ];
+
+    // Render template userprofile với dữ liệu users
+    res.render('userprofile', { 
+      users: users, // Truyền mảng users vào template
+      user: req.user // Truyền thông tin user để dùng trong header
+    });
+  }
+});
 
 module.exports = router;
