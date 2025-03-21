@@ -1,12 +1,12 @@
+<link rel="stylesheet" type="text/css" href="/css/chatbot.css">
+
+
 <footer class="bg-dark text-white py-5 mt-5">
     <div class="container">
         <div class="row">
             <div class="col-md-4">
                 <h5>Our journey</h5>
-                <p>From humble beginnings, we have built a community of loyal customers by offering high-quality
-                    products, seamless shopping experiences, and exceptional customer service. Every step of our journey
-                    has been driven by innovation, passion, and a commitment to excellence. And this is just the
-                    beginning—we’re excited to continue growing with you!</p>
+                <p>From humble beginnings, we have built a community of loyal customers...</p>
             </div>
             <div class="col-md-4">
                 <h5>Support</h5>
@@ -19,15 +19,74 @@
                 <a href="#" class="text-white me-2"><i class="fa-brands fa-x-twitter fa-2x"></i></a>
                 <a href="https://www.instagram.com/thah.lam7/" target="_blank" class="text-decoration-none">
                     <i class="fa fa-instagram fa-3x text-danger"></i>
-                    <p class="mt-2"></p>
                 </a>
                 <a href="https://www.facebook.com/thanhlamk4/" target="_blank" class="text-decoration-none">
                     <i class="fa fa-facebook-official fa-3x text-primary"></i>
-                    <p class="mt-2"></p>
                 </a>
             </div>
         </div>
         <hr class="bg-white">
         <p class="text-center">© Copyright Group11 2025. All rights reserved</p>
     </div>
+
+    <!-- Chatbot Button -->
+    <div id="chatbot-button" onclick="toggleChat()">
+        💬 Chat
+    </div>
+
+    <!-- Chatbot Window -->
+    <div id="chatbot-container">
+        <div id="chatbot-header">
+            <span>Chatbot</span>
+            <button onclick="toggleChat()">×</button>
+        </div>
+        <div id="chatbot-messages"></div>
+        <input type="text" id="chatbot-input" placeholder="Type a message..." onkeypress="sendMessage(event)">
+    </div>
 </footer>
+
+
+
+<script>
+    function toggleChat() {
+        let chatbot = document.getElementById("chatbot-container");
+        chatbot.style.display = chatbot.style.display === "none" || chatbot.style.display === "" ? "block" : "none";
+    }
+
+    function sendMessage(event) {
+        if (event.key === "Enter") {
+            let input = document.getElementById("chatbot-input");
+            let message = input.value.trim();
+            if (message === "") return;
+
+            let chatbox = document.getElementById("chatbot-messages");
+            let userMessage = `<div><strong>You:</strong> ${message}</div>`;
+            chatbox.innerHTML += userMessage;
+            saveChatHistory();
+            input.value = "";
+            chatbox.scrollTop = chatbox.scrollHeight;
+
+            setTimeout(() => {
+                let botReply = `<div><strong>Bot:</strong> Xin chào! Tôi có thể giúp gì?</div>`;
+                chatbox.innerHTML += botReply;
+                saveChatHistory();
+                chatbox.scrollTop = chatbox.scrollHeight;
+            }, 1000);
+        }
+    }
+
+    function saveChatHistory() {
+        let chatbox = document.getElementById("chatbot-messages");
+        localStorage.setItem("chatHistory", chatbox.innerHTML);
+    }
+
+    function loadChatHistory() {
+        let chatbox = document.getElementById("chatbot-messages");
+        let history = localStorage.getItem("chatHistory");
+        if (history) {
+            chatbox.innerHTML = history;
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", loadChatHistory);
+</script>

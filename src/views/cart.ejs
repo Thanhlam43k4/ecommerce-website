@@ -35,7 +35,7 @@
                             <td colspan="4" class="text-center text-muted">Giỏ hàng chưa có sản phẩm nào.</td>
                         </tr>
                         <% } else { let totalAmount=0; cartItems.forEach(item=> {
-                            let subtotal = item.product_price * item.quantity;
+                            let subtotal = item.price * item.quantity;
                             totalAmount += subtotal;
                             %>
                             <tr>
