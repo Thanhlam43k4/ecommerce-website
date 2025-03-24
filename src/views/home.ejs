@@ -17,6 +17,15 @@
 <body>
 
     <header><%- include('partials/header') %></header>
+    <!-- Banner Slider -->
+    <div class="banner-slider">
+        <div class="slides">
+            <img src="/image/banner-1.jpg" alt="Banner 1">
+            <img src="/image/banner-2.jpg" alt="Banner 2">
+            <img src="/image/banner-3.png" alt="Banner 3">
+        </div>
+    </div>
+    <div class="container">
     <% if (errorMessage) { %>
         <div id="errorToast" class="alert alert-danger alert-dismissible fade show error-toast" role="alert">
             <strong>⚠️ Lỗi:</strong>
@@ -24,14 +33,8 @@
                 <button type="button" class="btn-close close-toast" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
         <% } %>
-            <!-- Banner Slider -->
-            <div class="banner-slider">
-                <div class="slides">
-                    <img src="/image/banner-1.jpg" alt="Banner 1">
-                    <img src="/image/banner-2.jpg" alt="Banner 2">
-                    <img src="/image/banner-3.png" alt="Banner 3">
-                </div>
-            </div>
+        
+            
             <!-- Categories -->
             <div class="container mt-5">
                 <h4 class="fw-bold">Browse By Category</h4>
@@ -194,7 +197,7 @@
                     </div>
                 </div>
             </div>
-
+        </div>
 
 
 

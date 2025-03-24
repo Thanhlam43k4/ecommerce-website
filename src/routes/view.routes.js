@@ -140,4 +140,23 @@ router.get('/whistlist',authMiddleware, async (req,res) =>{
   }
 })
 
+//test FE
+router.get('/userprofile', authMiddleware, async (req, res) => {
+  if (!req.user) {
+    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+  } else {
+    // Dữ liệu users
+    const users = [
+      { id: 1, username: 'admin', email: 'group11@gmail.com', password: 'admin', role: 'admin', created_at: '2025-03-05 12:44:00', updated_at: '2025-03-05 12:44:00', phone: null, address: null, city: null, postal_code: null },
+      { id: 2, username: 'dodevice', email: 'dodevice@gmail.com', password: 'dodevice', role: 'user', created_at: '2025-03-05 12:44:00', updated_at: '2025-03-05 12:44:00', phone: null, address: null, city: null, postal_code: null },
+    ];
+
+    // Render template userprofile với dữ liệu users
+    res.render('userprofile', { 
+      users: users, // Truyền mảng users vào template
+      user: req.user // Truyền thông tin user để dùng trong header
+    });
+  }
+});
+
 module.exports = router;
