@@ -16,16 +16,17 @@ const PORT = 5000
 
 
 router.get('/', authMiddleware, async (req, res) => {
+  const errorMessage = req.query.errorMessage || null;
+
   try {
     const response = await fetch(`http://localhost:${PORT}/api/products`);
     const products = await response.json();
-    const errorMessage = req.query.errorMessage || null;
     console.log(products);
     res.render("home", { products, user: req.user, errorMessage }); // user sẽ là null nếu chưa đăng nhập
 
   } catch (error) {
     console.error("Lỗi khi lấy danh sách sản phẩm:", error);
-    res.render("home", { products: [], user: req.user });
+    res.render("home", { products: [], user: req.user ,errorMessage});
   }
 })
 router.get('/contact', authMiddleware, async (req, res) => {
