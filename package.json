@@ -5,7 +5,12 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+<<<<<<< Updated upstream
     "start": "node server.js"
+=======
+    "start": "nodemon server.js",
+    "chatbot": "cd src/extensions/chatbot/ && python3 -m venv venv && source venv/bin/activate && pip install -r requirements.txt && python3 main.py"
+>>>>>>> Stashed changes
   },
   "author": "NguyenThanhLam",
   "license": "ISC",
