@@ -17,12 +17,18 @@ const Review = {
   },
 
   //Get all reviews
-  getAllReviews: async () => {
+  getAll: async () => {
     const sql = `
       SELECT * 
       FROM reviews
       ORDER BY product_id, created_at DESC
-    `
+    `;
+    try {
+      const [reviews] = await db.promise().execute(sql);
+      return reviews
+    } catch(err) {
+      throw err;
+    }
   },
 
 
