@@ -7,6 +7,10 @@ CREATE TABLE users (
     email VARCHAR(100) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     role ENUM('user', 'admin') NOT NULL DEFAULT 'user',
+    phone VARCHAR(20),
+    address TEXT,
+    city VARCHAR(100),
+    postal_code VARCHAR(20);
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -88,3 +92,35 @@ CREATE TABLE cart_items (
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
     FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
+
+
+CREATE TABLE wishlist (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
+);
+
+--Chèn dữ liệu vào bảng users
+INSERT INTO users (username, email, password, role, created_at, updated_at) VALUES
+('admin', 'group11@gmail.com', 'admin', 'admin', '2025-03-05 12:44:00', '2025-03-05 12:44:00'),
+('dodevice', 'dodevice@gmail.com', 'dodevice', 'user', '2025-03-05 12:44:00', '2025-03-05 12:44:00'),
+('thanhlam', 'thanhlam@gmail.com', 'thanhlam', 'user', '2025-03-05 12:44:00', '2025-03-05 12:44:00'),
+('thanhhung', 'thanhhung@gmail.com', 'thanhhung', 'user', '2025-03-05 12:44:00', '2025-03-05 12:44:00'),
+('duonglong', 'duonglong@gmail.com', 'duonglong', 'user', '2025-03-05 12:44:00', '2025-03-05 12:44:00'),
+('ngohieu', 'ngohieu@gmail.com', 'ngohieu', 'user', '2025-03-05 12:44:00', '2025-03-05 12:44:00');
+
+
+
+-- Chèn dữ liệu vào bảng categories
+INSERT INTO categories (name, description) VALUES
+('Phones', 'Various smartphones and mobile devices.'),
+('Computers', 'Desktops, laptops, and related accessories.'),
+('SmartWatches', 'Smart wearable devices with multiple functionalities.'),
+('Cameras', 'Digital cameras and photography equipment.'),
+('Headphones', 'Audio devices including headphones and earphones.'),
+('Gaming', 'Gaming consoles, accessories, and related products.');
+
+

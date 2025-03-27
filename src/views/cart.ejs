@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/cart_style.css">
+</head>
+
+<body>
+    <header><%- include('partials/header') %></header>
+
+    <div class="container my-5">
+        <!-- Breadcrumb -->
+
+        <!-- Cart Table -->
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead class="bg-light">
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (!cartItems || cartItems.length===0) { %>
+                        <tr>
+                            <td colspan="4" class="text-center text-muted">Giỏ hàng chưa có sản phẩm nào.</td>
+                        </tr>
+                        <% } else { let totalAmount=0; cartItems.forEach(item=> {
+                            let subtotal = item.price * item.quantity;
+                            totalAmount += subtotal;
+                            %>
+                            <tr>
+                                <td>
+                                    <img src="<%= item.image_urls %>" alt="product" class="me-2"
+                                        style="width: 50px;">
+                                    <%= item.name %>
+                                </td>
+                                <td><%= item.price %>
+                                </td>
+                                <td>
+                                    <select class="form-select w-auto d-inline"
+                                        onchange="updateSubtotal(this, '<%= item.price %>')">
+                                        <% for (let i=0; i <=10; i++) { %>
+                                            <option value="<%= i %>" <%=i=== item.quantity ? 'selected' : '' %>><%= i %>
+                                            </option>
+                                            <% } %>
+                                    </select>
+                                </td>
+                                <td class="subtotal">$<%= subtotal.toFixed(2) %>
+                                </td>
+                            </tr>
+                            <% }) } %>
+                </tbody>
+
+            </table>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-between">
+            <a href="/" class="btn btn-outline-secondary">Return To Shop</a>
+            <button class="btn btn-outline-dark">Update Cart</button>
+        </div>
+
+        <!-- Coupon & Cart Total -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Coupon Code">
+                    <button class="btn btn-danger">Apply Coupon</button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <% if (cartItems && cartItems.length> 0) { %>
+                    <p>Subtotal: <span id="total">$100</span></p>
+                    <p>Shipping: Free</p>
+                    <hr>
+                    <p><strong>Total: <span id="grand-total">$100</span></strong></p>
+                    <form action="cart/checkout" method="GET">
+                        <button type="submit" class="btn btn-danger w-100">Proceed to Checkout</button>
+                    </form>
+                    <% } else { %>
+                        <p class="text-muted">Chưa có sản phẩm trong giỏ hàng.</p>
+                        <% } %>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script>
+
+
+        function updateSubtotal(selectElement, price) {
+            let quantity = parseInt(selectElement.value);
+            let subtotalCell = selectElement.closest("tr").querySelector(".subtotal");
+            let newSubtotal = quantity * price;
+            subtotalCell.innerText = `$${newSubtotal.toFixed(2)}`;
+            updateTotal();
+        }
+
+        function updateTotal() {
+            let total = 0;
+            document.querySelectorAll(".subtotal").forEach(cell => {
+                total += parseFloat(cell.innerText.replace("$", ""));
+            });
+            document.getElementById("total").innerText = `$${total.toFixed(2)}`;
+            document.getElementById("grand-total").innerText = `$${total.toFixed(2)}`;
+        }
+    </script>
+
+    <footer><%- include('partials/footer') %></footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

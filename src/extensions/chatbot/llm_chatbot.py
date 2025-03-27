@@ -37,7 +37,8 @@ class LLMChatbot:
     
     def read_data_from_db(self):
         self.PRODUCTS_API = self.NODE_API_URL + "products/"
-        self.REVIEWS_API = self.NODE_API_URL + ""
+        self.REVIEWS_API = self.NODE_API_URL + "reviews/"
+        self.WHISTLIST_API = self.NODE_API_URL + ""
 
 
     def create_prompt(self):

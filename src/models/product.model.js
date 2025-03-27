@@ -56,6 +56,16 @@ const Product = {
       throw error;
     }
   },
+  getByCategory: async (categoryId) => {
+    const sql = "SELECT * FROM products WHERE category_id = ?";
+    try {
+      const [products] = await db.promise().execute(sql, [categoryId]);
+      return products;
+    } catch (err) {
+      console.error('Error:', err);
+      throw err;
+    }
+  },
 }
 
 module.exports = Product;

@@ -13,7 +13,7 @@ UNLOCK TABLES;
 
 LOCK TABLES `order_items` WRITE;
 INSERT INTO `order_items` VALUES (1,1,2,1,'2025-03-05 13:57:51'),(2,1,24,1,'2025-03-05 13:57:51'),(3,1,21,2,'2025-03-05 13:57:51'),(4,2,25,1,'2025-03-05 14:04:06'),(5,3,24,1,'2025-03-05 14:04:06'),(6,3,22,3,'2025-03-05 14:04:06');
-UNLOCK TABLES;
+UNLOCK TABLES;a
 
 LOCK TABLES `orders` WRITE;
 INSERT INTO `orders` VALUES (1,3,1451.96,'shipped','Nguyen Thanh Lam','333333','Xuan Thuy','Ha Noi','1020','2025-03-05 13:56:46','2025-03-05 13:56:46'),(2,5,749.99,'confirmed','Duong Van Long','44444','Xuan Thuy','Ha Noi','1020','2025-03-05 14:02:05','2025-03-05 14:02:05'),(3,5,754.96,'shipped','Duong Van Long','696969','Xuan Thuy','ha Noi','3020','2025-03-05 14:02:05','2025-03-05 14:05:45');

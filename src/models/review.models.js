@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 const db = require('../config/db');
 const { getAllReviews } = require('../controllers/reviewController');
+=======
+const db = require('../config/db')
+>>>>>>> main
 
 const Review = {
 
@@ -16,6 +20,7 @@ const Review = {
     }
   },
 
+<<<<<<< HEAD
   //Get all reviews
   getAll: async () => {
     const sql = `
@@ -31,6 +36,8 @@ const Review = {
     }
   },
 
+=======
+>>>>>>> main
 
   // Get review by productId
   getByProductId: async (productId) => {
