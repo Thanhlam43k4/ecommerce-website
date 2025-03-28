@@ -77,6 +77,22 @@ const Product = {
       throw error;
     }
   },
+
+  // search
+  searchByQuery: async (searchQuery) => {
+    const sql = `
+      SELECT * FROM products 
+      WHERE name LIKE ? OR description LIKE ?
+    `;
+    const searchTerm = `%${searchQuery}%`; // Tìm kiếm gần đúng
+    try {
+      const [products] = await db.promise().execute(sql, [searchTerm, searchTerm]);
+      return products;
+    } catch (error) {
+      console.error('Error searching products:', error);
+      throw error;
+    }
+  }
 }
 
 module.exports = Product;

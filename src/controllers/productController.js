@@ -87,6 +87,19 @@ const productController = {
     } catch (err) {
       res.status(500).json({ message: "Server error", error: err.message });
     }
+  },
+
+  searchProducts: async (req, res) => {
+    const searchQuery = req.query.q;
+    if (!searchQuery) {
+      return res.status(400).json({ message: "Vui lòng cung cấp từ khóa tìm kiếm" });
+    }
+    try {
+      const products = await Product.searchByQuery(searchQuery);
+      res.status(200).json(products); // Trả về danh sách sản phẩm, có thể rỗng
+    } catch (err) {
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
   }
 }
 

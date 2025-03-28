@@ -129,6 +129,12 @@ header {
     display: flex;
     align-items: center;
 }
+/* button - error */
+.search-container button {
+    background: none;
+    border: none;
+    padding: 0;
+}
 
 /* Ẩn ô nhập liệu ban đầu */
 .search-box {

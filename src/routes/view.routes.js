@@ -146,7 +146,48 @@ router.get('/whistlist', authMiddleware, async (req, res) => {
           error: error 
       });
   }
+})
+
+router.get('/search', authMiddleware, async (req, res) => {
+  const searchQuery = req.query.q;
+
+  if (!searchQuery) {
+    return res.redirect('/?errorMessage=' + encodeURIComponent('Vui lòng nhập từ khóa tìm kiếm'));
+  }
+
+  try {
+    const response = await fetch(`http://localhost:${PORT}/api/products/search?q=${encodeURIComponent(searchQuery)}`);
+    const products = await response.json();
+
+    if (!Array.isArray(products) || products.length === 0) {
+      return res.render('whistlist', {
+        products: [],
+        user: req.user,
+        errorMessage: 'Không tìm thấy sản phẩm nào',
+        searchQuery,
+      });
+    }
+
+    if (products.length === 1) {
+      return res.redirect(`/product/${products[0].id}`); // Sử dụng 'id' thay vì 'productId'
+    }
+
+    res.render('whistlist', {
+      products,
+      user: req.user,
+      searchQuery,
+    });
+  } catch (error) {
+    console.error("Lỗi khi tìm kiếm sản phẩm:", error);
+    res.render('whistlist', {
+      products: [],
+      user: req.user,
+      errorMessage: 'Lỗi khi tìm kiếm sản phẩm',
+      searchQuery,
+    });
+  }
 });
+
 //test FE
 router.get('/profile', authMiddleware, async (req, res) => {
   if (!req.user) {
