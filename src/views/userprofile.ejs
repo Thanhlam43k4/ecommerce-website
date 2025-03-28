@@ -34,7 +34,7 @@
                 <div class="col-md-3">
                     <h5 class="mb-3">Manage My Account</h5>
                     <ul class="list-unstyled sidebar-menu">
-                        <li><a href="/userprofile" class="active">My Profile</a></li>
+                        <li><a href="/profile" class="active">My Profile</a></li>
                         <li><a href="/orders">My Orders</a></li>
                     </ul>
                 </div>
@@ -42,12 +42,12 @@
                 <!-- Profile Form -->
                 <div class="col-md-9">
                     <h5 class="mb-4 text-danger">Edit Your Profile</h5>
-                    <form action="/userprofile" method="POST">
+                    <form action="/profile" method="POST">
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="id" class="form-label">ID</label>
                                 <input type="text" class="form-control" id="id" name="id"
-                                    value="<%= user.id %>" readonly>
+                                    value="<%= user.userId %>" readonly>
                             </div>
                             <div class="col-md-6">
                                 <label for="username" class="form-label">Username</label>
@@ -91,19 +91,8 @@
                                     value="<%= user.postal_code || '' %>" placeholder="Postal Code">
                             </div>
                         </div>
-                        <div class="row mb-3">
-                            <div class="col-md-6">
-                                <label for="createdAt" class="form-label">Created At</label>
-                                <input type="text" class="form-control" id="createdAt" name="createdAt"
-                                    value="<%= user.created_at %>" readonly>
-                            </div>
-                            <div class="col-md-6">
-                                <label for="updatedAt" class="form-label">Updated At</label>
-                                <input type="text" class="form-control" id="updatedAt" name="updatedAt"
-                                    value="<%= user.updated_at %>" readonly>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
+                       
+                        <!-- <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="currentPassword" class="form-label">Current Password</label>
                                 <input type="password" class="form-control" id="currentPassword" name="currentPassword"
@@ -120,7 +109,7 @@
                                 <label for="confirmNewPassword" class="form-label">Confirm New Password</label>
                                 <input type="password" class="form-control" id="confirmNewPassword" name="confirmNewPassword"
                                     placeholder="Confirm New Password">
-                            </div>
+                            </div> -->
                         </div>
                         <div class="text-end">
                             <button type="submit" class="btn btn-danger">Save Changes</button>

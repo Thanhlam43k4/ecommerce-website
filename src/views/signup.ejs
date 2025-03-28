@@ -22,34 +22,45 @@
     <div class="signup-bg">
         <div class="signup-body">
             <h2 class="text-center mb-4">Đăng Ký</h2>
-
-            <form action="/api/auth/register" method="POST">
-                <div class="mb-3">
-                    <div class="signup-form-group">
-                        <input type="text" name="name" class="signup-form" placeholder=" " required> 
-                        <label class="signup-label">Name</label>
-                    </div>
+            <!-- ✅ Thông báo lỗi -->
+            <% if (errorMessage) { %>
+                <div class="alert alert-danger text-center" role="alert">
+                    <%= errorMessage %>
                 </div>
-                <div class="mb-3">
-                    <div class="signup-form-group">
-                        <input type="email" name="email" class="signup-form" placeholder=" " required>
-                        <label class="signup-label">Email</label>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="signup-form-group">
-                        <input type="password" name="password" class="signup-form" placeholder=" " required>
-                        <label class="signup-label">Password</label>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="signup-form-group">
-                        <input type="password" name="confirmPassword" class="signup-form" placeholder=" " required>
-                        <label class="signup-label">Confirm Password</label>
-                    </div>
-                </div>
-                <button type="submit" class="signup-button custom-btn w-100">Create Account</button>
-            </form>
+                <% } %>
+                    <form action="/api/auth/register" method="POST">
+                        <div class="mb-3">
+                            <div class="signup-form-group">
+                                <input type="text" name="name" class="signup-form" placeholder=" " required>
+                                <label class="signup-label">Name</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="signup-form-group">
+                                <input type="email" name="email" class="signup-form" placeholder=" " required>
+                                <label class="signup-label">Email</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="signup-form-group">
+                                <input type="password" name="password" class="signup-form" placeholder=" " required>
+                                <label class="signup-label">Password</label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="signup-form-group">
+                                <input type="password" name="confirmPassword" class="signup-form" placeholder=" "
+                                    required>
+                                <label class="signup-label">Confirm Password</label>
+                            </div>
+                        </div>
+                        <button type="submit" class="signup-button custom-btn w-100">Create Account</button>
+                        <div class="text-center mt-3">
+                            <a href="/api/auth/google" class="btn w-100 mb-2" id="google-login-btn">
+                                <i class="fa fa-google me-2"></i> Login with Google
+                            </a>
+                        </div>
+                    </form>
         </div>
     </div>
 

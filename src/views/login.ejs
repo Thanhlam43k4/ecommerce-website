@@ -16,7 +16,7 @@
   <link rel="stylesheet" type="text/css" href="/css/style.css">
   <link rel="stylesheet" type="text/css" href="/css/login.css">
 
-  
+
 </head>
 
 <body>
@@ -27,7 +27,7 @@
       <h2 class="text-center mb-4">Đăng Nhập</h2>
 
       <form action="/api/auth/login" method="POST">
-       
+
         <div class="mb-3">
           <div class="login-form-group">
             <input type="email" name="email" class="login-form" placeholder=" " required>
@@ -40,12 +40,18 @@
             <label class="login-label">Password</label>
           </div>
         </div>
-       
+
         <button type="submit" class="login-button custom-btn w-100">Login</button>
       </form>
-    </div>
-  </div>
+      <div class="text-center mt-3">
+        <a href="/api/auth/google" class="btn w-100 mb-2" id="google-login-btn">
+          <i class="fa fa-google me-2"></i> Login with Google
+        </a>
+      </div>
 
+    </div>
+
+  </div>
 
   <footer><%- include('partials/footer') %></footer>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

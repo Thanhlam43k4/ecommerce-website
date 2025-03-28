@@ -12,11 +12,14 @@ a {
 body {
     font-family: Arial, sans-serif;
     margin: 0;
-    overflow-y: scroll; /* Đảm bảo cuộn được */
-   
+    overflow-y: scroll;
+    /* Đảm bảo cuộn được */
+
 }
+
 body::-webkit-scrollbar {
-    display: none; /* Chrome, Safari, Edge */
+    display: none;
+    /* Chrome, Safari, Edge */
 }
 
 :root {
@@ -31,13 +34,14 @@ body::-webkit-scrollbar {
 /*header*/
 header {
     width: 100%;
-    
+
 }
 
 .navbar {
     overflow-y: hidden;
     position: relative;
-    z-index: 2000; /* Đảm bảo navbar nằm trên các phần tử khác */
+    z-index: 2000;
+    /* Đảm bảo navbar nằm trên các phần tử khác */
 }
 
 
@@ -125,6 +129,12 @@ header {
     display: flex;
     align-items: center;
 }
+/* button - error */
+.search-container button {
+    background: none;
+    border: none;
+    padding: 0;
+}
 
 /* Ẩn ô nhập liệu ban đầu */
 .search-box {
@@ -203,8 +213,9 @@ header {
     list-style: none;
     width: 130px;
     text-align: center;
-    top: 55px; 
-    right: 20px; /* Căn phải với body */
+    top: 55px;
+    right: 20px;
+    /* Căn phải với body */
     visibility: hidden;
     transform: translateY(-10px);
     z-index: 2001;
@@ -241,6 +252,7 @@ header {
     padding: 12px 20px;
     border-bottom: 2px solid #ddd;
 }
+
 /* Categories */
 .category-box {
     cursor: pointer;
@@ -568,7 +580,7 @@ h4.fw-bold:hover::before,
     position: fixed;
     top: 20px;
     right: 20px;
-    z-index: 999;
+    z-index: 2400;
     max-width: 350px;
     padding: 15px 20px;
     border-radius: 8px;
@@ -608,3 +620,18 @@ h4.fw-bold:hover::before,
     }
 }
 
+
+#google-login-btn {
+    background-color: #4285F4;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+#google-login-btn:hover {
+    background-color: #357ae8;
+}

@@ -1,4 +1,4 @@
-const Wishlist = require("../models/wishlist.model");
+const Wishlist = require("../models/whislist.model");
 
 // Lấy danh sách wishlist theo userId
 const getWishlistByUserId = async (req, res) => {
