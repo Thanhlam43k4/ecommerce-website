@@ -18,7 +18,7 @@ const addToWishlist = async (req, res) => {
       return res.status(400).json({ msg: "Product ID is required" });
     }
 
-    await Wishlist.addToWishlist(req.user.id, productId);
+    await Wishlist.addToWishlist(req.user.userId, productId);
     res.status(201).json({ msg: "Added to wishlist successfully!" });
   } catch (error) {
     res.status(500).json({ msg: "Server Error", error: error.message });
@@ -33,7 +33,7 @@ const removeFromWishlist = async (req, res) => {
       return res.status(400).json({ msg: "Product ID is required" });
     }
 
-    await Wishlist.removeFromWishlist(req.user.id, productId);
+    await Wishlist.removeFromWishlist(req.user.userId, productId);
     res.status(200).json({ msg: "Removed from wishlist successfully!" });
   } catch (error) {
     res.status(500).json({ msg: "Server Error", error: error.message });

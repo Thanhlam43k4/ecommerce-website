@@ -11,13 +11,14 @@ const axios = require('axios');
 const categoryModel = require('../models/category.models.js'); // Điều chỉnh đường dẫn nếu cần
 const userModel = require('../models/user.model.js')
 const authMiddleware = require("../middlewares/authenticate");
+const Wishlist = require('../models/whislist.model.js');
 const PORT = 5000
 
 
 
 router.get('/', authMiddleware, async (req, res) => {
   const errorMessage = req.query.errorMessage || null;
-
+  console.log(req.user)
   try {
     const response = await fetch(`http://localhost:${PORT}/api/products`);
     const products = await response.json();
@@ -118,21 +119,34 @@ router.get('/store', authMiddleware, async (req, res) => {
   }
 })
 router.get('/store/editproducts', authMiddleware, async (req, res) => {
-
-  const products = await userModel.getProductsBySellerId(req.user.userId)
-
-  res.render('editproducts', { user: req.user, products: products })
-})
+  try {
+      const products = await userModel.getProductsBySellerId(req.user.userId);
+      res.render('editproducts', { user: req.user, products: products });
+  } catch (error) {
+      console.error('Error fetching products:', error);
+      res.status(500).render('error', { 
+          message: 'Failed to load products. Please try again later.', 
+          error: error 
+      });
+  }
+});
 router.get('/whistlist', authMiddleware, async (req, res) => {
   if (!req.user) {
+      return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+  } 
 
-    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
-
-  } else {
-    const products = await userModel.getProductsBySellerId(req.user.userId)
-    res.render('whistlist', { products: products, user: req.user })
+  try {
+      const products = await Wishlist.getWishlistByUserId(req.user.userId);
+      console.log(products);
+      res.render('whistlist', { products: products, user: req.user });
+  } catch (error) {
+      console.error('Error fetching wishlist:', error);
+      res.status(500).render('error', { 
+          message: 'Failed to load wishlist. Please try again later.', 
+          error: error 
+      });
   }
-})
+});
 //test FE
 router.get('/profile', authMiddleware, async (req, res) => {
   if (!req.user) {
