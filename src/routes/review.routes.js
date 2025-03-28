@@ -4,10 +4,10 @@ const authenticate = require("../middlewares/authenticate"); // Middleware xác 
 
 const router = express.Router();
 
-// Route thêm đánh giá (Buyer cần đăng nhập)
+// POST /api/reviews - Thêm đánh giá mới (Buyer cần đăng nhập)
 router.post("/", authenticate, reviewController.createReview);
 
-// Route lấy đánh giá của sản phẩm theo productId
+// GET /api/reviews/:productId - Lấy danh sách đánh giá theo productId
 router.get("/:productId", reviewController.getReviewsByProduct);
 
 module.exports = router;

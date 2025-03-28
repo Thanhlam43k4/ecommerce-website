@@ -39,7 +39,32 @@ const getUserById = async(req,res) =>{
 
 }
 
+const updateUserInfo = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { username, phone, address, city, postalCode } = req.body;
 
+    if (!username && !phone && !address && !city && !postalCode) {
+      return res.status(400).json({ msg: "No fields to update" });
+    }
 
+    const updatedUser = await User.updateUser(userId, {
+      username,
+      phone,
+      address,
+      city,
+      postalCode,
+    });
 
-module.exports = {getMe,getUserById};
+    if (updatedUser.affectedRows === 0) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    res.status(200).json({ msg: "User updated successfully" });
+
+  } catch (error) {
+    res.status(500).json({ msg: "Server Error!!", error: error.message });
+  }
+};
+
+module.exports = {getMe,getUserById,updateUserInfo};

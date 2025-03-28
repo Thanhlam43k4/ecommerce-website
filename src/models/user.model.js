@@ -79,6 +79,26 @@ const User = {
       throw error;
     }
   },
+  updateUser: async (id, userData) => {
+    const { username, phone, address, city, postalCode } = userData;
+    const sql = `UPDATE users SET 
+      username = ?, 
+      phone = ?, 
+      address = ?, 
+      city = ?, 
+      postal_code = ?, 
+      updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?`;
+
+    try {
+      const [result] = await db.promise().execute(sql, [username, phone, address, city, postalCode, id]);
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+
 
 };
 

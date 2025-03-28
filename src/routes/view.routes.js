@@ -21,12 +21,11 @@ router.get('/', authMiddleware, async (req, res) => {
   try {
     const response = await fetch(`http://localhost:${PORT}/api/products`);
     const products = await response.json();
-    console.log(products);
     res.render("home", { products, user: req.user, errorMessage }); // user sẽ là null nếu chưa đăng nhập
 
   } catch (error) {
     console.error("Lỗi khi lấy danh sách sản phẩm:", error);
-    res.render("home", { products: [], user: req.user ,errorMessage});
+    res.render("home", { products: [], user: req.user, errorMessage });
   }
 })
 router.get('/contact', authMiddleware, async (req, res) => {
@@ -87,8 +86,6 @@ router.get('/category/:categoryId', authMiddleware, async (req, res) => {
   }
 })
 router.get('/cart/checkout', authMiddleware, async (req, res) => {
-
-
   res.render('checkout', { user: req.user })
 })
 router.get('/product/:productId', authMiddleware, async (req, res) => {
@@ -101,10 +98,10 @@ router.get('/product/:productId', authMiddleware, async (req, res) => {
       throw new Error(product.message || "Không tìm thấy sản phẩm");
     }
 
-    res.render('product_info', { user: req.user, product });
+    res.render('product_info', { user: req.user, product,reviews : null});
   } catch (error) {
     console.error("Lỗi khi lấy thông tin sản phẩm:", error.message);
-    res.render('product_info', { user: req.user, product: null, errorMessage: error.message });
+    res.render('product_info', { user: req.user, product: null,reviews : null, errorMessage: error.message });
   }
 })
 router.get('/store', authMiddleware, async (req, res) => {
@@ -126,37 +123,53 @@ router.get('/store/editproducts', authMiddleware, async (req, res) => {
 
   res.render('editproducts', { user: req.user, products: products })
 })
-router.get('/whistlist',authMiddleware, async (req,res) =>{
+router.get('/whistlist', authMiddleware, async (req, res) => {
   if (!req.user) {
 
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
 
   } else {
     const products = await userModel.getProductsBySellerId(req.user.userId)
-
-    console.log(products);
-
     res.render('whistlist', { products: products, user: req.user })
   }
 })
-
 //test FE
-router.get('/userprofile', authMiddleware, async (req, res) => {
+router.get('/profile', authMiddleware, async (req, res) => {
   if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
   } else {
     // Dữ liệu users
-    const users = [
-      { id: 1, username: 'admin', email: 'group11@gmail.com', password: 'admin', role: 'admin', created_at: '2025-03-05 12:44:00', updated_at: '2025-03-05 12:44:00', phone: null, address: null, city: null, postal_code: null },
-      { id: 2, username: 'dodevice', email: 'dodevice@gmail.com', password: 'dodevice', role: 'user', created_at: '2025-03-05 12:44:00', updated_at: '2025-03-05 12:44:00', phone: null, address: null, city: null, postal_code: null },
-    ];
-
     // Render template userprofile với dữ liệu users
-    res.render('userprofile', { 
-      users: users, // Truyền mảng users vào template
+    res.render('userprofile', {
       user: req.user // Truyền thông tin user để dùng trong header
     });
   }
 });
+router.post('/profile', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { username, phone, address, city, postalCode } = req.body;
 
+    if (!username && !phone && !address && !city && !postalCode) {
+      return res.status(400).json({ msg: "No fields to update" });
+    }
+
+    const updatedUser = await User.updateUser(userId, {
+      username,
+      phone,
+      address,
+      city,
+      postalCode,
+    });
+
+    if (updatedUser.affectedRows === 0) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    res.status(200).json({ msg: "Profile updated successfully" });
+
+  } catch (error) {
+    res.status(500).json({ msg: "Server Error!!", error: error.message });
+  }
+});
 module.exports = router;

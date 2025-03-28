@@ -66,6 +66,17 @@ const Product = {
       throw err;
     }
   },
+
+   // Xóa sản phẩm theo userId và productId
+   deleteByUserAndProductId: async (userId, productId) => {
+    const sql = "DELETE FROM products WHERE seller_id = ? AND id = ?";
+    try {
+      const [result] = await db.promise().execute(sql, [userId, productId]);
+      return result.affectedRows;
+    } catch (error) {
+      throw error;
+    }
+  },
 }
 
 module.exports = Product;

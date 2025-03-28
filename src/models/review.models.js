@@ -1,38 +1,64 @@
-const db = require('../config/db')
+// ReviewModel.js (Node.js Model)
+const db = require('../config/db');
 
-const Review = {
+const review = {
+  // Lấy tất cả các đánh giá
+  getAllReviews: async () => {
+    const sql = "SELECT * FROM reviews";
+    try {
+      const [rows] = await db.promise().execute(sql);
+      return rows;
+    } catch (error) {
+      throw error;
+    }
+  },
 
-  // Add new review 
-  create: async (reviewData) => {
-    const { product_id, buyer_id, rating, comment } = reviewData;
+  // Lấy đánh giá theo ID
+  getReviewById: async (id) => {
+    const sql = "SELECT * FROM reviews WHERE id = ?";
+    try {
+      const [rows] = await db.promise().execute(sql, [id]);
+      if (rows.length > 0) {
+        return rows[0];
+      }
+      return null;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // Thêm đánh giá mới
+  addReview: async (productId, buyerId, rating, comment) => {
     const sql = "INSERT INTO reviews (product_id, buyer_id, rating, comment) VALUES (?, ?, ?, ?)";
     try {
-      const [result] = await db.promise().execute(sql, [product_id, buyer_id, rating, comment]);
-
-      return result.insertId || "Review created successfully!!!!";
-    } catch (err) {
-      throw err;
+      const [result] = await db.promise().execute(sql, [productId, buyerId, rating, comment]);
+      return result.affectedRows > 0;
+    } catch (error) {
+      throw error;
     }
   },
 
-
-  // Get review by productId
-  getByProductId: async (productId) => {
-    const sql = `
-    SELECT product_id, buyer_id, rating, comment, created_at 
-    FROM reviews 
-    WHERE product_id = ? 
-    ORDER BY created_at DESC
-  `;
+  // Cập nhật đánh giá
+  updateReview: async (id, rating, comment) => {
+    const sql = "UPDATE reviews SET rating = ?, comment = ? WHERE id = ?";
     try {
-      const [rows] = await db.promise().execute(sql, productId);
-      return rows;
-    } catch (err) {
-      throw err;
+      const [result] = await db.promise().execute(sql, [rating, comment, id]);
+      return result.affectedRows > 0;
+    } catch (error) {
+      throw error;
     }
   },
 
+  // Xóa đánh giá
+  deleteReview: async (id) => {
+    const sql = "DELETE FROM reviews WHERE id = ?";
+    try {
+      const [result] = await db.promise().execute(sql, [id]);
+      return result.affectedRows > 0;
+    } catch (error) {
+      throw error;
+    }
+  }
+};
 
-}
-
-module.exports = Review;
+module.exports = review;
