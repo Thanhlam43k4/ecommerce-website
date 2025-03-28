@@ -15,10 +15,12 @@
       </ul>
 
       <div class="d-flex nav-icons">
-        <div class="search-container">
-          <a href="/user"><i class="fa fa-search"></i></a>
-          <input type="text" class="search-box" placeholder="Search...">
-        </div>
+        <form action="/search" method="GET" class="search-container">
+          <button  ><i class="fa fa-search"></i></button>
+          <input type="text" name="q" class="search-box" placeholder="Tìm kiếm" required>
+        </form>
+        
+        
         <a href="/whistlist"><i class="fa fa-heart-o"></i></a>
         <a href="/cart" class="cart-icon"><i class="fa fa-shopping-cart"></i><span>6</span></a>
 
