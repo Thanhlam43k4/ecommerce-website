@@ -11,13 +11,14 @@ const axios = require('axios');
 const categoryModel = require('../models/category.models.js'); // Điều chỉnh đường dẫn nếu cần
 const userModel = require('../models/user.model.js')
 const authMiddleware = require("../middlewares/authenticate");
+const Wishlist = require('../models/whislist.model.js');
 const PORT = 5000
-
+const reviewController = require("../controllers/reviewController.js")
 
 
 router.get('/', authMiddleware, async (req, res) => {
   const errorMessage = req.query.errorMessage || null;
-
+  console.log(req.user)
   try {
     const response = await fetch(`http://localhost:${PORT}/api/products`);
     const products = await response.json();
@@ -41,20 +42,23 @@ router.get('/cart', authMiddleware, async (req, res) => {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
   }
   try {
-    // Gọi API để lấy dữ liệu giỏ hàng của user
 
-    const response = await axios.get(`http://localhost:${PORT}/api/cart/${req.user.userId}`);
-    const cartItems = response.data;
+    // Lấy userId từ req.user
+    const userId = req.user.userId; // Tùy theo cấu trúc của user
 
+    // Gọi API để lấy dữ liệu giỏ hàng với userId trong header
+    const response = await axios.get(`http://localhost:${PORT}/api/cart?userId=${userId}`);
+
+
+    const cartItems = response.data.cartItems;
     console.log(cartItems);
-
     res.render('cart', { user: req.user, cartItems });
 
   } catch (error) {
     console.error(error);
     res.render('cart', { user: req.user, cartItems: [], errorMessage: 'Failed to load cart items' });
   }
-})
+});
 router.get('/category/:categoryId', authMiddleware, async (req, res) => {
   const { categoryId } = req.params;
 
@@ -91,6 +95,8 @@ router.get('/cart/checkout', authMiddleware, async (req, res) => {
 router.get('/product/:productId', authMiddleware, async (req, res) => {
   try {
     const productId = req.params.productId;
+
+    // Gọi API lấy thông tin sản phẩm
     const response = await fetch(`http://localhost:${PORT}/api/products/${productId}`);
     const product = await response.json();
 
@@ -98,12 +104,27 @@ router.get('/product/:productId', authMiddleware, async (req, res) => {
       throw new Error(product.message || "Không tìm thấy sản phẩm");
     }
 
-    res.render('product_info', { user: req.user, product,reviews : null});
+    // Lấy reviews từ hàm getReviewsByProductId
+    const reviews = await reviewController.getReviewsByProduct(productId);
+
+    // Render ra view với sản phẩm và reviews
+    res.render('product_info', {
+      user: req.user,
+      product,
+      reviews
+    });
+
   } catch (error) {
     console.error("Lỗi khi lấy thông tin sản phẩm:", error.message);
-    res.render('product_info', { user: req.user, product: null,reviews : null, errorMessage: error.message });
+    res.render('product_info', {
+      user: req.user,
+      product: null,
+      reviews: null,
+      errorMessage: error.message
+    });
   }
-})
+});
+
 router.get('/store', authMiddleware, async (req, res) => {
   if (!req.user) {
 
@@ -118,19 +139,32 @@ router.get('/store', authMiddleware, async (req, res) => {
   }
 })
 router.get('/store/editproducts', authMiddleware, async (req, res) => {
-
-  const products = await userModel.getProductsBySellerId(req.user.userId)
-
-  res.render('editproducts', { user: req.user, products: products })
-})
+  try {
+    const products = await userModel.getProductsBySellerId(req.user.userId);
+    res.render('editproducts', { user: req.user, products: products });
+  } catch (error) {
+    console.error('Error fetching products:', error);
+    res.status(500).render('error', {
+      message: 'Failed to load products. Please try again later.',
+      error: error
+    });
+  }
+});
 router.get('/whistlist', authMiddleware, async (req, res) => {
   if (!req.user) {
-
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+  }
 
-  } else {
-    const products = await userModel.getProductsBySellerId(req.user.userId)
-    res.render('whistlist', { products: products, user: req.user })
+  try {
+    const products = await Wishlist.getWishlistByUserId(req.user.userId);
+    console.log(products);
+    res.render('whistlist', { products: products, user: req.user });
+  } catch (error) {
+    console.error('Error fetching wishlist:', error);
+    res.status(500).render('error', {
+      message: 'Failed to load wishlist. Please try again later.',
+      error: error
+    });
   }
 })
 

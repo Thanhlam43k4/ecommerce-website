@@ -33,7 +33,19 @@ const Wishlist = {
     } catch (error) {
       throw error;
     }
-  }
+  },
+  // Kiểm tra sản phẩm đã tồn tại trong wishlist chưa
+  isProductInWhistlist: (userId, productId) => {
+    return new Promise((resolve, reject) => {
+      const sql = `SELECT COUNT(*) AS count 
+                     FROM wishlist 
+                     WHERE user_id = ? AND product_id = ?`;
+      db.query(sql, [userId, productId], (err, results) => {
+        if (err) return reject(err);
+        resolve(results[0].count > 0); // Trả về true nếu đã tồn tại
+      });
+    });
+  },
 };
 
 module.exports = Wishlist;

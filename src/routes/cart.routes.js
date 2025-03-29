@@ -1,16 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const cart = require('../models/cart.models.js');
+const authenticate = require("../middlewares/authenticate");
 
-router.get('/:userId', async (req, res) => {
-  try {
-    const cartItems = await cart.getCartByUserId(req.params.userId);
-    res.json(cartItems);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-});
+const cartController = require('../controllers/cartController.js');
 
+// Lấy danh sách sản phẩm trong giỏ hàng
+router.get('/',authenticate, cartController.getCartByUserId);
 
+// Thêm sản phẩm vào giỏ hàng
+router.post('/add',authenticate, cartController.addToCart);
+
+// Xóa sản phẩm khỏi giỏ hàng
+router.delete('/remove',authenticate ,cartController.removeFromCart);
+
+// Xóa toàn bộ giỏ hàng
+router.delete('/clear',authenticate, cartController.clearCart);
 
 module.exports = router;
