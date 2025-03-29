@@ -12,7 +12,16 @@ const review = {
       throw error;
     }
   },
-
+  // Lấy đánh giá theo Product ID
+  getReviewByProductId: async (productId) => {
+    const sql = "SELECT * FROM reviews WHERE product_id = ?";
+    try {
+      const [rows] = await db.promise().execute(sql, [productId]);
+      return rows;
+    } catch (error) {
+      throw error;
+    }
+  },
   // Lấy đánh giá theo ID
   getReviewById: async (id) => {
     const sql = "SELECT * FROM reviews WHERE id = ?";

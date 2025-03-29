@@ -1,4 +1,4 @@
-const Review = require('../models/review.models')
+const Review = require('../models/cart.models')
 
 
 const reviewController = {
@@ -32,17 +32,13 @@ const reviewController = {
 
   // GET /api/reviews/:productId - get Review 
 
-  getReviewsByProduct: async (req, res) => {
+  getReviewsByProduct: async (productId) => {
     try {
-
-      const productId = req.params.productId;
-
-      const reviews = await Review.getByProductId(productId);
-
-      return res.status(200).json({ reviews });
-    }catch(error) {
-      console.error("Error Fetching reviews: ",error);
-      return res.status(500).json({message : "Failed to fetch reviews."});
+      const reviews = await Review.getCartByProductId(productId);
+      console.log(reviews)
+      return reviews;
+    } catch (error) {
+      throw error;
     }
   },
 

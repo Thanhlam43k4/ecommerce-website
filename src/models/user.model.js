@@ -21,7 +21,6 @@ const User = {
   findByEmail: async (email) => {
     try {
       const [rows] = await db.promise().execute("SELECT * FROM users WHERE email = ?", [email]);
-      console.log("Finding user....", rows, email);
       return rows.length > 0 ? rows[0] : null;
     } catch (err) {
       throw err;
