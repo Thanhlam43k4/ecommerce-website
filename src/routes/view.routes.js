@@ -180,7 +180,7 @@ router.get('/search', authMiddleware, async (req, res) => {
     const products = await response.json();
 
     if (!Array.isArray(products) || products.length === 0) {
-      return res.render('whistlist', {
+      return res.render('search_result', {
         products: [],
         user: req.user,
         errorMessage: 'Không tìm thấy sản phẩm nào',
@@ -192,14 +192,14 @@ router.get('/search', authMiddleware, async (req, res) => {
       return res.redirect(`/product/${products[0].id}`); // Sử dụng 'id' thay vì 'productId'
     }
 
-    res.render('whistlist', {
+    res.render('search_result', {
       products,
       user: req.user,
       searchQuery,
     });
   } catch (error) {
     console.error("Lỗi khi tìm kiếm sản phẩm:", error);
-    res.render('whistlist', {
+    res.render('search_result', {
       products: [],
       user: req.user,
       errorMessage: 'Lỗi khi tìm kiếm sản phẩm',
