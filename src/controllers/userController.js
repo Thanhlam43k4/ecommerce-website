@@ -67,4 +67,15 @@ const updateUserInfo = async (req, res) => {
   }
 };
 
-module.exports = {getMe,getUserById,updateUserInfo};
+// Endpoint tìm kiếm user theo số điện thoại
+const searchUsersByPhone = async (req, res) => {
+  const searchPhone = req.query.phone || '';
+  try {
+    const users = await User.searchByPhone(searchPhone);
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+module.exports = {getMe,getUserById,updateUserInfo,searchUsersByPhone};

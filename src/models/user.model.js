@@ -18,6 +18,22 @@ const User = {
     }
   },
 
+  searchByPhone: async (phone) => {
+    try {
+      let sql = 'SELECT * FROM users';
+      let params = [];
+      if (phone) {
+        sql += ' WHERE phone LIKE ?';
+        params.push(`%${phone}%`);
+      }
+      const [users] = await db.promise().query(sql, params);
+      return users;
+    } catch (error) {
+      console.error('Error searching users by phone:', error);
+      throw error;
+    }
+  },
+
   findByEmail: async (email) => {
     try {
       const [rows] = await db.promise().execute("SELECT * FROM users WHERE email = ?", [email]);

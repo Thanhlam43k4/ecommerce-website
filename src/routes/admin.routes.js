@@ -5,6 +5,8 @@ const authorizeAdmin = require("../middlewares/authorizeAdmin"); // Middleware n
 
 const router = express.Router();
 
+
+
 // Lấy danh sách user (chỉ admin mới có quyền truy cập)
 router.get("/user", authenticate, authorizeAdmin, adminController.getAllUsers);
 

@@ -9,6 +9,9 @@ const router =  express.Router();
 router.get("/me",getMe);
 
 
+//Endpoint tìm kiếm user theo số điện thoại
+// router.get('admin/searchPhone', searchUsersByPhone);
+
 // Route.login 
 
 router.get("/:id",getUserById);

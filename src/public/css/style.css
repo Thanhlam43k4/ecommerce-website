@@ -9,12 +9,16 @@ a {
     text-decoration: none;
 }
 
+
 body {
+    height: 100%;
     font-family: Arial, sans-serif;
     margin: 0;
     overflow-y: scroll;
+    
     /* Đảm bảo cuộn được */
-
+    position: relative;
+    
 }
 
 body::-webkit-scrollbar {
@@ -22,9 +26,36 @@ body::-webkit-scrollbar {
     /* Chrome, Safari, Edge */
 }
 
+
+/* Wrapper chính cho layout */
+.page-wrapper {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* Chiều cao tối thiểu bằng viewport */
+}
+
+/* Nội dung chính */
+.content {
+    flex: 1 0 auto; /* Mở rộng để đẩy footer xuống nếu cần */
+}
+
+/* Footer */
+footer {
+    flex-shrink: 0; /* Giữ nguyên kích thước footer */
+}
+
+
 :root {
     --black: #000;
     --primaryColor: #ff3368;
+}
+
+footer {
+   
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    
 }
 
 .navbar-nav {

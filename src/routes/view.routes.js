@@ -175,17 +175,51 @@ router.get('/search', authMiddleware, async (req, res) => {
 });
 
 //test FE
-router.get('/profile', authMiddleware, async (req, res) => {
+router.get('/admin', authMiddleware, async (req, res) => {
   if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
-  } else {
-    // Dữ liệu users
-    // Render template userprofile với dữ liệu users
-    res.render('userprofile', {
-      user: req.user // Truyền thông tin user để dùng trong header
+  }
+
+  const type = req.query.type || 'users'; // Mặc định là users
+  const searchPhone = req.query.phone || ''; // Tìm kiếm theo số điện thoại (cho users)
+  const searchQuery = req.query.q || ''; // Tìm kiếm chung (cho products/orders)
+
+  try {
+    let data = [];
+    if (type === 'users') {
+      const response = await fetch(`http://localhost:${PORT}/api/users/search?phone=${encodeURIComponent(searchPhone)}`);
+      data = await response.json();
+    } else if (type === 'products') {
+      const response = await fetch(`http://localhost:${PORT}/api/products/search?q=${encodeURIComponent(searchQuery)}`);
+      data = await response.json();
+    } else if (type === 'orders') {
+      // Giả sử có API tìm kiếm orders, thay đổi theo thực tế
+      const response = await fetch(`http://localhost:${PORT}/api/orders/search?q=${encodeURIComponent(searchQuery)}`);
+      data = await response.json();
+    }
+
+    res.render('admin', {
+      data: data, // Truyền dữ liệu tương ứng
+      type: type, // Truyền type để template biết hiển thị gì
+      user: req.user,
+      searchPhone: searchPhone,
+      searchQuery: searchQuery
+    });
+  } catch (error) {
+    console.error(`Error fetching ${type}:`, error);
+    res.render('admin', {
+      data: [],
+      type: type,
+      user: req.user,
+      searchPhone: searchPhone,
+      searchQuery: searchQuery,
+      errorMessage: `Lỗi khi tải danh sách ${type}`
     });
   }
 });
+
+
+
 router.post('/profile', authMiddleware, async (req, res) => {
   try {
     const userId = req.user.userId;
