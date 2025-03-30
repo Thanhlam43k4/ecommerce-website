@@ -66,6 +66,15 @@ const Product = {
       throw err;
     }
   },
+  getCategories: async() => {
+    const sql = "SELECT id, name FROM categories";
+    try {
+      const[categories] = await db.promise().query(sql);
+      return categories
+    } catch (err) {
+      throw err;
+    }
+  },
 
    // Xóa sản phẩm theo userId và productId
    deleteByUserAndProductId: async (userId, productId) => {

@@ -47,6 +47,22 @@ const review = {
     }
   },
 
+  // Get review by productId
+  getByProductId: async (productId) => {
+    const sql = `
+    SELECT product_id, buyer_id, rating, comment, created_at 
+    FROM reviews 
+    WHERE product_id = ? 
+    ORDER BY created_at DESC
+  `;
+    try {
+      const [rows] = await db.promise().execute(sql, [productId]);
+      return rows;
+    } catch (err) {
+      throw err;
+    }
+  },
+
   // Cập nhật đánh giá
   updateReview: async (id, rating, comment) => {
     const sql = "UPDATE reviews SET rating = ?, comment = ? WHERE id = ?";
