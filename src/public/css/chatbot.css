@@ -54,3 +54,20 @@
   border: none;
   border-top: 1px solid #ddd;
 }
+
+#chatbot-messages button {
+  display: inline-block;
+  margin: 5px 5px 0 0;
+  padding: 6px 10px;
+  background: transparent;
+  color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#chatbot-messages button:hover {
+  background: #95c8ff;
+  color: white;
+}

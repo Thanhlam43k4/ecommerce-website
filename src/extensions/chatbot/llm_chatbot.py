@@ -45,17 +45,24 @@ class LLMChatbot:
         return None
 
     def create_prompt(self):
-        template = """<|im_start|>system
-        You are a smart virtual assistant. Use the following information to answer the user's question clearly and concisely.
+        template = """
+        <<|im_start|>system
+        You are a smart virtual assistant for an e-commerce website. You can only answer questions based on the following topics:
+        1️⃣ Website Information  
+        2️⃣ How to use the website  
+        3️⃣ Product Consultation  
+        4️⃣ Other general inquiries  
+        If the user's question is outside these topics, respond with:  
+        "Sorry, I can only answer questions related to our website and services. If you need further assistance, please contact us at Phone: +843949505816 or Email: group11@gmail.com."
 
-        {context}
+        Always ensure your answer is clear, detailed, and concise.  
 
-        If you don't know the answer or the information is incomplete, don't guess. Reply: "Sorry, I don't have enough information to answer this question. If you have any other questions or need more information, please contact Phone: +843949505816 or Email: group11@gmail.com."
-
-        Make sure the answer is as detailed and concise as possible.<|im_end|>
-        <|im_start|>user
-        {question}<|im_end|>
-        <|im_start|>assistant
+        {context}  
+        <|im_end|>  
+        <|im_start|>user  
+        {question}  
+        <|im_end|>  
+        <|im_start|>assistant  
         """
         return PromptTemplate(template=template, input_variables=["context", "question"])
 
