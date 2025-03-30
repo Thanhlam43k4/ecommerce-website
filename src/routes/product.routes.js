@@ -14,11 +14,11 @@ router.get('/categories', productController.getAllCategories);
 
 router.get('/:id',productController.getProductById);
 
-router.post('/',authenticate,authorizeSeller,productController.createProduct);
+router.post('/',authenticate,productController.createProduct);
 
-router.put('/:id',authenticate,authorizeSeller,productController.updateProduct);
+router.put('/:id',authenticate,productController.updateProduct);
 
-router.delete('/:id',authenticate,authorizeSeller,productController.deleteProduct);
+router.delete('/:id',authenticate,productController.deleteProduct);
 
 router.get('/category/:categoryId', productController.getProductsByCategory);
 

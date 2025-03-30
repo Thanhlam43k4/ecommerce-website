@@ -74,6 +74,33 @@ const Product = {
     } catch (err) {
       throw err;
     }
+  },
+
+   // Xóa sản phẩm theo userId và productId
+   deleteByUserAndProductId: async (userId, productId) => {
+    const sql = "DELETE FROM products WHERE seller_id = ? AND id = ?";
+    try {
+      const [result] = await db.promise().execute(sql, [userId, productId]);
+      return result.affectedRows;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  // search
+  searchByQuery: async (searchQuery) => {
+    const sql = `
+      SELECT * FROM products 
+      WHERE name LIKE ? OR description LIKE ?
+    `;
+    const searchTerm = `%${searchQuery}%`; // Tìm kiếm gần đúng
+    try {
+      const [products] = await db.promise().execute(sql, [searchTerm, searchTerm]);
+      return products;
+    } catch (error) {
+      console.error('Error searching products:', error);
+      throw error;
+    }
   }
 }
 

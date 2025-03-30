@@ -1,7 +1,7 @@
-const Wishlist = require("../models/wishlist.model");
+const Wishlist = require("../models/whislist.model");
 
 // Lấy danh sách wishlist theo userId
-const getWishlistByUserId = async (req, res) => {
+const getWhistlistByUserId = async (req, res) => {
   try {
     const wishlist = await Wishlist.getWishlistByUserId(req.user.id);
     res.status(200).json(wishlist);
@@ -9,31 +9,35 @@ const getWishlistByUserId = async (req, res) => {
     res.status(500).json({ msg: "Server Error", error: error.message });
   }
 };
-
 // Thêm sản phẩm vào wishlist
-const addToWishlist = async (req, res) => {
+// Thêm sản phẩm vào wishlist với kiểm tra
+const addToWhistlist = async (req, res) => {
   try {
     const { productId } = req.body;
     if (!productId) {
       return res.status(400).json({ msg: "Product ID is required" });
     }
 
-    await Wishlist.addToWishlist(req.user.id, productId);
+    // Kiểm tra nếu sản phẩm đã tồn tại
+    const isExist = await Wishlist.isProductInWhistlist(req.user.userId, productId);
+    if (isExist) {
+      return res.status(400).json({ msg: "Product already in whistlist!!" });
+    }
+    await Wishlist.addToWishlist(req.user.userId, productId);
     res.status(201).json({ msg: "Added to wishlist successfully!" });
   } catch (error) {
     res.status(500).json({ msg: "Server Error", error: error.message });
   }
 };
-
 // Xóa sản phẩm khỏi wishlist
-const removeFromWishlist = async (req, res) => {
+const removeFromWhistlist = async (req, res) => {
   try {
     const { productId } = req.body;
     if (!productId) {
       return res.status(400).json({ msg: "Product ID is required" });
     }
 
-    await Wishlist.removeFromWishlist(req.user.id, productId);
+    await Wishlist.removeFromWishlist(req.user.userId, productId);
     res.status(200).json({ msg: "Removed from wishlist successfully!" });
   } catch (error) {
     res.status(500).json({ msg: "Server Error", error: error.message });
@@ -41,7 +45,7 @@ const removeFromWishlist = async (req, res) => {
 };
 
 module.exports = {
-  getWishlistByUserId,
-  addToWishlist,
-  removeFromWishlist,
+  getWhistlistByUserId,
+  addToWhistlist,
+  removeFromWhistlist,
 };

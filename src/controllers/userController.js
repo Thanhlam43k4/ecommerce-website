@@ -39,7 +39,43 @@ const getUserById = async(req,res) =>{
 
 }
 
+const updateUserInfo = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { username, phone, address, city, postalCode } = req.body;
 
+    if (!username && !phone && !address && !city && !postalCode) {
+      return res.status(400).json({ msg: "No fields to update" });
+    }
 
+    const updatedUser = await User.updateUser(userId, {
+      username,
+      phone,
+      address,
+      city,
+      postalCode,
+    });
 
-module.exports = {getMe,getUserById};
+    if (updatedUser.affectedRows === 0) {
+      return res.status(404).json({ msg: "User not found" });
+    }
+
+    res.status(200).json({ msg: "User updated successfully" });
+
+  } catch (error) {
+    res.status(500).json({ msg: "Server Error!!", error: error.message });
+  }
+};
+
+// Endpoint tìm kiếm user theo số điện thoại
+const searchUsersByPhone = async (req, res) => {
+  const searchPhone = req.query.phone || '';
+  try {
+    const users = await User.searchByPhone(searchPhone);
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+module.exports = {getMe,getUserById,updateUserInfo,searchUsersByPhone};

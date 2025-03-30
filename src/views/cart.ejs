@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cart</title>
+    <title>Giỏ Hàng</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
@@ -16,106 +16,96 @@
     <header><%- include('partials/header') %></header>
 
     <div class="container my-5">
-        <!-- Breadcrumb -->
+        <h2 class="mb-4">🛒 Giỏ Hàng Của Bạn</h2>
 
-        <!-- Cart Table -->
+        <!-- Bảng Giỏ Hàng -->
         <div class="table-responsive">
             <table class="table table-bordered">
                 <thead class="bg-light">
                     <tr>
-                        <th>Product</th>
-                        <th>Price</th>
-                        <th>Quantity</th>
-                        <th>Subtotal</th>
+                        <th>Sản Phẩm</th>
+                        <th>Giá</th>
+                        <th>Số Lượng</th>
+                        <th>Thành Tiền</th>
+                        <th>Hành Động</th> <!-- 🆕 Thêm cột Hành Động -->
                     </tr>
                 </thead>
                 <tbody>
-                    <% if (!cartItems || cartItems.length===0) { %>
-                        <tr>
-                            <td colspan="4" class="text-center text-muted">Giỏ hàng chưa có sản phẩm nào.</td>
-                        </tr>
-                        <% } else { let totalAmount=0; cartItems.forEach(item=> {
-                            let subtotal = item.price * item.quantity;
-                            totalAmount += subtotal;
-                            %>
-                            <tr>
-                                <td>
-                                    <img src="<%= item.image_urls %>" alt="product" class="me-2"
-                                        style="width: 50px;">
-                                    <%= item.name %>
-                                </td>
-                                <td><%= item.price %>
-                                </td>
-                                <td>
-                                    <select class="form-select w-auto d-inline"
-                                        onchange="updateSubtotal(this, '<%= item.price %>')">
-                                        <% for (let i=0; i <=10; i++) { %>
-                                            <option value="<%= i %>" <%=i=== item.quantity ? 'selected' : '' %>><%= i %>
-                                            </option>
-                                            <% } %>
-                                    </select>
-                                </td>
-                                <td class="subtotal">$<%= subtotal.toFixed(2) %>
-                                </td>
-                            </tr>
-                            <% }) } %>
-                </tbody>
+                    <% let totalAmount=0; %> <!-- Đặt ngoài block if -->
 
+                        <% if (!cartItems || cartItems.length===0) { %>
+                            <tr>
+                                <td colspan="5" class="text-center text-muted">🛑 Giỏ hàng chưa có sản phẩm nào.</td>
+                            </tr>
+                            <% } else { cartItems.forEach(item=> {
+                                let price = parseFloat(item.price);
+                                let subtotal = price * item.quantity;
+                                totalAmount += subtotal;
+                                %>
+                                <tr id="item-<%= item.id %>"> <!-- Gán id cho từng sản phẩm -->
+                                    <td>
+                                        <img src="<%= item.image_urls %>" alt="product" class="me-2"
+                                            style="width: 50px;">
+                                        <%= item.name %>
+                                    </td>
+                                    <td>$<%= price.toFixed(2) %>
+                                    </td>
+                                    <td>
+                                        <select class="form-select w-auto d-inline"
+                                            onchange="updateSubtotal(this, '<%= item.price %>', '<%= item.id %>')">
+                                            <% for (let i=1; i <=10; i++) { %>
+                                                <option value="<%= i %>" <%=i===item.quantity ? 'selected' : '' %>><%= i
+                                                        %>
+                                                </option>
+                                                <% } %>
+                                        </select>
+                                    </td>
+                                    <td class="subtotal">$<%= subtotal.toFixed(2) %>
+                                    </td>
+                                    <td>
+                                        <!-- Nút Xóa -->
+                                        <button class="btn btn-danger btn-sm" onclick="removeItem('<%= item.id %>')">
+                                            🗑️ Xóa
+                                        </button>
+                                    </td>
+                                </tr>
+                                <% }) } %>
+                </tbody>
             </table>
         </div>
 
-        <!-- Buttons -->
-        <div class="d-flex justify-content-between">
-            <a href="/" class="btn btn-outline-secondary">Return To Shop</a>
-            <button class="btn btn-outline-dark">Update Cart</button>
+        <!-- Nút và Thông Tin -->
+        <div class="d-flex justify-content-between my-3">
+            <a href="/" class="btn btn-outline-secondary">🔙 Quay Lại Cửa Hàng</a>
+            <button class="btn btn-outline-dark">♻️ Cập Nhật Giỏ Hàng</button>
         </div>
 
-        <!-- Coupon & Cart Total -->
+        <!-- Tổng Tiền và Checkout -->
         <div class="row mt-4">
             <div class="col-md-6">
                 <div class="input-group">
-                    <input type="text" class="form-control" placeholder="Coupon Code">
-                    <button class="btn btn-danger">Apply Coupon</button>
+                    <input type="text" class="form-control" placeholder="🎟️ Mã Giảm Giá">
+                    <button class="btn btn-danger">Áp Dụng</button>
                 </div>
             </div>
             <div class="col-md-6">
                 <% if (cartItems && cartItems.length> 0) { %>
-                    <p>Subtotal: <span id="total">$100</span></p>
-                    <p>Shipping: Free</p>
+                    <p><strong>Tạm tính: </strong><span id="total">$<%= totalAmount.toFixed(2) %></span></p>
+                    <p><strong>Vận chuyển:</strong> Miễn phí</p>
                     <hr>
-                    <p><strong>Total: <span id="grand-total">$100</span></strong></p>
-                    <form action="cart/checkout" method="GET">
-                        <button type="submit" class="btn btn-danger w-100">Proceed to Checkout</button>
+                    <p><strong>Tổng cộng: <span id="grand-total">$<%= totalAmount.toFixed(2) %></span></strong></p>
+                    <form action="/cart/checkout" method="GET">
+                        <button type="submit" class="btn btn-danger w-100">🛒 Thanh Toán</button>
                     </form>
                     <% } else { %>
-                        <p class="text-muted">Chưa có sản phẩm trong giỏ hàng.</p>
+                        <p class="text-muted">🛑 Chưa có sản phẩm trong giỏ hàng.</p>
                         <% } %>
             </div>
         </div>
     </div>
 
+    <script src="/js/cart.js"></script>
 
-
-    <script>
-
-
-        function updateSubtotal(selectElement, price) {
-            let quantity = parseInt(selectElement.value);
-            let subtotalCell = selectElement.closest("tr").querySelector(".subtotal");
-            let newSubtotal = quantity * price;
-            subtotalCell.innerText = `$${newSubtotal.toFixed(2)}`;
-            updateTotal();
-        }
-
-        function updateTotal() {
-            let total = 0;
-            document.querySelectorAll(".subtotal").forEach(cell => {
-                total += parseFloat(cell.innerText.replace("$", ""));
-            });
-            document.getElementById("total").innerText = `$${total.toFixed(2)}`;
-            document.getElementById("grand-total").innerText = `$${total.toFixed(2)}`;
-        }
-    </script>
 
     <footer><%- include('partials/footer') %></footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
