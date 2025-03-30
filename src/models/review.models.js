@@ -1,7 +1,7 @@
 // ReviewModel.js (Node.js Model)
 const db = require('../config/db');
 
-const review = {
+const Review = {
   // Lấy tất cả các đánh giá
   getAllReviews: async () => {
     const sql = "SELECT * FROM reviews";
@@ -37,29 +37,13 @@ const review = {
   },
 
   // Thêm đánh giá mới
-  addReview: async (productId, buyerId, rating, comment) => {
+  create: async (productId, buyerId, rating, comment) => {
     const sql = "INSERT INTO reviews (product_id, buyer_id, rating, comment) VALUES (?, ?, ?, ?)";
     try {
       const [result] = await db.promise().execute(sql, [productId, buyerId, rating, comment]);
       return result.affectedRows > 0;
     } catch (error) {
       throw error;
-    }
-  },
-
-  // Get review by productId
-  getByProductId: async (productId) => {
-    const sql = `
-    SELECT product_id, buyer_id, rating, comment, created_at 
-    FROM reviews 
-    WHERE product_id = ? 
-    ORDER BY created_at DESC
-  `;
-    try {
-      const [rows] = await db.promise().execute(sql, [productId]);
-      return rows;
-    } catch (err) {
-      throw err;
     }
   },
 
@@ -86,4 +70,4 @@ const review = {
   }
 };
 
-module.exports = review;
+module.exports = Review;
