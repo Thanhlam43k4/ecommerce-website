@@ -30,16 +30,6 @@ const reviewController = {
     }
   },
 
-  // GET/api/reviews/ - get all reviews (for chatbot)
-  getAllReviews: async (req, res) => {
-    try {
-      const reviews = await Review.getAll();
-      res.status(200).json(reviews);
-    } catch (err) {
-      res.status(500).json({ message: "Server Error", error: err.message });
-    }
-  },
-
   // GET /api/reviews/:productId - get Review 
 
   getReviewsByProduct: async (req, res) => {

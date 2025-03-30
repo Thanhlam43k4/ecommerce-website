@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-const db = require('../config/db');
-const { getAllReviews } = require('../controllers/reviewController');
-=======
 const db = require('../config/db')
->>>>>>> main
 
 const Review = {
 
@@ -20,25 +15,6 @@ const Review = {
     }
   },
 
-<<<<<<< HEAD
-  //Get all reviews
-  getAll: async () => {
-    const sql = `
-      SELECT * 
-      FROM reviews
-      ORDER BY product_id, created_at DESC
-    `;
-    try {
-      const [reviews] = await db.promise().execute(sql);
-      return reviews
-    } catch(err) {
-      throw err;
-    }
-  },
-
-=======
->>>>>>> main
-
   // Get review by productId
   getByProductId: async (productId) => {
     const sql = `
@@ -48,7 +24,7 @@ const Review = {
     ORDER BY created_at DESC
   `;
     try {
-      const [rows] = await db.promise().execute(sql, productId);
+      const [rows] = await db.promise().execute(sql, [productId]);
       return rows;
     } catch (err) {
       throw err;
