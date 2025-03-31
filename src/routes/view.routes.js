@@ -167,6 +167,52 @@ router.get('/store/editproducts', authMiddleware, async (req, res) => {
     });
   }
 });
+// add product
+router.post('/store/addproduct', authMiddleware, async (req, res) => {
+  try {
+    // Lấy dữ liệu từ form
+    const { image_urls, name, price, stock, description, category_id } = req.body;
+    
+    // Kiểm tra dữ liệu đầu vào
+    if (!name || !price || !stock || !category_id) {
+      throw new Error('Please fill in all required fields (Name, Price, Quantity, Category)');
+    }
+
+    // Tạo object productData
+    const productData = {
+      image_urls: image_urls || '', 
+      name,
+      description: description || '', 
+      price: parseFloat(price),
+      stock: parseInt(stock),
+      category_id: parseInt(category_id),
+      seller_id: req.user.userId, // Lấy từ req.user (authMiddleware)
+    };
+
+    // Lưu sản phẩm vào database
+    const productId = await Product.create(productData);
+
+    // Lấy lại danh sách sản phẩm mới nhất
+    const products = await userModel.getProductsBySellerId(req.user.userId);
+
+    // Render lại trang editproducts với danh sách sản phẩm cập nhật
+    res.render('editproducts', {
+      user: req.user,
+      products: products,
+      successMessage: 'Product added successfully!'
+    });
+  } catch (error) {
+    console.error('Error adding product:', error);
+
+    // Nếu có lỗi, render lại trang với thông báo lỗi
+    const products = await userModel.getProductsBySellerId(req.user.userId);
+    res.render('editproducts', {
+      user: req.user,
+      products: products,
+      errorMessage: error.message || 'Failed to add product. Please try again.'
+    });
+  }
+});
 router.get('/whistlist', authMiddleware, async (req, res) => {
   if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
