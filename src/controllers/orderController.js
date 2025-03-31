@@ -1,6 +1,6 @@
 const Order = require('../models/order.models')
 const Product = require('../models/product.model')
-const  normalizeCartItems = require('../middlewares/normalizeCart')
+const normalizeCartItems = require('../middlewares/normalizeCart')
 const orderController = {
 
 
@@ -8,10 +8,15 @@ const orderController = {
   getOrders: async (req, res) => {
     try {
       const buyer_id = req.user.userId;
-      const orders = await Order.getOrderbyBuyer(buyer_id);
-      return res.status(200).json(orders);
+      const orders = await Order.getOrdersByBuyer(buyer_id);
+
+      if (!orders || orders.length === 0) {
+        return res.status(204).send(); // Không trả về nội dung nếu không có đơn hàng nào
+      }
+
+      return orders;
     } catch (err) {
-      console.log("Error fetching orders by buyers:", err);
+      console.error("Error fetching orders by buyers:", err);
       return res.status(500).json({ message: "Unable to fetch orders. Please try again later." });
     }
   },

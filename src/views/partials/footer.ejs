@@ -28,7 +28,17 @@
         <hr class="bg-white">
         <p class="text-center">© Copyright Group11 2025. All rights reserved</p>
     </div>
-
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="toastNotification" class="toast align-items-center text-bg-success border-0" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" id="toastMessage">
+                    <!-- Message sẽ hiển thị ở đây -->
+                </div>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
     <!-- Chatbot Button -->
     <div id="chatbot-button" onclick="toggleChat()">
         💬 Chat
@@ -69,7 +79,7 @@
             try {
                 let response = await fetch(`http://localhost:8000/api/chatbot?question=${encodeURIComponent(message)}`);
                 let data = await response.json();
-                
+
                 let botReply = `<div><strong>Bot:</strong> ${data.response.replace(/\n/g, "<br>")}</div>`;
                 chatbox.innerHTML += botReply;
                 saveChatHistory();

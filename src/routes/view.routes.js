@@ -224,17 +224,16 @@ router.get('/search', authMiddleware, async (req, res) => {
     });
   }
 });
+
 router.get('/orders', authMiddleware, async (req, res) => {
   try {
     const orders = await orderController.getOrders(req, res); // Lấy danh sách đơn hàng
 
+    // console.log(orders);
     res.render('order', { orders, user: req.user }); // Render trang order.ejs với data
 
   } catch (error) {
-
     console.error("Error rendering orders page:", error);
-    
-    res.status(500).send("Something went wrong");
   }
 });
 //test FE
@@ -281,7 +280,17 @@ router.get('/admin', authMiddleware, async (req, res) => {
   }
 });
 
-
+router.get('/profile', authMiddleware, async (req, res) => {
+  if (!req.user) {
+    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+  } else {
+    // Dữ liệu users
+    // Render template userprofile với dữ liệu users
+    res.render('userprofile', {
+      user: req.user // Truyền thông tin user để dùng trong header
+    });
+  }
+});
 
 router.post('/profile', authMiddleware, async (req, res) => {
   try {

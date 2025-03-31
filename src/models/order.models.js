@@ -33,17 +33,14 @@ const Order = {
   },
   getOrdersByBuyer: async (buyer_id) => {
     try {
-      const [rows] = await db.execute("SELECT * FROM orders WHERE buyer_id = ?", [buyer_id]);
+      const [rows] = await db.promise().query("SELECT * FROM orders WHERE buyer_id = ?", [buyer_id]);
 
-      console.log("Fetched Orders:", rows);  // ✅ Kiểm tra kết quả truy vấn
-
-      return Array.isArray(rows) ? rows : [];  // ✅ Đảm bảo trả về một mảng
+      return rows.length > 0 ? rows : [];  // ✅ Trả về danh sách hoặc mảng rỗng nếu không có đơn hàng
     } catch (err) {
       console.error("Database error:", err);
-      return [];
+      return null;  // ✅ Trả về null nếu có lỗi
     }
   },
-
   // get Detail order by Id
   getOrderById: async (id) => {
     const sql = "SELECT * FROM orders WHERE id = ?";

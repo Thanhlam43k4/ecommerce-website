@@ -36,14 +36,14 @@
                     <% orders.forEach(order => { %>
                         <tr>
                             <td>#<%= order.id %></td>
-                            <td><%= order.customer_name %></td>
+                            <td><%= order.full_name %></td>
                             <td>
-                                <span class="badge bg-<%= order.status === 'Completed' ? 'success' : 'warning' %>">
-                                    <%= order.status %>
+                                <span class="badge bg-<%= order.status === 'Completed' ? 'warning' : 'success' %>">
+                                    Success
                                 </span>
                             </td>
-                            <td>$<%= order.total.toFixed(2) %></td>
-                            <td><%= new Date(order.order_date).toLocaleDateString() %></td>
+                            <td>$<%= order.total_price %></td>
+                            <td><%= new Date(order.created_at).toLocaleString() %></td>
                             <td>
                                 <a href="/order/<%= order.id %>" class="btn btn-primary btn-sm">View</a>
                                 <button class="btn btn-danger btn-sm cancel-order" data-id="<%= order.id %>">Cancel</button>
