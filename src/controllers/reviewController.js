@@ -1,4 +1,4 @@
-const Review = require('../models/cart.models')
+const Review = require('../models/review.models')
 
 
 const reviewController = {
@@ -34,7 +34,7 @@ const reviewController = {
 
   getReviewsByProduct: async (productId) => {
     try {
-      const reviews = await Review.getCartByProductId(productId);
+      const reviews = await Review.getReviewByProductId(productId);
       console.log(reviews)
       return reviews;
     } catch (error) {

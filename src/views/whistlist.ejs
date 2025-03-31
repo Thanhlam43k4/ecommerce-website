@@ -24,6 +24,7 @@
                         <th>Product</th>
                         <th>Price</th>
                         <th>Status</th>
+                        <th>Amount</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -60,7 +61,6 @@
                                 </div>
                             </td>
                             <td>
-                            <td>
 
                                 <% if (product.stock> 0) { %>
                                     <button class="btn btn-sm btn-primary me-2"
@@ -91,9 +91,6 @@
     </div>
 
     <footer><%- include('partials/footer') %></footer>
-
-
-
 
     <script src="/js/whistlist.js"></script>
 

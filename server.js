@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 const db = require("./src/config/db");
 const path = require("path");
+const session = require('express-session');
 const cookieParser = require("cookie-parser");
 const axios = require('axios');
 const passport = require('passport');
@@ -32,13 +33,17 @@ app.set("views", path.join(__dirname, "src/views"))
 app.use(cookieParser()); // Quan trọng để đọc cookie từ req.cookies
 app.set("view engine", "ejs");
 app.use(express.static(path.join(__dirname, "src/public")));
-
-
+app.use(session({
+  secret: 'your-secret-key', // Bạn có thể thay thế khóa bí mật này
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Nếu bạn dùng https, đặt `secure: true`
+}));
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/products", productRoutes);
-app.use("/api/orders", orderRoutes);
+app.use("/api/order", orderRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/whistlist",whistlistRoutes);

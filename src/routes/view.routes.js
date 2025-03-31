@@ -14,7 +14,7 @@ const authMiddleware = require("../middlewares/authenticate");
 const Wishlist = require('../models/whislist.model.js');
 const PORT = 5000
 const reviewController = require("../controllers/reviewController.js")
-
+const orderController = require("../controllers/orderController.js")
 
 router.get('/', authMiddleware, async (req, res) => {
   const errorMessage = req.query.errorMessage || null;
@@ -51,7 +51,7 @@ router.get('/cart', authMiddleware, async (req, res) => {
 
 
     const cartItems = response.data.cartItems;
-    console.log(cartItems);
+    req.session.cartItems = cartItems;
     res.render('cart', { user: req.user, cartItems });
 
   } catch (error) {
@@ -90,8 +90,25 @@ router.get('/category/:categoryId', authMiddleware, async (req, res) => {
   }
 })
 router.get('/cart/checkout', authMiddleware, async (req, res) => {
-  res.render('checkout', { user: req.user })
-})
+  if (!req.user) {
+    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+  }
+
+  // Lấy dữ liệu giỏ hàng từ session
+  const cartItems = req.session.cartItems || [];
+
+  if (cartItems.length === 0) {
+    return res.render('checkout', {
+      user: req.user,
+      cartItems: [],
+      errorMessage: 'Your cart is empty. Please add some items to your cart first.'
+    });
+  }
+
+  // Truyền dữ liệu giỏ hàng vào view checkout
+  res.render('checkout', { user: req.user, cartItems });
+});
+
 router.get('/product/:productId', authMiddleware, async (req, res) => {
   try {
     const productId = req.params.productId;
@@ -207,7 +224,19 @@ router.get('/search', authMiddleware, async (req, res) => {
     });
   }
 });
+router.get('/orders', authMiddleware, async (req, res) => {
+  try {
+    const orders = await orderController.getOrders(req, res); // Lấy danh sách đơn hàng
 
+    res.render('order', { orders, user: req.user }); // Render trang order.ejs với data
+
+  } catch (error) {
+
+    console.error("Error rendering orders page:", error);
+    
+    res.status(500).send("Something went wrong");
+  }
+});
 //test FE
 router.get('/profile', authMiddleware, async (req, res) => {
   if (!req.user) {

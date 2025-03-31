@@ -13,8 +13,26 @@ const review = {
     }
   },
   // Lấy đánh giá theo Product ID
+  // Lấy review theo productId (kèm thông tin user và product)
   getReviewByProductId: async (productId) => {
-    const sql = "SELECT * FROM reviews WHERE product_id = ?";
+    const sql = `
+    SELECT 
+      r.id AS review_id,
+      r.comment,
+      r.rating,
+      r.created_at,
+      u.id AS user_id,
+      u.username AS user_name,
+      u.email,
+      p.id AS product_id,
+      p.name AS product_name,
+      p.price,
+      p.description
+    FROM reviews r
+    JOIN users u ON r.buyer_id = u.id
+    JOIN products p ON r.product_id = p.id
+    WHERE r.product_id = ?
+  `;
     try {
       const [rows] = await db.promise().execute(sql, [productId]);
       return rows;
@@ -22,6 +40,7 @@ const review = {
       throw error;
     }
   },
+
   // Lấy đánh giá theo ID
   getReviewById: async (id) => {
     const sql = "SELECT * FROM reviews WHERE id = ?";

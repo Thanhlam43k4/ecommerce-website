@@ -14,7 +14,4 @@ router.get('/:id',authenticate,orderController.getOrderById);
 
 router.post('/',authenticate,orderController.createOrder);
 
-router.put('/:id',authenticate,authorizeAdmin,orderController.updateOrderStatus);
-
-
 module.exports = router;
