@@ -48,7 +48,7 @@ class APIClient:
                     reviews = []
 
                 review_text = "\n".join([
-                    f"- {review['buyer_id']}: {review['comment']} (⭐ {review['rating']})"
+                    f"- {review['user_id']}: {review['comment']} (⭐ {review['rating']})"
                     for review in reviews
                 ]) if reviews else "No reviews yet."
 
