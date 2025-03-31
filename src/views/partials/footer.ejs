@@ -43,17 +43,6 @@
         <div id="chatbot-messages"></div>
         <input type="text" id="chatbot-input" placeholder="Type a message..." onkeypress="sendMessage(event)">
     </div>
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 1055;">
-        <div id="toastNotification" class="toast align-items-center text-bg-success border-0" role="alert"
-            aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body" id="toastMessage">
-                    <!-- Nội dung thông báo -->
-                </div>
-                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
-            </div>
-        </div>
-    </div>
 </footer>
 
 
@@ -64,7 +53,7 @@
         chatbot.style.display = chatbot.style.display === "none" || chatbot.style.display === "" ? "block" : "none";
     }
 
-    function sendMessage(event) {
+    async function sendMessage(event) {
         if (event.key === "Enter") {
             let input = document.getElementById("chatbot-input");
             let message = input.value.trim();
@@ -77,27 +66,71 @@
             input.value = "";
             chatbox.scrollTop = chatbox.scrollHeight;
 
-            setTimeout(() => {
-                let botReply = `<div><strong>Bot:</strong> Xin chào! Tôi có thể giúp gì?</div>`;
+            try {
+                let response = await fetch(`http://localhost:8000/api/chatbot?question=${encodeURIComponent(message)}`);
+                let data = await response.json();
+                
+                let botReply = `<div><strong>Bot:</strong> ${data.response.replace(/\n/g, "<br>")}</div>`;
                 chatbox.innerHTML += botReply;
                 saveChatHistory();
                 chatbox.scrollTop = chatbox.scrollHeight;
-            }, 1000);
+            } catch (error) {
+                console.error("Chatbot API error:", error);
+                let errorMessage = `<div><strong>Bot:</strong> Sorry! I can't answer now!.</div>`;
+                chatbox.innerHTML += errorMessage;
+                chatbox.scrollTop = chatbox.scrollHeight;
+            }
         }
     }
 
     function saveChatHistory() {
         let chatbox = document.getElementById("chatbot-messages");
-        localStorage.setItem("chatHistory", chatbox.innerHTML);
+        sessionStorage.setItem("chatHistory", chatbox.innerHTML);
     }
 
     function loadChatHistory() {
         let chatbox = document.getElementById("chatbot-messages");
-        let history = localStorage.getItem("chatHistory");
+        let history = sessionStorage.getItem("chatHistory");
+
         if (history) {
             chatbox.innerHTML = history;
+        } else {
+            chatbox.innerHTML = `
+                <div><strong>Bot:</strong> Hello! How can I assist you today?</div>
+                <div>
+                    <button onclick="selectOption('info')">📌 Website Information</button>
+                    <button onclick="selectOption('usage')">📖 How to Use the Website</button>
+                    <button onclick="selectOption('advice')">🛒 Product Consultation</button>
+                    <button onclick="selectOption('others')">❓ Other Questions</button>
+                </div>
+            `;
         }
     }
+
+    function selectOption(option) {
+        let chatbox = document.getElementById("chatbot-messages");
+        let response = "";
+
+        switch (option) {
+            case 'info':
+                response = "Tk88 - UET Store is an e-commerce platform specializing in smart electronic products. It is also a marketplace where you can buy or sell various items.";
+                break;
+            case 'usage':
+                response = "Which part of the website would you like me to guide you through?";
+                break;
+            case 'advice':
+                response = "What product would you like me to recommend?";
+                break;
+            case 'others':
+                response = "You can ask me anything related to the website!";
+                break;
+        }
+
+        chatbox.innerHTML += `<div><strong>Bot:</strong> ${response}</div>`;
+        saveChatHistory();
+        chatbox.scrollTop = chatbox.scrollHeight;
+    }
+
 
     document.addEventListener("DOMContentLoaded", loadChatHistory);
 </script>

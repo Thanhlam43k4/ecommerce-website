@@ -19,6 +19,7 @@
   background: white;
   border-radius: 10px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
 }
 
 #chatbot-header {
@@ -41,6 +42,7 @@
 }
 
 #chatbot-messages {
+  color: black;
   padding: 10px;
   height: 200px;
   overflow-y: auto;
@@ -51,4 +53,21 @@
   padding: 10px;
   border: none;
   border-top: 1px solid #ddd;
+}
+
+#chatbot-messages button {
+  display: inline-block;
+  margin: 5px 5px 0 0;
+  padding: 6px 10px;
+  background: transparent;
+  color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+#chatbot-messages button:hover {
+  background: #95c8ff;
+  color: white;
 }

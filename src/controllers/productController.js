@@ -74,6 +74,21 @@ const productController = {
     }
   },
 
+  // Get /api/products/categories - Use for chatbot
+  getAllCategories: async (req, res) => {
+    try {
+        const categories = await Product.getCategories();        
+        const formattedCategories = categories.reduce((obj, category) => {
+            obj[category.id] = category.name;
+            return obj;
+        }, {});
+
+        res.status(200).json(formattedCategories);
+    } catch (err) {
+        res.status(500).json({ message: "Server error", error: err.message });
+    }
+  },
+
   // Xóa sản phẩm theo userId và productId
   deleteProduct: async (req, res) => {
     const { userId, productId } = req.params;
