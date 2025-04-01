@@ -319,4 +319,7 @@ router.post('/profile', authMiddleware, async (req, res) => {
     res.status(500).json({ msg: "Server Error!!", error: error.message });
   }
 });
+router.get('/errorPage', async(req,res) =>{
+  res.render('errorpage')
+})
 module.exports = router;
