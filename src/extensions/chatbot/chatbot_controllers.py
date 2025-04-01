@@ -4,7 +4,6 @@ from fastapi.responses import JSONResponse
 
 from llm_chatbot import LLMChatbot
 from chatbot_history_model import ChatbotHistory
-from api_client import APIClient
 
 class ChatbotController:
     def __init__(self):

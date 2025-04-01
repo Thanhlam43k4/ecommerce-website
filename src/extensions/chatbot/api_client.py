@@ -24,12 +24,6 @@ class APIClient:
 
     async def get_categories(self):
         return await self.fetch_api("products/categories")
-    
-    async def get_my_id(self):
-        me = await self.fetch_api("me")
-        if me:
-            return me['id']
-        return None
 
     async def update_vector_db_words(self, embedding_model):
         products = await self.get_products()
