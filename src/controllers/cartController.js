@@ -56,7 +56,9 @@ const removeFromCart = async (req, res) => {
     }
 
     await cart.removeFromCart(userId, productId);
+    
     res.status(200).json({ msg: "Product removed from cart successfully." });
+    
   } catch (error) {
     console.error('Error removing from cart:', error);
     res.status(500).json({ msg: "Server Error", error: error.message });

@@ -32,14 +32,25 @@ const reviewController = {
 
   // GET /api/reviews/:productId - get Review 
 
+  getReviewsByProductId: async (req, res) => {
+    try {
+      const {productId} = req.params;
+      const reviews = await Review.getReviewByProductId(productId);
+      return res.status(200).json(reviews);
+    } catch (error) {
+      console.error("Error fetching reviews: ", error);
+      return res.status(500).json({ message: "Failed to fetch reviews!!" });
+    }
+  },
+
+  // GET Reivew by Product without req, res
   getReviewsByProduct: async (productId) => {
     try {
       const reviews = await Review.getReviewByProductId(productId);
       console.log(reviews)
       return reviews;
     } catch (error) {
-      console.error("Error fetching reviews: ", error);
-      return res.status(500).json({ message: "Failed to fetch reviews!!" });
+      throw error;
     }
   },
 

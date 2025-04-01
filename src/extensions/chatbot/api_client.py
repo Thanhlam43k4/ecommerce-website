@@ -28,7 +28,7 @@ class APIClient:
     async def get_my_id(self):
         me = await self.fetch_api("me")
         if me:
-            return me['id']
+            return int(me['id'])
         return None
 
     async def update_vector_db_words(self, embedding_model):
@@ -48,7 +48,7 @@ class APIClient:
                     reviews = []
 
                 review_text = "\n".join([
-                    f"- {review['buyer_id']}: {review['comment']} (⭐ {review['rating']})"
+                    f"- {review['user_id']}: {review['comment']} (⭐ {review['rating']})"
                     for review in reviews
                 ]) if reviews else "No reviews yet."
 

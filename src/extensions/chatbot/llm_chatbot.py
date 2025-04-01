@@ -75,7 +75,7 @@ class LLMChatbot:
         if self.data_db:
             retrievers.append(self.data_db.as_retriever(search_kwargs={"k": 10}))
         if self.guide_db:
-            retrievers.append(self.guide_db.as_retriever(search_kwargs={"k": 4}))
+            retrievers.append(self.guide_db.as_retriever(search_kwargs={"k": 3}))
 
         if not retrievers:
             raise ValueError("No vector databases found. Please initialize at least one.")
@@ -96,3 +96,23 @@ class LLMChatbot:
         return self.clean_response(result)
 
 
+import asyncio
+
+def main():
+    chatbot = LLMChatbot()
+    
+    async def test_chatbot():
+        test_questions = [
+            "What is this website about?",
+            "How do I place an order?"
+        ]
+        
+        for question in test_questions:
+            print(f"\n🔹 Question: {question}")
+            response = await chatbot.get_response(question)
+            print(type(response))
+    
+    asyncio.run(test_chatbot())
+
+if __name__ == "__main__":
+    main()

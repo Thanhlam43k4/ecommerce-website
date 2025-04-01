@@ -1,6 +1,6 @@
 
 // const User = require("../models/user.model")
-// const User = require("../model/User")
+ const User = require("../models/user.model")
 
 // Get me with jwt 
 const getMe = async(req,res) =>{
@@ -41,10 +41,13 @@ const getUserById = async(req,res) =>{
 
 const updateUserInfo = async (req, res) => {
   try {
-    const userId = req.user.userId;
-    const { username, phone, address, city, postalCode } = req.body;
+    const userId = req.user?.userId;
+    if (!userId) {
+      return res.status(401).json({ msg: "Unauthorized access" });
+    }
 
-    if (!username && !phone && !address && !city && !postalCode) {
+    const { username, phone, address, city, postalCode } = req.body;
+    if (![username, phone, address, city, postalCode].some(Boolean)) {
       return res.status(400).json({ msg: "No fields to update" });
     }
 
@@ -56,14 +59,14 @@ const updateUserInfo = async (req, res) => {
       postalCode,
     });
 
-    if (updatedUser.affectedRows === 0) {
+    if (!updatedUser || updatedUser.affectedRows === 0) {
       return res.status(404).json({ msg: "User not found" });
     }
 
-    res.status(200).json({ msg: "User updated successfully" });
-
+    res.redirect("/profile")
   } catch (error) {
-    res.status(500).json({ msg: "Server Error!!", error: error.message });
+    console.error("Error updating user:", error);
+    res.status(500).json({ msg: "Server Error", error: error.message });
   }
 };
 

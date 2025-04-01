@@ -167,6 +167,98 @@ router.get('/store/editproducts', authMiddleware, async (req, res) => {
     });
   }
 });
+// add product
+router.post('/store/addproduct', authMiddleware, async (req, res) => {
+  try {
+    // Lấy dữ liệu từ form
+    const { image_urls, name, price, stock, description, category_id } = req.body;
+
+    // Kiểm tra dữ liệu đầu vào
+    if (!name || !price || !stock || !category_id) {
+      throw new Error('Please fill in all required fields (Name, Price, Quantity, Category)');
+    }
+
+    // Tạo object productData
+    const productData = {
+      image_urls: image_urls || '',
+      name,
+      description: description || '',
+      price: parseFloat(price),
+      stock: parseInt(stock),
+      category_id: parseInt(category_id),
+      seller_id: req.user.userId, // Lấy từ req.user (authMiddleware)
+    };
+
+    // Lưu sản phẩm vào database
+    const productId = await Product.create(productData);
+
+    // Lấy lại danh sách sản phẩm mới nhất
+    const products = await userModel.getProductsBySellerId(req.user.userId);
+
+    // Render lại trang editproducts với danh sách sản phẩm cập nhật
+    res.render('editproducts', {
+      user: req.user,
+      products: products,
+      successMessage: 'Product added successfully!'
+    });
+  } catch (error) {
+    console.error('Error adding product:', error);
+
+    // Nếu có lỗi, render lại trang với thông báo lỗi
+    const products = await userModel.getProductsBySellerId(req.user.userId);
+    res.render('editproducts', {
+      user: req.user,
+      products: products,
+      errorMessage: error.message || 'Failed to add product. Please try again.'
+    });
+  }
+});
+
+// Route GET để render trang Settings
+router.get('/settings', authMiddleware, async (req, res) => {
+  try {
+    // Giả sử user đã có thông tin theme và language
+    res.render('setting', {
+      user: req.user,
+      successMessage: null,
+      errorMessage: null
+    });
+  } catch (error) {
+    console.error('Error rendering settings:', error);
+    res.status(500).render('error', {
+      message: 'Failed to load settings.',
+      error: error
+    });
+  }
+});
+
+// Route POST để cập nhật mật khẩu
+router.post('/settings/update-password', authMiddleware, async (req, res) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+    if (newPassword !== confirmPassword) {
+      throw new Error('New password and confirmation do not match');
+    }
+
+
+    const updated = await User.updatePassword(req.user.userId, currentPassword, newPassword);
+    if (!updated) {
+      throw new Error('Current password is incorrect');
+    }
+
+    res.render('settings', {
+      user: req.user,
+      successMessage: 'Password updated successfully!',
+      errorMessage: null
+    });
+  } catch (error) {
+    res.render('settings', {
+      user: req.user,
+      successMessage: null,
+      errorMessage: error.message || 'Failed to update password'
+    });
+  }
+});
 router.get('/whistlist', authMiddleware, async (req, res) => {
   if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
@@ -255,7 +347,6 @@ router.get('/admin', authMiddleware, async (req, res) => {
       const response = await fetch(`http://localhost:${PORT}/api/products/search?q=${encodeURIComponent(searchQuery)}`);
       data = await response.json();
     } else if (type === 'orders') {
-      // Giả sử có API tìm kiếm orders, thay đổi theo thực tế
       const response = await fetch(`http://localhost:${PORT}/api/orders/search?q=${encodeURIComponent(searchQuery)}`);
       data = await response.json();
     }
@@ -281,45 +372,21 @@ router.get('/admin', authMiddleware, async (req, res) => {
 });
 
 router.get('/profile', authMiddleware, async (req, res) => {
-  if (!req.user) {
-    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
-  } else {
-    // Dữ liệu users
-    // Render template userprofile với dữ liệu users
-    res.render('userprofile', {
-      user: req.user // Truyền thông tin user để dùng trong header
-    });
-  }
-});
-
-router.post('/profile', authMiddleware, async (req, res) => {
   try {
-    const userId = req.user.userId;
-    const { username, phone, address, city, postalCode } = req.body;
-
-    if (!username && !phone && !address && !city && !postalCode) {
-      return res.status(400).json({ msg: "No fields to update" });
+    const user = await userModel.findByEmail(req.user?.email);
+    if (!user) {
+      return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
     }
-
-    const updatedUser = await User.updateUser(userId, {
-      username,
-      phone,
-      address,
-      city,
-      postalCode,
-    });
-
-    if (updatedUser.affectedRows === 0) {
-      return res.status(404).json({ msg: "User not found" });
-    }
-
-    res.status(200).json({ msg: "Profile updated successfully" });
-
-  } catch (error) {
-    res.status(500).json({ msg: "Server Error!!", error: error.message });
+    res.render('userprofile', { user });
+  } catch (err) {
+    console.error("Error fetching user profile:", err);
+    res.status(500).send("Server Error");
   }
 });
-router.get('/errorPage', async(req,res) =>{
+
+
+
+router.get('/errorPage', async (req, res) => {
   res.render('errorpage')
 })
 module.exports = router;

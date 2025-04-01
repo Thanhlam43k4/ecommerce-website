@@ -4,22 +4,21 @@ from fastapi.responses import JSONResponse
 
 from llm_chatbot import LLMChatbot
 from chatbot_history_model import ChatbotHistory
-from api_client import APIClient
 
 class ChatbotController:
     def __init__(self):
         self.chatbot = LLMChatbot()
 
-    async def get_response(self, question: str, db: Session, background_tasks: BackgroundTasks):
+    async def get_response(self, message: str, db: Session, background_tasks: BackgroundTasks):
         try:
-            response = await self.chatbot.get_response(question=question)
+            response = await self.chatbot.get_response(message)
 
             api_client = self.chatbot.api_client
             user_id = await api_client.get_my_id()
 
             result = JSONResponse(status_code=200, content={"response": response})
 
-            background_tasks.add_task(self.save_chat_history, db, user_id, question, response)
+            background_tasks.add_task(self.save_chat_history, db, user_id, message, response)
 
             return result
 
