@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, TIMESTAMP, Text, ForeignKey, func
+from sqlalchemy import Column, Integer, TIMESTAMP, Text, func
 from sqlalchemy.orm import Session
 from config_db import Base
 

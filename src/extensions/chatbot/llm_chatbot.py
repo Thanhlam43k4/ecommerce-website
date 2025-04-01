@@ -94,3 +94,25 @@ class LLMChatbot:
         await self.api_client.update_vector_db_words(self.embedding_model)
         result = self.qa_chain.invoke({"query": question + "?"})["result"]
         return self.clean_response(result)
+
+
+import asyncio
+
+def main():
+    chatbot = LLMChatbot()
+    
+    async def test_chatbot():
+        test_questions = [
+            "What is this website about?",
+            "How do I place an order?"
+        ]
+        
+        for question in test_questions:
+            print(f"\n🔹 Question: {question}")
+            response = await chatbot.get_response(question)
+            print(type(response))
+    
+    asyncio.run(test_chatbot())
+
+if __name__ == "__main__":
+    main()

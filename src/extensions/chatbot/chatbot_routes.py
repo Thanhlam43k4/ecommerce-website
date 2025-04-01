@@ -9,8 +9,8 @@ chatbot_controller = ChatbotController()
 
 @router.get("/chatbot")
 async def get_chatbot_response(
-    question: str = Query(default=..., min_length=1), 
+    message: str = Query(..., min_length=1), 
     db: Session = Depends(get_db), 
     background_tasks: BackgroundTasks = BackgroundTasks()
 ):
-    return await chatbot_controller.get_response(question, db, background_tasks)
+    return await chatbot_controller.get_response(message, db, background_tasks)
