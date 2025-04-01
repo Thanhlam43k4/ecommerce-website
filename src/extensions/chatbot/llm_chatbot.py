@@ -75,7 +75,7 @@ class LLMChatbot:
         if self.data_db:
             retrievers.append(self.data_db.as_retriever(search_kwargs={"k": 10}))
         if self.guide_db:
-            retrievers.append(self.guide_db.as_retriever(search_kwargs={"k": 4}))
+            retrievers.append(self.guide_db.as_retriever(search_kwargs={"k": 3}))
 
         if not retrievers:
             raise ValueError("No vector databases found. Please initialize at least one.")
@@ -94,5 +94,3 @@ class LLMChatbot:
         await self.api_client.update_vector_db_words(self.embedding_model)
         result = self.qa_chain.invoke({"query": question + "?"})["result"]
         return self.clean_response(result)
-
-
