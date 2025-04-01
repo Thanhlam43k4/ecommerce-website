@@ -213,6 +213,52 @@ router.post('/store/addproduct', authMiddleware, async (req, res) => {
     });
   }
 });
+
+// Route GET để render trang Settings
+router.get('/settings', authMiddleware, async (req, res) => {
+  try {
+    // Giả sử user đã có thông tin theme và language
+    res.render('setting', {
+      user: req.user,
+      successMessage: null,
+      errorMessage: null
+    });
+  } catch (error) {
+    console.error('Error rendering settings:', error);
+    res.status(500).render('error', {
+      message: 'Failed to load settings.',
+      error: error
+    });
+  }
+});
+
+// Route POST để cập nhật mật khẩu
+router.post('/settings/update-password', authMiddleware, async (req, res) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+    if (newPassword !== confirmPassword) {
+      throw new Error('New password and confirmation do not match');
+    }
+
+ 
+    const updated = await User.updatePassword(req.user.userId, currentPassword, newPassword);
+    if (!updated) {
+      throw new Error('Current password is incorrect');
+    }
+
+    res.render('settings', {
+      user: req.user,
+      successMessage: 'Password updated successfully!',
+      errorMessage: null
+    });
+  } catch (error) {
+    res.render('settings', {
+      user: req.user,
+      successMessage: null,
+      errorMessage: error.message || 'Failed to update password'
+    });
+  }
+});
 router.get('/whistlist', authMiddleware, async (req, res) => {
   if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
@@ -301,7 +347,6 @@ router.get('/admin', authMiddleware, async (req, res) => {
       const response = await fetch(`http://localhost:${PORT}/api/products/search?q=${encodeURIComponent(searchQuery)}`);
       data = await response.json();
     } else if (type === 'orders') {
-      // Giả sử có API tìm kiếm orders, thay đổi theo thực tế
       const response = await fetch(`http://localhost:${PORT}/api/orders/search?q=${encodeURIComponent(searchQuery)}`);
       data = await response.json();
     }
