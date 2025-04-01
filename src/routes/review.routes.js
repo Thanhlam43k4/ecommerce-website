@@ -8,6 +8,6 @@ const router = express.Router();
 router.post("/", authenticate, reviewController.createReview);
 
 // GET /api/reviews/:productId - Lấy danh sách đánh giá theo productId
-router.get("/:productId", reviewController.getReviewsByProduct);
+router.get("/:productId", reviewController.getReviewsByProductId);
 
 module.exports = router;
