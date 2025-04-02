@@ -343,6 +343,15 @@ router.get('/orders', authMiddleware, async (req, res) => {
   }
 });
 
+router.get('/orders/details/:id', authMiddleware, async (req, res) => {
+  try {
+    const orderDetails = await orderController.getOrderDetailsById(req, res);
+    res.render('order_details', { orderDetails, user: req.user});
+  } catch (err) {
+    console.error("Error rendering order_details page: ", err);
+  }
+});
+
 //test FE
 router.get('/admin', authMiddleware, async (req, res) => {
   // Kiểm tra xác thực
