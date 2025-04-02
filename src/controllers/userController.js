@@ -1,6 +1,6 @@
 
 // const User = require("../models/user.model")
- const User = require("../models/user.model")
+const User = require("../models/user.model")
 
 // Get me with jwt 
 const getMe = async(req,res) =>{
@@ -20,9 +20,7 @@ const getMe = async(req,res) =>{
   }
 
 }
-
 // Get /api/users/:id - Lấy thông tin từ user khác 
-
 const getUserById = async(req,res) =>{
   try{
     const userId = req.params.id;
@@ -38,7 +36,6 @@ const getUserById = async(req,res) =>{
   }
 
 }
-
 const updateUserInfo = async (req, res) => {
   try {
     const userId = req.user?.userId;
@@ -69,7 +66,6 @@ const updateUserInfo = async (req, res) => {
     res.status(500).json({ msg: "Server Error", error: error.message });
   }
 };
-
 // Endpoint tìm kiếm user theo số điện thoại
 const searchUsersByPhone = async (req, res) => {
   const searchPhone = req.query.phone || '';

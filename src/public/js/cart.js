@@ -41,44 +41,43 @@ function showToast(message, isSuccess = true) {
 // Xóa sản phẩm khỏi giỏ hàng
 async function removeItem(itemId) {
     // Cảnh báo người dùng trước khi xóa
-    if (confirm("Bạn có chắc muốn xóa sản phẩm này?")) {
-        try {
-            console.log(itemId);
+    try {
+        console.log(itemId);
 
-            // Gửi yêu cầu xóa sản phẩm đến server
-            const response = await fetch('api/cart/remove', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ productId: itemId })
-            });
+        // Gửi yêu cầu xóa sản phẩm đến server
+        const response = await fetch('api/cart/remove', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ productId: itemId })
+        });
 
-            // Kiểm tra trạng thái HTTP trả về từ server
-            if (!response.ok) {
-                throw new Error(`Lỗi HTTP: ${response.status}`);
-            }
-
-            // Xóa sản phẩm khỏi DOM
-            const productRow = document.getElementById(`item-${itemId}`);
-            if (productRow) {
-                productRow.remove();
-            }
-
-            // Cập nhật lại tổng tiền
-            updateTotal();
-
-            // Hiển thị thông báo thành công
-            showToast("✅ Xóa sản phẩm thành công!", true);
-            setTimeout(() => location.reload(), 2000);
-        } catch (err) {
-            console.error("Lỗi:", err);
-
-            // Hiển thị thông báo lỗi nếu có vấn đề xảy ra
-            showToast("❌ Xóa sản phẩm thất bại!", false);
-            setTimeout(() => location.reload(), 2000);
+        // Kiểm tra trạng thái HTTP trả về từ server
+        if (!response.ok) {
+            throw new Error(`Lỗi HTTP: ${response.status}`);
         }
+
+        // Xóa sản phẩm khỏi DOM
+        const productRow = document.getElementById(`item-${itemId}`);
+        if (productRow) {
+            productRow.remove();
+        }
+
+        // Cập nhật lại tổng tiền
+        updateTotal();
+
+        // Hiển thị thông báo thành công
+        showToast("✅ Xóa sản phẩm thành công!", true);
+        setTimeout(() => location.reload(), 2000);
+    } catch (err) {
+        console.error("Lỗi:", err);
+
+        // Hiển thị thông báo lỗi nếu có vấn đề xảy ra
+        showToast("❌ Xóa sản phẩm thất bại!", false);
+        setTimeout(() => location.reload(), 2000);
     }
+
 }
 // Cập nhật tổng tiền khi thay đổi số lượng
 function updateTotal() {

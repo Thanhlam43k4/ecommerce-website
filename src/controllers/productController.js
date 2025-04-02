@@ -77,18 +77,17 @@ const productController = {
   // Get /api/products/categories - Use for chatbot
   getAllCategories: async (req, res) => {
     try {
-        const categories = await Product.getCategories();        
-        const formattedCategories = categories.reduce((obj, category) => {
-            obj[category.id] = category.name;
-            return obj;
-        }, {});
+      const categories = await Product.getCategories();
+      const formattedCategories = categories.reduce((obj, category) => {
+        obj[category.id] = category.name;
+        return obj;
+      }, {});
 
-        res.status(200).json(formattedCategories);
+      res.status(200).json(formattedCategories);
     } catch (err) {
-        res.status(500).json({ message: "Server error", error: err.message });
+      res.status(500).json({ message: "Server error", error: err.message });
     }
   },
-
   // Xóa sản phẩm theo userId và productId
   deleteProduct: async (req, res) => {
     const { userId, productId } = req.params;
@@ -103,7 +102,6 @@ const productController = {
       res.status(500).json({ message: "Server error", error: err.message });
     }
   },
-
   searchProducts: async (req, res) => {
     const searchQuery = req.query.q;
     if (!searchQuery) {
@@ -115,8 +113,36 @@ const productController = {
     } catch (err) {
       res.status(500).json({ message: "Server error", error: err.message });
     }
-  }
-}
+  },
+  getNumberProductByUser: async (req, res) => {
+    try {
+      const userId = req.params.id // Lấy userId từ URL
+      // Gọi model để lấy số lượng sản phẩm
+      const productCount = await Product.getNumberProductByUser(userId);
+
+      res.status(200).json({ userId, productCount });
+    } catch (error) {
+      console.error("Error getting product count:", error);
+      res.status(500).json({ msg: "Server Error", error: error.message });
+    }
+  },
+  // Xóa tất cả sản phẩm của một người bán theo userId
+  deleteProductByUserId: async (req, res) => {
+
+    const  userId  = req.user.userId; // Lấy userId từ URL
+    const productId = req.params.id;
+    try {
+      const affectedRows = await Product.deleteByUserAndProductId(userId,productId);
+      if (affectedRows) {
+        res.status(200).json({ message: "All products of the seller have been deleted successfully." });
+      } else {
+        res.status(404).json({ message: "No products found for this seller." });
+      }
+    } catch (err) {
+      res.status(500).json({ message: "Server error", error: err.message });
+    }
+  },
+};
 
 module.exports = productController;
 

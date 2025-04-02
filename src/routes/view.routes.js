@@ -1,12 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const cors = require("cors");
-const bodyParser = require("body-parser");
 require("dotenv").config();
-const db = require("../config/db.js");
-const path = require("path");
-const cookieParser = require("cookie-parser");
 const axios = require('axios');
 const categoryModel = require('../models/category.models.js'); // Điều chỉnh đường dẫn nếu cần
 const userModel = require('../models/user.model.js')
@@ -14,9 +9,9 @@ const authMiddleware = require("../middlewares/authenticate");
 const Wishlist = require('../models/whislist.model.js');
 const PORT = 5000
 const reviewController = require("../controllers/reviewController.js")
-const orderController = require("../controllers/orderController.js");
-const Order = require('../models/order.models.js');
-
+const orderController = require("../controllers/orderController.js")
+const productModel = require('../models/product.model.js')
+const productController = require('../controllers/productController.js')
 router.get('/', authMiddleware, async (req, res) => {
   const errorMessage = req.query.errorMessage || null;
   console.log(req.user)
@@ -151,8 +146,6 @@ router.get('/store', authMiddleware, async (req, res) => {
   } else {
     const products = await userModel.getProductsBySellerId(req.user.userId)
 
-    console.log(products);
-
     res.render('store', { products: products, user: req.user })
   }
 })
@@ -162,10 +155,7 @@ router.get('/store/editproducts', authMiddleware, async (req, res) => {
     res.render('editproducts', { user: req.user, products: products });
   } catch (error) {
     console.error('Error fetching products:', error);
-    res.status(500).render('error', {
-      message: 'Failed to load products. Please try again later.',
-      error: error
-    });
+    res.status(500).json({error: error})
   }
 });
 // add product
@@ -189,9 +179,9 @@ router.post('/store/addproduct', authMiddleware, async (req, res) => {
       category_id: parseInt(category_id),
       seller_id: req.user.userId, // Lấy từ req.user (authMiddleware)
     };
-
+    console.log(productData)
     // Lưu sản phẩm vào database
-    const productId = await Product.create(productData);
+    const productId = await productModel.create(productData);
 
     // Lấy lại danh sách sản phẩm mới nhất
     const products = await userModel.getProductsBySellerId(req.user.userId);
@@ -409,8 +399,9 @@ router.get('/profile', authMiddleware, async (req, res) => {
 });
 
 
-
 router.get('/errorPage', async (req, res) => {
   res.render('errorpage')
 })
+
+
 module.exports = router;
