@@ -87,7 +87,6 @@
                 let response = await fetch(`http://localhost:8000/api/chatbot?message=${encodeURIComponent(message)}`);
                 let data = await response.json();
 
-                // Add bot message to chat interface
                 let botMessage = document.createElement('div');
                 botMessage.className = "chat-message bot";
                 botMessage.innerHTML = `<div class="chat-bubble">${data.response.replace(/\n/g, "<br>")}</div>`;
@@ -123,7 +122,6 @@
             welcomeMessage.innerHTML = `<div class="chat-bubble">Hello! How can I assist you today?</div>`;
             chatbox.appendChild(welcomeMessage);
             
-            // Option buttons
             let optionsContainer = document.createElement('div');
             optionsContainer.className = "chat-options";
             optionsContainer.innerHTML = `
@@ -139,21 +137,31 @@
     function selectOption(option) {
         let chatbox = document.getElementById("chatbot-messages");
         let response = "";
+        let message = "";
 
         switch (option) {
             case 'info':
+                message = "Website Information";
                 response = "Tk88 - UET Store is an e-commerce platform specializing in smart electronic products. It is also a marketplace where you can buy or sell various items.";
                 break;
             case 'usage':
+                message = "How to Use the Website";
                 response = "Which part of the website would you like me to guide you through?";
                 break;
             case 'advice':
+                message = "Product Consultation"
                 response = "What product would you like me to recommend?";
                 break;
             case 'others':
+                message = "Other Questions";
                 response = "You can ask me anything related to the website!";
                 break;
         }
+
+        let userMessage = document.createElement('div');
+        userMessage.className = "chat-message user";
+        userMessage.innerHTML = `<div class="chat-bubble">${message}</div>`;
+        chatbox.appendChild(userMessage);
 
         let botResponse = document.createElement('div');
         botResponse.className = "chat-message bot";

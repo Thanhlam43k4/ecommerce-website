@@ -131,7 +131,6 @@
   max-height: 100px;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .footer-column {
     flex: 0 0 100%;
