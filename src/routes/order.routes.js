@@ -16,6 +16,4 @@ router.post('/',authenticate,orderController.createOrder);
 
 router.get('/all', authorizeAdmin, orderController.getAllOrders);
 
-router.get('/items/:orderId', orderController.getOrderItemsById);
-
 module.exports = router;

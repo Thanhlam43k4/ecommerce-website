@@ -76,18 +76,29 @@ const orderController = {
     }
   },
 
-  //GET /api/orders/items/:id - get all order items from orderId
-  getOrderItemsById: async(req, res) => {
+  //GET /api/orders/details/:id - get all order items from orderId
+  getOrderDetailsById: async(req, res) => {
     try {
-      const orderId = req.params.orderId;
-      const orderItems = await Order.getOrderItemsByOrderId(orderId);
-      if (!orderItems) {
-        return res.status(404).json({message: "Order items from orderId not found."});
+      const orderId = req.params.id;
+      
+      const order = await Order.getOrderById(orderId);
+      if (!order) {
+        return res.status(404).json({message: "Order not found."});
       }
-      return res.status(200).json(orderItems);
+      
+      const orderItems = await Order.getOrderItemsByOrderId(orderId);
+      if (!orderItems || orderItems.length === 0) {
+        return res.status(404).json({message: "No items found in this order."});
+      }
+      
+      return {
+        order: order,
+        items: orderItems
+      };
+      
     } catch(err) {
       console.error("Error fetching all order items", err);
-      return res.status(500).json({message: "Unable to fetch all order items. Please try again later."});
+      return res.status(500).json({message: "Unable to fetch order details. Please try again later."});
     }
   },
 
