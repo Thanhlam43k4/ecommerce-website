@@ -68,25 +68,30 @@
 
     </div>
     <h3 class="fw-bold mt-5">Sản phẩm bạn có thể thích</h3>
-    <div class="product-slider">
-      <div class="product-wrapper d-flex">
-        <% featuredProducts.forEach(product=> { %>
-          <div class="product-item">
-            <div class="card product-card p-3 mb-4">
-              <img src="<%= product.image_urls %>" class="card-img-top product-image" alt="<%= product.name %>">
-              <div class="card-body text-center">
-                <h6 class="product-name">
-                  <%= product.name %>
-                </h6>
-                <p class="fw-bold text-primary">$<%= product.price %>
-                </p>
-                <a href="/product/<%= product.id %>" class="btn btn-success">Xem chi tiết</a>
+    <% if (Array.isArray(featuredProducts) && featuredProducts.length> 0) { %>
+      <h3 class="fw-bold mt-5">Sản phẩm bạn có thể thích</h3>
+      <div class="product-slider">
+        <div class="product-wrapper d-flex">
+          <% featuredProducts.forEach(product=> { %>
+            <div class="product-item">
+              <div class="card product-card p-3 mb-4">
+                <img src="<%= product.image_urls %>" class="card-img-top product-image" alt="<%= product.name %>">
+                <div class="card-body text-center">
+                  <h6 class="product-name">
+                    <%= product.name %>
+                  </h6>
+                  <p class="fw-bold text-primary">$<%= product.price %>
+                  </p>
+                  <a href="/product/<%= product.id %>" class="btn btn-success">Xem chi tiết</a>
+                </div>
               </div>
             </div>
-          </div>
-          <% }) %>
+            <% }) %>
+        </div>
       </div>
-    </div>
+      <% } else { %>
+        <p class="text-center text-muted mt-3">Hiện tại không có sản phẩm gợi ý.</p>
+        <% } %>
   </div>
 
 

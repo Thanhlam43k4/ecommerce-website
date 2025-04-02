@@ -15,8 +15,19 @@ const orderModel = require('../models/order.models.js')
 const productController = require('../controllers/productController.js')
 const jwt = require("jsonwebtoken"); // Thêm JWT
 const bcrypt = require("bcryptjs"); 
+const multer = require('multer');
 
-
+// Cấu hình lưu file
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads'); // Lưu vào thư mục này trong source code
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname)); // Tạo tên file duy nhất
+  }
+});
+const upload = multer({ storage: storage });
 
 router.get('/', authMiddleware, async (req, res) => {
   const errorMessage = req.query.errorMessage || null;
@@ -173,6 +184,10 @@ router.post('/store/addproduct', authMiddleware, async (req, res) => {
     // Kiểm tra dữ liệu đầu vào
     if (!name || !price || !stock || !category_id) {
       throw new Error('Please fill in all required fields (Name, Price, Quantity, Category)');
+    }
+    let imageUrl = '';
+    if (req.file) {
+      imageUrl = `/uploads/${req.file.filename}`; // Đường dẫn lưu trữ trong thư mục public
     }
 
     // Tạo object productData
