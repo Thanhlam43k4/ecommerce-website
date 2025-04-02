@@ -311,7 +311,7 @@ router.get('/search', authMiddleware, async (req, res) => {
 router.get('/orders', authMiddleware, async (req, res) => {
   try {
     const orders = await orderController.getOrders(req, res); // Lấy danh sách đơn hàng
-
+    console.log(orders)
     // console.log(orders);
     res.render('order', { orders, user: req.user }); // Render trang order.ejs với data
 

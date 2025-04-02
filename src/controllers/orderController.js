@@ -11,7 +11,7 @@ const orderController = {
       const orders = await Order.getOrdersByBuyer(buyer_id);
 
       if (!orders || orders.length === 0) {
-        return res.status(204).send(); // Không trả về nội dung nếu không có đơn hàng nào
+        return res.status(204).json({message: "No orders"}); // Không trả về nội dung nếu không có đơn hàng nào
       }
 
       return orders;
