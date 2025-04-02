@@ -15,7 +15,7 @@ body {
 
 :root {
     --black: #000;
-    --primaryColor: #ff3368;
+    --primaryColor: black;
 }
 
 .navbar-nav {
@@ -61,7 +61,7 @@ header {
     width: 14px;
     height: 14px;
     border-radius: 100%;
-    background: red;
+    background: rgb(0, 0, 0);
     color: white;
     font-size: 10px;
     text-align: center;
@@ -261,28 +261,28 @@ header {
 
 /* Đổi màu cho nút .btn-primary thành màu đỏ */
 .btn-primary {
-  background-color: #dc3545 !important; /* Tương đương .btn-danger của Bootstrap */
-  border-color: #dc3545 !important;
+  background-color: #000000 !important; /* Tương đương .btn-danger của Bootstrap */
+  border-color: #050505 !important;
 }
 .btn-primary:hover {
-  background-color: #c82333 !important;
-  border-color: #bd2130 !important;
+  background-color: #030203 !important;
+  border-color: #0b0909 !important;
 }
 
 /* Đổi màu cho nút .btn-success nếu bạn cũng muốn đỏ */
 .btn-success {
-  background-color: #dc3545 !important;
-  border-color: #dc3545 !important;
+  background-color: #0b0909 !important;
+  border-color: #060404 !important;
 }
 .btn-success:hover {
-  background-color: #c82333 !important;
-  border-color: #bd2130 !important;
+  background-color: #000000 !important;
+  border-color: #000000 !important;
 }
 
 /* Đổi màu tiêu đề H2, H3 sang đỏ */
 h2.fw-bold,
 h3.fw-bold {
-  color: #dc3545; /* Màu đỏ tương tự nút */
+  color: #000000; /* Màu đỏ tương tự nút */
 }
 
 /* Thêm hiệu ứng hover cho card sản phẩm */
@@ -293,7 +293,7 @@ h3.fw-bold {
 .product-card:hover {
   transform: translateY(-5px);
   box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-  border: 1px solid #dc3545;
+  border: 1px solid #000000;
 }
 
 /* Căn chỉnh ảnh sản phẩm cho đẹp hơn */
@@ -301,4 +301,69 @@ h3.fw-bold {
   height: 200px;
   object-fit: cover;
   border-radius: 8px;
+}
+
+.highlight-text {
+    position: relative;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ff3368;
+    /* Màu cam */
+    padding: 5px 15px;
+    border-radius: 5px;
+    transition: color 0.3s ease-in-out;
+    z-index: 2;
+    width: fit-content;
+}
+.highlight-text::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 100%;
+    background-color: #ff3368;
+    /* Màu cam */
+    transition: width 0.4s ease-in-out;
+    z-index: -1;
+    border-radius: 5px;
+}
+.best-selling-header:hover .highlight-text {
+    color: white;
+    /* Đổi màu chữ thành trắng */
+}
+
+.best-selling-header:hover .highlight-text::before {
+    width: 100%;
+    /* Mở rộng nền cam */
+}
+.best-selling-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    /* Đẩy "View All" sang phải */
+    position: relative;
+    padding: 10px 0;
+}
+
+/* Phần bên trái (This Month + Best Selling Products) */
+.left-section {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+.view-all-btn {
+    background-color: #ff3368;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+}
+
+.view-all-btn:hover {
+    background-color: #e62e5b;
 }
