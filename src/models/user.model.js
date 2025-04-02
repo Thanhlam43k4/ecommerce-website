@@ -18,6 +18,18 @@ const User = {
     }
   },
 
+  // Cập nhật mật khẩu
+  updatePassword: async (userId, newPassword) => {
+    try {
+      const sql = "UPDATE users SET password = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+      const [result] = await db.promise().execute(sql, [newPassword, userId]);
+      return result.affectedRows > 0; // Trả về true nếu cập nhật thành công
+    } catch (error) {
+      console.error('Lỗi khi cập nhật mật khẩu:', error);
+      throw error;
+    }
+  },
+
   searchByPhone: async (phone) => {
     try {
       let sql = 'SELECT * FROM users';

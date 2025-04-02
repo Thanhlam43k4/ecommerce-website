@@ -11,6 +11,7 @@ const PORT = 5000
 const reviewController = require("../controllers/reviewController.js")
 const orderController = require("../controllers/orderController.js")
 const productModel = require('../models/product.model.js')
+const orderModel = require('../models/order.models.js')
 const productController = require('../controllers/productController.js')
 router.get('/', authMiddleware, async (req, res) => {
   const errorMessage = req.query.errorMessage || null;
@@ -223,30 +224,47 @@ router.get('/settings', authMiddleware, async (req, res) => {
   }
 });
 
-// Route POST để cập nhật mật khẩu
 router.post('/settings/update-password', authMiddleware, async (req, res) => {
   try {
     const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    // Kiểm tra mật khẩu mới và xác nhận có khớp không
     if (newPassword !== confirmPassword) {
-      throw new Error('New password and confirmation do not match');
+      throw new Error('Mật khẩu mới và xác nhận không khớp');
     }
 
+    // Lấy thông tin user từ database
+    const user = await userModel.findById(req.user.userId);
+    if (!user) {
+      throw new Error('Không tìm thấy người dùng');
+    }
 
-    const updated = await User.updatePassword(req.user.userId, currentPassword, newPassword);
+    // Kiểm tra mật khẩu hiện tại
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      throw new Error('Mật khẩu hiện tại không đúng');
+    }
+
+    // Mã hóa mật khẩu mới
+    const salt = await bcrypt.genSalt(10);
+    const hashedNewPassword = await bcrypt.hash(newPassword, salt);
+
+    // Cập nhật mật khẩu
+    const updated = await User.updatePassword(req.user.userId, hashedNewPassword);
     if (!updated) {
-      throw new Error('Current password is incorrect');
+      throw new Error('Không thể cập nhật mật khẩu');
     }
 
-    res.render('settings', {
+    res.render('setting', {
       user: req.user,
-      successMessage: 'Password updated successfully!',
+      successMessage: 'Cập nhật mật khẩu thành công!',
       errorMessage: null
     });
   } catch (error) {
-    res.render('settings', {
+    res.render('setting', {
       user: req.user,
       successMessage: null,
-      errorMessage: error.message || 'Failed to update password'
+      errorMessage: error.message || 'Không thể cập nhật mật khẩu'
     });
   }
 });
@@ -339,25 +357,25 @@ router.get('/admin', authMiddleware, async (req, res) => {
     // Xử lý theo loại dữ liệu
     if (type === 'users') {
       if (searchPhone) {
-        data = await User.searchByPhone(searchPhone);
+        data = await userModel.searchByPhone(searchPhone);
         
       } else {
-        data = await User.getAllUsers();
+        data = await userModel.getAllUsers();
         
       }
     } else if (type === 'products') {
       if (searchQuery) {
-        data = await Product.searchByQuery(searchQuery); // Chỉ tìm theo tên
+        data = await productModel.searchByQuery(searchQuery); // Chỉ tìm theo tên
         message = `Tìm thấy ${data.length} sản phẩm với tên: ${searchQuery}`;
       } else {
-        data = await Product.getAllProducts();
+        data = await productModel.getAllProducts();
   
       }
     } else if (type === 'orders') {
       if (buyer_id) {
-        data = await Order.getOrdersByBuyer(buyer_id); 
+        data = await orderModel.getOrdersByBuyer(buyer_id); 
       } else {
-        data = await Order.getAllOders();
+        data = await orderModel.getAllOders();
   
       }
     }
