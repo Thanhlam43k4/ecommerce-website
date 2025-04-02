@@ -12,6 +12,10 @@ const reviewController = require("../controllers/reviewController.js")
 const orderController = require("../controllers/orderController.js")
 const productModel = require('../models/product.model.js')
 const productController = require('../controllers/productController.js')
+
+
+
+
 router.get('/', authMiddleware, async (req, res) => {
   const errorMessage = req.query.errorMessage || null;
   console.log(req.user)
