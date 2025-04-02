@@ -7,7 +7,7 @@ const authorizeSeller = require('../middlewares/authorizeSeller')
 const router = express.Router();
 
 
-
+router.get('/search', productController.searchProducts);
 router.get('/',productController.getAllProducts);
 
 router.get('/categories', productController.getAllCategories);
