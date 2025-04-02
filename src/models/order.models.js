@@ -50,6 +50,16 @@ const Order = {
     } catch (err) {
       throw err;
     }
-  }
+  },
+
+  getAll: async() => {
+    const sql = "SELECT * FROM orders";
+    try {
+      const [rows] = await db.promise().query(sql);
+      return rows.length > 0 ? rows : [];
+    } catch (err) {
+      throw err;
+    }
+  },
 }
 module.exports = Order;

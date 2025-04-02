@@ -76,7 +76,16 @@ const orderController = {
     }
   },
 
-
+  //GET /api/orders/all - get all orders
+  getAllOrders: async(req, res) => {
+    try {
+      const orders = await Order.getAll();
+      return res.status(200).json(orders);
+    } catch(err) {
+      console.error("Error fetching all orders: ", err);
+      return res.status(500).json({message: "Unable to fetch all orders. Please try again later."});
+    }
+  }
 }
 
 
