@@ -96,39 +96,6 @@
                 </button>
 
             </div>
-
-            <div class="carousel-inner">
-                <% for (let i=0; i < product.length; i +=4) { %> <!-- Hiển thị 4 sản phẩm mỗi slide -->
-                    <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
-                        <div class="row">
-                            <% for (let j=i; j < i + 4 && j < product.length; j++) { %>
-                                <div class="col-md-3">
-                                    <div class="card p-3">
-                                        <img src="<%= product[j].image_urls %>" class="card-img-top"
-                                            alt="<%= product[j].name %>">
-                                        <div class="icon-group">
-                                            <span class="icon-circle" onclick="viewProduct('<%= product[j].id %>')"><i
-                                                    class="fa fa-eye"></i></span>
-                                        </div>
-                                        <div class="card-body text-center">
-                                            <h6>
-                                                <%= product[j].name %>
-                                            </h6>
-                                            <p>$<%= product[j].price %>
-                                            </p>
-                                            <p class="text-warning">
-                                                <%= '★' .repeat(product[j].stock % 5) + '☆' .repeat(5 - product[j].stock
-                                                    % 5) %>
-                                                    (<%= product[j].reviews_count %>)
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <% } %>
-                        </div>
-                    </div>
-                    <% } %>
-            </div>
         </div>
 
         <!-- Phần Reviews -->
