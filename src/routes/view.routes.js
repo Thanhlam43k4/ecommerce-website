@@ -13,7 +13,8 @@ const orderController = require("../controllers/orderController.js")
 const productModel = require('../models/product.model.js')
 const orderModel = require('../models/order.models.js')
 const productController = require('../controllers/productController.js')
-
+const jwt = require("jsonwebtoken"); // Thêm JWT
+const bcrypt = require("bcryptjs"); 
 
 
 
@@ -254,7 +255,7 @@ router.post('/settings/update-password', authMiddleware, async (req, res) => {
     const hashedNewPassword = await bcrypt.hash(newPassword, salt);
 
     // Cập nhật mật khẩu
-    const updated = await User.updatePassword(req.user.userId, hashedNewPassword);
+    const updated = await userModel.updatePassword(req.user.userId, hashedNewPassword);
     if (!updated) {
       throw new Error('Không thể cập nhật mật khẩu');
     }
