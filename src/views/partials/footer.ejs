@@ -1,44 +1,49 @@
 <link rel="stylesheet" type="text/css" href="/css/chatbot.css">
 
 
-<footer class="bg-dark text-white py-5 mt-5">
+<footer class="footer">
     <div class="container">
-        <div class="row">
-            <div class="col-md-4">
+        <div class="footer-row">
+            <div class="footer-column">
                 <h5>Our journey</h5>
                 <p>From humble beginnings, we have built a community of loyal customers</p>
             </div>
-            <div class="col-md-4">
+            <div class="footer-column">
                 <h5>Support</h5>
                 <p>141 Xuan Thuy, Dich Vong Hau, Cau Giay, Ha Noi</p>
                 <p>group11@gmail.com</p>
                 <p>+843949505816</p>
             </div>
-            <div class="col-md-4">
+            <div class="footer-column">
                 <h5>Follow us</h5>
-                <a href="#" class="text-white me-2"><i class="fa-brands fa-x-twitter fa-2x"></i></a>
-                <a href="https://www.instagram.com/thah.lam7/" target="_blank" class="text-decoration-none">
-                    <i class="fa fa-instagram fa-3x text-danger"></i>
-                </a>
-                <a href="https://www.facebook.com/thanhlamk4/" target="_blank" class="text-decoration-none">
-                    <i class="fa fa-facebook-official fa-3x text-primary"></i>
-                </a>
-            </div>
-        </div>
-        <hr class="bg-white">
-        <p class="text-center">© Copyright Group11 2025. All rights reserved</p>
-    </div>
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div id="toastNotification" class="toast align-items-center text-bg-success border-0" role="alert"
-            aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body" id="toastMessage">
-                    <!-- Message sẽ hiển thị ở đây -->
+                <div class="social-icons">
+                    <a href="#" class="social-icon twitter">
+                        <i class="icon-twitter">𝕏</i>
+                    </a>
+                    <a href="https://www.instagram.com/thah.lam7/" target="_blank" class="social-icon instagram">
+                        <i class="icon-instagram">📸</i>
+                    </a>
+                    <a href="https://www.facebook.com/thanhlamk4/" target="_blank" class="social-icon facebook">
+                        <i class="icon-facebook">ƒ</i>
+                    </a>
                 </div>
-                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+        <hr class="footer-divider">
+        <p class="copyright">© Copyright Group11 2025. All rights reserved</p>
+    </div>
+    
+    <div class="toast-container">
+        <div id="toastNotification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="toast-content">
+                <div class="toast-body" id="toastMessage">
+                    <!-- Message will display here -->
+                </div>
+                <button type="button" class="toast-close" data-dismiss="toast" aria-label="Close">×</button>
             </div>
         </div>
     </div>
+    
     <!-- Chatbot Button -->
     <div id="chatbot-button" onclick="toggleChat()">
         💬 Chat
@@ -51,96 +56,8 @@
             <button onclick="toggleChat()">×</button>
         </div>
         <div id="chatbot-messages"></div>
-        <input type="text" id="chatbot-input" placeholder="Type a message..." onkeypress="sendMessage(event)">
+        <textarea id="chatbot-input" placeholder="Type a message..." onkeypress="sendMessage(event)"></textarea>
     </div>
 </footer>
 
-
-
-<script>
-    function toggleChat() {
-        let chatbot = document.getElementById("chatbot-container");
-        chatbot.style.display = chatbot.style.display === "none" || chatbot.style.display === "" ? "block" : "none";
-    }
-
-    async function sendMessage(event) {
-        if (event.key === "Enter") {
-            let input = document.getElementById("chatbot-input");
-            let message = input.value.trim();
-            if (message === "") return;
-
-            let chatbox = document.getElementById("chatbot-messages");
-            let userMessage = `<div><strong>You:</strong> ${message}</div>`;
-            chatbox.innerHTML += userMessage;
-            saveChatHistory();
-            input.value = "";
-            chatbox.scrollTop = chatbox.scrollHeight;
-
-            try {
-                let response = await fetch(`http://localhost:8000/api/chatbot?message=${encodeURIComponent(message)}`);
-                let data = await response.json();
-
-                let botReply = `<div><strong>Bot:</strong> ${data.response.replace(/\n/g, "<br>")}</div>`;
-                chatbox.innerHTML += botReply;
-                saveChatHistory();
-                chatbox.scrollTop = chatbox.scrollHeight;
-            } catch (error) {
-                console.error("Chatbot API error:", error);
-                let errorMessage = `<div><strong>Bot:</strong> Sorry! I can't answer now!.</div>`;
-                chatbox.innerHTML += errorMessage;
-                chatbox.scrollTop = chatbox.scrollHeight;
-            }
-        }
-    }
-
-    function saveChatHistory() {
-        let chatbox = document.getElementById("chatbot-messages");
-        sessionStorage.setItem("chatHistory", chatbox.innerHTML);
-    }
-
-    function loadChatHistory() {
-        let chatbox = document.getElementById("chatbot-messages");
-        let history = sessionStorage.getItem("chatHistory");
-
-        if (history) {
-            chatbox.innerHTML = history;
-        } else {
-            chatbox.innerHTML = `
-                <div><strong>Bot:</strong> Hello! How can I assist you today?</div>
-                <div>
-                    <button onclick="selectOption('info')">📌 Website Information</button>
-                    <button onclick="selectOption('usage')">📖 How to Use the Website</button>
-                    <button onclick="selectOption('advice')">🛒 Product Consultation</button>
-                    <button onclick="selectOption('others')">❓ Other Questions</button>
-                </div>
-            `;
-        }
-    }
-
-    function selectOption(option) {
-        let chatbox = document.getElementById("chatbot-messages");
-        let response = "";
-
-        switch (option) {
-            case 'info':
-                response = "Tk88 - UET Store is an e-commerce platform specializing in smart electronic products. It is also a marketplace where you can buy or sell various items.";
-                break;
-            case 'usage':
-                response = "Which part of the website would you like me to guide you through?";
-                break;
-            case 'advice':
-                response = "What product would you like me to recommend?";
-                break;
-            case 'others':
-                response = "You can ask me anything related to the website!";
-                break;
-        }
-
-        chatbox.innerHTML += `<div><strong>Bot:</strong> ${response}</div>`;
-        saveChatHistory();
-        chatbox.scrollTop = chatbox.scrollHeight;
-    }
-
-
-    document.addEventListener("DOMContentLoaded", loadChatHistory);
-</script>
+<script src="/js/chatbot.js"></script>

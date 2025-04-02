@@ -27,7 +27,6 @@ port = int(os.getenv("CHAT_PORT", 8000))
 async def root():
     return {"message": f"Chatbot server đang chạy tại http://localhost:{port}"}
 
-# Sửa lại cách chạy main
 def start():
     uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
 
