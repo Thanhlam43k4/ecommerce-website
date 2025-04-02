@@ -29,6 +29,32 @@ const adminController = {
     }catch(error){
       res.status(500).json({message: "Sever error", error: error.message});
     }
+  },
+
+  searchUsersByPhone : async (req, res) => {
+    const searchPhone = req.query.phone || '';
+    
+    try {
+      const users = await User.searchByPhone(searchPhone);
+      res.render('admin', {
+        data: users,
+        type: 'users',
+        user: req.user,
+        searchPhone: searchPhone,
+        searchQuery: '',
+        message: searchPhone ? `Tìm thấy ${users.length} người dùng với số điện thoại: ${searchPhone}` : 'Hiển thị tất cả người dùng'
+      });
+    } catch (error) {
+      console.error('Lỗi khi tìm kiếm người dùng:', error);
+      res.render('admin', {
+        data: [],
+        type: 'users',
+        user: req.user,
+        searchPhone: searchPhone,
+        searchQuery: '',
+        errorMessage: 'Lỗi khi tìm kiếm người dùng'
+      });
+    }
   }
 }
 
