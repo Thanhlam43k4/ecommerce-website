@@ -319,6 +319,7 @@ router.get('/orders', authMiddleware, async (req, res) => {
     console.error("Error rendering orders page:", error);
   }
 });
+
 //test FE
 router.get('/admin', authMiddleware, async (req, res) => {
   // Kiểm tra xác thực

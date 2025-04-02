@@ -1,49 +1,44 @@
 <link rel="stylesheet" type="text/css" href="/css/chatbot.css">
 
 
-<footer class="footer">
+<footer class="bg-dark text-white py-5 mt-5">
     <div class="container">
-        <div class="footer-row">
-            <div class="footer-column">
+        <div class="row">
+            <div class="col-md-4">
                 <h5>Our journey</h5>
                 <p>From humble beginnings, we have built a community of loyal customers</p>
             </div>
-            <div class="footer-column">
+            <div class="col-md-4">
                 <h5>Support</h5>
                 <p>141 Xuan Thuy, Dich Vong Hau, Cau Giay, Ha Noi</p>
                 <p>group11@gmail.com</p>
                 <p>+843949505816</p>
             </div>
-            <div class="footer-column">
+            <div class="col-md-4">
                 <h5>Follow us</h5>
-                <div class="social-icons">
-                    <a href="#" class="social-icon twitter">
-                        <i class="icon-twitter">𝕏</i>
-                    </a>
-                    <a href="https://www.instagram.com/thah.lam7/" target="_blank" class="social-icon instagram">
-                        <i class="icon-instagram">📸</i>
-                    </a>
-                    <a href="https://www.facebook.com/thanhlamk4/" target="_blank" class="social-icon facebook">
-                        <i class="icon-facebook">ƒ</i>
-                    </a>
-                </div>
+                <a href="#" class="text-white me-2"><i class="fa-brands fa-x-twitter fa-2x"></i></a>
+                <a href="https://www.instagram.com/thah.lam7/" target="_blank" class="text-decoration-none">
+                    <i class="fa fa-instagram fa-3x text-danger"></i>
+                </a>
+                <a href="https://www.facebook.com/thanhlamk4/" target="_blank" class="text-decoration-none">
+                    <i class="fa fa-facebook-official fa-3x text-primary"></i>
+                </a>
             </div>
         </div>
-        <hr class="footer-divider">
-        <p class="copyright">© Copyright Group11 2025. All rights reserved</p>
+        <hr class="bg-white">
+        <p class="text-center">© Copyright Group11 2025. All rights reserved</p>
     </div>
-    
-    <div class="toast-container">
-        <div id="toastNotification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-            <div class="toast-content">
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="toastNotification" class="toast align-items-center text-bg-success border-0" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
                 <div class="toast-body" id="toastMessage">
-                    <!-- Message will display here -->
+                    <!-- Message sẽ hiển thị ở đây -->
                 </div>
-                <button type="button" class="toast-close" data-dismiss="toast" aria-label="Close">×</button>
+                <button type="button" class="btn-close me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         </div>
     </div>
-    
     <!-- Chatbot Button -->
     <div id="chatbot-button" onclick="toggleChat()">
         💬 Chat
@@ -56,8 +51,9 @@
             <button onclick="toggleChat()">×</button>
         </div>
         <div id="chatbot-messages"></div>
-        <textarea id="chatbot-input" placeholder="Type a message..." onkeypress="sendMessage(event)"></textarea>
+        <input type="text" id="chatbot-input" placeholder="Type a message..." onkeypress="sendMessage(event)">
     </div>
 </footer>
+
 
 <script src="/js/chatbot.js"></script>
