@@ -60,9 +60,13 @@ const Order = {
         oi.quantity,
         p.name,
         p.price,
-        p.image_urls
+        p.image_urls,
+        r.rating,
+        r.comment
       FROM order_items AS oi
       JOIN products AS p on p.id = oi.product_id
+      JOIN orders AS o on o.id = oi.order_id
+      LEFT JOIN reviews AS r on r.product_id = p.id and r.buyer_id = o.buyer_id
       WHERE oi.order_id = ?
     `;
     try {
