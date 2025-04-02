@@ -11,7 +11,7 @@ router.get('/',authenticate, cartController.getCartByUserId);
 router.post('/add',authenticate, cartController.addToCart);
 
 // Xóa sản phẩm khỏi giỏ hàng
-router.delete('/remove',authenticate ,cartController.removeFromCart);
+router.post('/remove',authenticate ,cartController.removeFromCart);
 
 // Xóa toàn bộ giỏ hàng
 router.delete('/clear',authenticate, cartController.clearCart);

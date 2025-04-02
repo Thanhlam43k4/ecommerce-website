@@ -7,6 +7,7 @@ const authorizeSeller = require('../middlewares/authorizeSeller')
 const router = express.Router();
 
 
+router.get('/search', productController.searchProducts);
 
 router.get('/',productController.getAllProducts);
 
@@ -18,10 +19,11 @@ router.post('/',authenticate,productController.createProduct);
 
 router.put('/:id',authenticate,productController.updateProduct);
 
-router.delete('/:id',authenticate,productController.deleteProduct);
 
 router.get('/category/:categoryId', productController.getProductsByCategory);
 
+router.get('/count/:id',authenticate, productController.getNumberProductByUser);
 
+router.post('/:id',authenticate, productController.deleteProductByUserId);
 
 module.exports = router;

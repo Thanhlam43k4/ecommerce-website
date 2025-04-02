@@ -67,7 +67,7 @@ const orderController = {
         await Order.addOrderItems(orderId, productId, quantity);
       }
 
-      return res.status(201).json({ message: "Order created successfully", orderId });
+      res.redirect('/orders')
     } catch (err) {
 
       console.error("Error creating order: ", err);

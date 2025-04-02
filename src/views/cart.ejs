@@ -52,7 +52,7 @@
                                     </td>
                                     <td>
                                         <select class="form-select w-auto d-inline"
-                                            onchange="updateSubtotal(this, '<%= item.price %>', '<%= item.id %>')">
+                                            onchange="updateSubtotal(this, '<%= item.price %>', '<%= item.product_id %>')">
                                             <% for (let i=1; i <=10; i++) { %>
                                                 <option value="<%= i %>" <%=i===item.quantity ? 'selected' : '' %>><%= i
                                                         %>
@@ -64,7 +64,7 @@
                                     </td>
                                     <td>
                                         <!-- Nút Xóa -->
-                                        <button class="btn btn-danger btn-sm" onclick="removeItem('<%= item.id %>')">
+                                        <button class="btn btn-danger btn-sm" onclick="removeItem('<%= item.product_id %>')">
                                             🗑️ Xóa
                                         </button>
                                     </td>
@@ -98,7 +98,7 @@
                         <button type="submit" class="btn btn-danger w-100">🛒 Thanh Toán</button>
                     </form>
                     <% } else { %>
-                        <p class="text-muted">🛑 Chưa có sản phẩm trong giỏ hàng.</p>
+                        
                         <% } %>
             </div>
         </div>
