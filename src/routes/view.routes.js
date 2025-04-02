@@ -319,44 +319,68 @@ router.get('/orders', authMiddleware, async (req, res) => {
     console.error("Error rendering orders page:", error);
   }
 });
+
 //test FE
 router.get('/admin', authMiddleware, async (req, res) => {
+  // Kiểm tra xác thực
   if (!req.user) {
-    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+    return res.redirect('/?errorMessage=' + encodeURIComponent('Bạn cần đăng nhập trước'));
   }
 
+  // Lấy các tham số query
   const type = req.query.type || 'users'; // Mặc định là users
   const searchPhone = req.query.phone || ''; // Tìm kiếm theo số điện thoại (cho users)
-  const searchQuery = req.query.q || ''; // Tìm kiếm chung (cho products/orders)
-
+  const searchQuery = req.query.q || ''; // Tìm kiếm chung (cho products
+  const buyer_id = req.query.buyer_id || ''; // Tìm kiếm theo buyer_id (cho orders)
   try {
     let data = [];
+    let message = '';
+
+    // Xử lý theo loại dữ liệu
     if (type === 'users') {
-      const response = await fetch(`http://localhost:${PORT}/api/users/search?phone=${encodeURIComponent(searchPhone)}`);
-      data = await response.json();
+      if (searchPhone) {
+        data = await User.searchByPhone(searchPhone);
+        
+      } else {
+        data = await User.getAllUsers();
+        
+      }
     } else if (type === 'products') {
-      const response = await fetch(`http://localhost:${PORT}/api/products/search?q=${encodeURIComponent(searchQuery)}`);
-      data = await response.json();
+      if (searchQuery) {
+        data = await Product.searchByQuery(searchQuery); // Chỉ tìm theo tên
+        message = `Tìm thấy ${data.length} sản phẩm với tên: ${searchQuery}`;
+      } else {
+        data = await Product.getAllProducts();
+  
+      }
     } else if (type === 'orders') {
-      const response = await fetch(`http://localhost:${PORT}/api/orders/search?q=${encodeURIComponent(searchQuery)}`);
-      data = await response.json();
+      if (buyer_id) {
+        data = await Order.getOrdersByBuyer(buyer_id); 
+      } else {
+        data = await Order.getAllOders();
+  
+      }
     }
 
+    // Render template với dữ liệu
     res.render('admin', {
-      data: data, // Truyền dữ liệu tương ứng
-      type: type, // Truyền type để template biết hiển thị gì
+      data: data,
+      type: type,
       user: req.user,
       searchPhone: searchPhone,
-      searchQuery: searchQuery
+      searchQuery: searchQuery,
+      buyer_id: buyer_id,
+      message: message
     });
   } catch (error) {
-    console.error(`Error fetching ${type}:`, error);
+    console.error(`Lỗi khi tải danh sách ${type}:`, error);
     res.render('admin', {
       data: [],
       type: type,
       user: req.user,
       searchPhone: searchPhone,
       searchQuery: searchQuery,
+      buyer_id: buyer_id,
       errorMessage: `Lỗi khi tải danh sách ${type}`
     });
   }

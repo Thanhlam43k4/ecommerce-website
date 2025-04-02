@@ -50,6 +50,38 @@ const Order = {
     } catch (err) {
       throw err;
     }
-  }
+  },
+
+  // get all order_items 
+  getOrderItemsByOrderId: async (orderId) => {
+    const sql = `
+      SELECT 
+        oi.product_id,
+        oi.quantity,
+        p.name,
+        p.price,
+        p.image_urls
+      FROM order_items AS oi
+      JOIN products AS p on p.id = oi.product_id
+      WHERE oi.order_id = ?
+    `;
+    try {
+      const [rows] = await db.promise().execute(sql, [orderId]);
+      return rows.length > 0 ? rows : [];
+    } catch (err) {
+      throw err;
+    }
+  },
+
+  // get all orders (for admin)
+  getAll: async() => {
+    const sql = "SELECT * FROM orders";
+    try {
+      const [rows] = await db.promise().query(sql);
+      return rows.length > 0 ? rows : [];
+    } catch (err) {
+      throw err;
+    }
+  },
 }
 module.exports = Order;
