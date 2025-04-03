@@ -367,6 +367,7 @@ router.get('/orders', authMiddleware, async (req, res) => {
 router.get('/orders/:id', authMiddleware, async (req, res) => {
   try {
     const orderDetails = await orderController.getOrderDetailsById(req, res);
+    console.log(orderDetails);
     res.render('order_details', { orderDetails, user: req.user });
   } catch (err) {
     console.error("Error rendering order_details page: ", err);
