@@ -6,6 +6,8 @@ const axios = require('axios');
 const categoryModel = require('../models/category.models.js'); // Điều chỉnh đường dẫn nếu cần
 const userModel = require('../models/user.model.js')
 const authMiddleware = require("../middlewares/authenticate");
+const authenticate = require("../middlewares/authenticate");
+const authorizeAdmin = require("../middlewares/authorizeAdmin"); // Middleware này kiểm tra user có quyền admin hay không
 const Wishlist = require('../models/whislist.model.js');
 const PORT = 5000
 const reviewController = require("../controllers/reviewController.js")
@@ -15,19 +17,19 @@ const orderModel = require('../models/order.models.js')
 const productController = require('../controllers/productController.js')
 const jwt = require("jsonwebtoken"); // Thêm JWT
 const bcrypt = require("bcryptjs");
-const multer = require('multer');
+// const multer = require('multer');
 
-// Cấu hình lưu file
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/uploads'); // Lưu vào thư mục này trong source code
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + path.extname(file.originalname)); // Tạo tên file duy nhất
-  }
-});
-const upload = multer({ storage: storage });
+// // Cấu hình lưu file
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, 'public/uploads'); // Lưu vào thư mục này trong source code
+//   },
+//   filename: function (req, file, cb) {
+//     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+//     cb(null, uniqueSuffix + path.extname(file.originalname)); // Tạo tên file duy nhất
+//   }
+// });
+// const upload = multer({ storage: storage });
 
 router.get('/', authMiddleware, async (req, res) => {
   const errorMessage = req.query.errorMessage || null;
@@ -176,60 +178,60 @@ router.get('/store/editproducts', authMiddleware, async (req, res) => {
   }
 });
 // add product
-router.post('/store/addproduct', authMiddleware, upload.single('image'), async (req, res) => {
-  try {
-    // Lấy dữ liệu từ form
-    const { name, price, stock, description, category_id } = req.body;
+// router.post('/store/addproduct', authMiddleware, upload.single('image'), async (req, res) => {
+//   try {
+//     // Lấy dữ liệu từ form
+//     const { name, price, stock, description, category_id } = req.body;
 
-    // Kiểm tra dữ liệu đầu vào
-    if (!name || !price || !stock || !category_id) {
-      throw new Error('Please fill in all required fields (Name, Price, Quantity, Category)');
-    }
+//     // Kiểm tra dữ liệu đầu vào
+//     if (!name || !price || !stock || !category_id) {
+//       throw new Error('Please fill in all required fields (Name, Price, Quantity, Category)');
+//     }
 
-    // Xử lý file ảnh
-    let imageUrl = '';
-    if (req.file) {
-      imageUrl = `/uploads/${req.file.filename}`; // Đường dẫn ảnh
-    }
+//     // Xử lý file ảnh
+//     let imageUrl = '';
+//     if (req.file) {
+//       imageUrl = `/uploads/${req.file.filename}`; // Đường dẫn ảnh
+//     }
 
-    // Tạo object productData
-    const productData = {
-      image_urls: imageUrl,
-      name,
-      description: description || '',
-      price: parseFloat(price),
-      stock: parseInt(stock),
-      category_id: parseInt(category_id),
-      seller_id: req.user.userId, // Lấy từ req.user (authMiddleware)
-    };
+//     // Tạo object productData
+//     const productData = {
+//       image_urls: imageUrl,
+//       name,
+//       description: description || '',
+//       price: parseFloat(price),
+//       stock: parseInt(stock),
+//       category_id: parseInt(category_id),
+//       seller_id: req.user.userId, // Lấy từ req.user (authMiddleware)
+//     };
 
-    console.log('Product Data:', productData);
+//     console.log('Product Data:', productData);
 
-    // Lưu sản phẩm vào database
-    const productId = await productModel.create(productData);
+//     // Lưu sản phẩm vào database
+//     const productId = await productModel.create(productData);
 
-    // Lấy lại danh sách sản phẩm mới nhất
-    const products = await userModel.getProductsBySellerId(req.user.userId);
+//     // Lấy lại danh sách sản phẩm mới nhất
+//     const products = await userModel.getProductsBySellerId(req.user.userId);
 
-    // Render lại trang editproducts với danh sách sản phẩm cập nhật
-    res.render('editproducts', {
-      user: req.user,
-      products: products,
-      successMessage: 'Product added successfully!'
-    });
+//     // Render lại trang editproducts với danh sách sản phẩm cập nhật
+//     res.render('editproducts', {
+//       user: req.user,
+//       products: products,
+//       successMessage: 'Product added successfully!'
+//     });
 
-  } catch (error) {
-    console.error('Error adding product:', error);
+//   } catch (error) {
+//     console.error('Error adding product:', error);
 
-    // Nếu có lỗi, render lại trang với thông báo lỗi
-    const products = await userModel.getProductsBySellerId(req.user.userId);
-    res.render('editproducts', {
-      user: req.user,
-      products: products,
-      errorMessage: error.message || 'Failed to add product. Please try again.'
-    });
-  }
-});
+//     // Nếu có lỗi, render lại trang với thông báo lỗi
+//     const products = await userModel.getProductsBySellerId(req.user.userId);
+//     res.render('editproducts', {
+//       user: req.user,
+//       products: products,
+//       errorMessage: error.message || 'Failed to add product. Please try again.'
+//     });
+//   }
+// });
 
 
 // Route GET để render trang Settings
@@ -374,8 +376,8 @@ router.get('/orders/:id', authMiddleware, async (req, res) => {
   }
 });
 
-//test FE
-router.get('/admin', authMiddleware, async (req, res) => {
+//admin
+router.get('/admin', authenticate, authorizeAdmin, async (req, res) => {
   // Kiểm tra xác thực
   if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('Bạn cần đăng nhập trước'));
@@ -383,7 +385,7 @@ router.get('/admin', authMiddleware, async (req, res) => {
 
   // Lấy các tham số query
   const type = req.query.type || 'users'; // Mặc định là users
-  const searchPhone = req.query.phone || ''; // Tìm kiếm theo số điện thoại (cho users)
+  const searchEmail = req.query.email || ''; // Tìm kiếm theo số điện thoại (cho users)
   const searchQuery = req.query.q || ''; // Tìm kiếm chung (cho products)
   const buyer_id = req.query.buyer_id || ''; // Tìm kiếm theo buyer_id (cho orders)
 
@@ -393,8 +395,8 @@ router.get('/admin', authMiddleware, async (req, res) => {
 
     // Xử lý theo loại dữ liệu
     if (type === 'users') {
-      if (searchPhone) {
-        data = await userModel.searchByPhone(searchPhone);
+      if (searchEmail) {
+        data = await userModel.searchByEmail(searchEmail);
       } else {
         data = await userModel.getAllUsers();
       }
@@ -418,7 +420,7 @@ router.get('/admin', authMiddleware, async (req, res) => {
       data: data,
       type: type,
       user: req.user,
-      searchPhone: searchPhone,
+      searchEmail: searchEmail,
       searchQuery: searchQuery,
       buyer_id: buyer_id,
       message: message
@@ -429,7 +431,7 @@ router.get('/admin', authMiddleware, async (req, res) => {
       data: [],
       type: type,
       user: req.user,
-      searchPhone: searchPhone,
+      searchEmail: searchEmail,
       searchQuery: searchQuery,
       buyer_id: buyer_id,
       errorMessage: `Lỗi khi tải danh sách ${type}`
