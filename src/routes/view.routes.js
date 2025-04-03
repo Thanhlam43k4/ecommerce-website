@@ -380,7 +380,7 @@ router.get('/admin', authMiddleware, async (req, res) => {
       if (buyer_id) {
         data = await orderModel.getOrdersByBuyer(buyer_id); 
       } else {
-        data = await orderModel.getAllOders();
+        data = await orderModel.getAll();
   
       }
     }
