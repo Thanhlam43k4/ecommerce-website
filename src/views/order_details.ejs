@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Order Details</title>
+    <title>Order Details - <%= orderDetails.order.id %></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <link rel="stylesheet" type="text/css" href="/css/order-details.css">
+    <link rel="stylesheet" type="text/css" href="/css/order_details.css">
     <link rel="icon" type="image/x-icon" href="/image/uet.jpeg">
 
 </head>
@@ -24,12 +24,12 @@
                 <p class="text-muted">Placed on <span id="order-date">
                     <%= new Date(orderDetails.order.created_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) %>
                 </span></p>
-                <span class="order-status status-<%= orderDetails.order.status %>">
-                    <%= orderDetails.order.status.charAt(0).toUpperCase() + orderDetails.order.status.slice(1) %>
-                </span>
+                <span class="order-status status-success">
+                    Success
+                </span>                
             </div>
 
-            <div class="row">
+            <div class="row" >
                 <div class="col-md-8">
                     <h3>Order Items</h3>
                     
@@ -38,9 +38,9 @@
                             <div class="product-card">
                                 <img src="<%= item.image_urls %>" 
                                      alt="<%= item.name %>" class="product-image">
-                                <div class="product-info">
+                                <div class="product-info" onclick="viewProduct('<%= item.productId %>')">
                                     <h5><%= item.name %></h5>
-                                    <p class="text-muted">Quantity: <%= item.quantity %></p>
+                                    <p class="text-muted">x<%= item.quantity %></p>
                                     <p class="text-muted">Price: $<%= item.price %> each</p>
                                     
                                     <div class="review-section">
@@ -48,9 +48,9 @@
                                             <div class="stars">
                                                 <% for (let i = 0; i < 5; i++) { %>
                                                     <% if (i < item.rating) { %>
-                                                        <i class="fas fa-star"></i>
+                                                        <i class="fa fa-star"></i>
                                                     <% } else { %>
-                                                        <i class="far fa-star"></i>
+                                                        <i class="fa fa-star"></i>
                                                     <% } %>
                                                 <% } %>
                                             </div>
@@ -59,7 +59,7 @@
                                             <p class="review-comment mt-2"><em>"<%= item.comment %>"</em></p>
                                         <% } %>
                                         <% if (!item.rating && !item.comment) { %>
-                                            <p class="review-comment mt-2 text-muted">No reviews yet</p>
+                                            <p class="review-comment mt-2 text-muted">You haven't reviewed this product yet </p>
                                         <% } %>
                                     </div>
                                     
@@ -75,32 +75,35 @@
                 </div>
                 
                 <div class="col-md-4">
+                    <h3>Order Summary</h3>
+
                     <div class="order-summary">
-                        <h3>Order Summary</h3>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Subtotal:</span>
-                            <span>$<%= orderDetails.order.total_price %></span>
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">Full name:</span>
+                            <span><%= orderDetails.order.full_name %></span>     
                         </div>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Shipping:</span>
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">City:</span>
+                            <span><%= orderDetails.order.city %></span>     
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">Street:</span>
+                            <span><%= orderDetails.order.street %></span>     
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">Phone number:</span>
+                            <span><%= orderDetails.order.phone %></span>     
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="fw-bold">Shipping:</span>
                             <span>Free</span>
                         </div>
-                        <hr>
                         <div class="d-flex justify-content-between fw-bold">
-                            <span>Total:</span>
+                            <span class="fw-bold">Total:</span>
                             <span>$<%= orderDetails.order.total_price %></span>
                         </div>
-                        
-                        <h3 class="mt-4">Shipping Information</h3>
-                        <p>
-                            <strong><%= orderDetails.order.full_name %></strong><br>
-                            <%= orderDetails.order.street %><br>
-                            <%= orderDetails.order.city %>, <%= orderDetails.order.postal_code %><br>
-                            <strong>Phone:</strong> <%= orderDetails.order.phone %>
-                        </p>
-                        
-                    
                     </div>
+                    
                 </div>
             </div>
         <% } else { %>
@@ -117,5 +120,12 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
         crossorigin="anonymous"></script>
+    
+
+    <script>
+        function viewProduct(productId) {
+            window.location.href = `/product/${productId}`;
+        }       
+    </script>
 </body>
 </html>
