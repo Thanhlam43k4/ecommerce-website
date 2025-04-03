@@ -67,7 +67,7 @@ const User = {
   // Lấy danh sách tất cả user
   getAllUsers: async () => {
     try {
-      const [users] = await db.promise().query("SELECT id, username, email, role, created_at FROM users");
+      const [users] = await db.promise().query("SELECT * FROM users");
       return users;
     } catch (error) {
       throw error;
