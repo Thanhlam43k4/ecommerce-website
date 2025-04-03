@@ -48,7 +48,7 @@
                             <td>$<%= order.total_price %></td>
                             <td><%= new Date(order.created_at).toLocaleString() %></td>
                             <td>
-                                <a href="/order/<%= order.id %>" class="btn btn-primary btn-sm">View</a>
+                                <a href="/orders/<%= order.id %>" class="btn btn-primary btn-sm">View</a>
                                 <button class="btn btn-danger btn-sm cancel-order" data-id="<%= order.id %>">Cancel</button>
                             </td>
                         </tr>

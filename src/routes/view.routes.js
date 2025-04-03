@@ -14,7 +14,7 @@ const productModel = require('../models/product.model.js')
 const orderModel = require('../models/order.models.js')
 const productController = require('../controllers/productController.js')
 const jwt = require("jsonwebtoken"); // Thêm JWT
-const bcrypt = require("bcryptjs"); 
+const bcrypt = require("bcryptjs");
 const multer = require('multer');
 
 // Cấu hình lưu file
@@ -172,27 +172,29 @@ router.get('/store/editproducts', authMiddleware, async (req, res) => {
     res.render('editproducts', { user: req.user, products: products });
   } catch (error) {
     console.error('Error fetching products:', error);
-    res.status(500).json({error: error})
+    res.status(500).json({ error: error })
   }
 });
 // add product
-router.post('/store/addproduct', authMiddleware, async (req, res) => {
+router.post('/store/addproduct', authMiddleware, upload.single('image'), async (req, res) => {
   try {
     // Lấy dữ liệu từ form
-    const { image_urls, name, price, stock, description, category_id } = req.body;
+    const { name, price, stock, description, category_id } = req.body;
 
     // Kiểm tra dữ liệu đầu vào
     if (!name || !price || !stock || !category_id) {
       throw new Error('Please fill in all required fields (Name, Price, Quantity, Category)');
     }
+
+    // Xử lý file ảnh
     let imageUrl = '';
     if (req.file) {
-      imageUrl = `/uploads/${req.file.filename}`; // Đường dẫn lưu trữ trong thư mục public
+      imageUrl = `/uploads/${req.file.filename}`; // Đường dẫn ảnh
     }
 
     // Tạo object productData
     const productData = {
-      image_urls: image_urls || '',
+      image_urls: imageUrl,
       name,
       description: description || '',
       price: parseFloat(price),
@@ -200,7 +202,9 @@ router.post('/store/addproduct', authMiddleware, async (req, res) => {
       category_id: parseInt(category_id),
       seller_id: req.user.userId, // Lấy từ req.user (authMiddleware)
     };
-    console.log(productData)
+
+    console.log('Product Data:', productData);
+
     // Lưu sản phẩm vào database
     const productId = await productModel.create(productData);
 
@@ -213,6 +217,7 @@ router.post('/store/addproduct', authMiddleware, async (req, res) => {
       products: products,
       successMessage: 'Product added successfully!'
     });
+
   } catch (error) {
     console.error('Error adding product:', error);
 
@@ -225,6 +230,7 @@ router.post('/store/addproduct', authMiddleware, async (req, res) => {
     });
   }
 });
+
 
 // Route GET để render trang Settings
 router.get('/settings', authMiddleware, async (req, res) => {
@@ -358,10 +364,10 @@ router.get('/orders', authMiddleware, async (req, res) => {
   }
 });
 
-router.get('/orders/details/:id', authMiddleware, async (req, res) => {
+router.get('/orders/:id', authMiddleware, async (req, res) => {
   try {
     const orderDetails = await orderController.getOrderDetailsById(req, res);
-    res.render('order_details', { orderDetails, user: req.user});
+    res.render('order_details', { orderDetails, user: req.user });
   } catch (err) {
     console.error("Error rendering order_details page: ", err);
   }
@@ -387,27 +393,24 @@ router.get('/admin', authMiddleware, async (req, res) => {
     if (type === 'users') {
       if (searchPhone) {
         data = await userModel.searchByPhone(searchPhone);
-        
+
       } else {
         data = await userModel.getAllUsers();
-        
+
       }
     } else if (type === 'products') {
       if (searchQuery) {
         data = await productModel.searchByQuery(searchQuery); // Chỉ tìm theo tên
         message = `Tìm thấy ${data.length} sản phẩm với tên: ${searchQuery}`;
       } else {
-        data = await productModel.getAllProducts();
-  
+        data = await productModel.getAll();
+
       }
     } else if (type === 'orders') {
-      if (buyer_id) {
-        data = await orderModel.getOrdersByBuyer(buyer_id); 
-      } else {
-        data = await orderModel.getAllOders();
-  
+        data = await orderModel.getAll();
+        console.log(data);
       }
-    }
+    
 
     // Render template với dữ liệu
     res.render('admin', {
