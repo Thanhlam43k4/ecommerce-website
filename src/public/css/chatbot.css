@@ -2,7 +2,7 @@
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: #007bff;
+  background-color: black;
   color: white;
   padding: 12px 18px;
   border-radius: 50px;
@@ -27,7 +27,7 @@
 }
 
 #chatbot-header {
-  background: #007bff;
+  background: black;
   color: white;
   padding: 12px;
   display: flex;
@@ -80,7 +80,7 @@
 }
 
 .chat-message.user .chat-bubble {
-  background-color: #007bff;
+  background-color: black;
   color: white;
   border-radius: 15px 15px 0 15px;
 }
@@ -113,7 +113,7 @@
 }
 
 #chatbot-messages button:hover {
-  background: #007bff;
+  background: black;
   color: white;
 }
 
@@ -144,4 +144,8 @@
     left: 5%;
     bottom: 80px;
   }
+}#chatbot-header img {
+  max-width: 50px;  /* Tối đa 50px */
+  height: auto;  /* Giữ tỷ lệ gốc */
+  margin-right: 10px;
 }

@@ -382,7 +382,7 @@ router.get('/orders/:id', authMiddleware, async (req, res) => {
 });
 
 //admin
-router.get('/admin', authenticate, authorizeAdmin, async (req, res) => {
+router.get('/admin', authenticate, async (req, res) => {
   // Kiểm tra xác thực
   if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('Bạn cần đăng nhập trước'));
