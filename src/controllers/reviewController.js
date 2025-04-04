@@ -6,7 +6,7 @@ const reviewController = {
 
   createReview: async (req, res) => {
     try {
-      const buyer_id = req.user.id;
+      const buyer_id = req.user.userId;
 
       const { product_id, rating, comment } = req.body;
 
@@ -18,7 +18,7 @@ const reviewController = {
         return res.status(400).json({ message: "Rating must be between 1 and 5" })
       }
 
-      const result = await Review.create({ product_id, buyer_id, rating, comment })
+      const result = await Review.create(product_id, buyer_id, rating, comment)
 
       return res.status(201).json({ message: "Review added successfully!!!", result })
 
