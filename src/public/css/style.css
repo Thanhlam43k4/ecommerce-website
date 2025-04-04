@@ -495,8 +495,8 @@ h4.fw-bold:hover::before,
 /* Đưa các nút điều hướng lên góc phải */
 .carousel-controls {
     position: relative;
-    top: 80px;
-
+    top: 170px;
+    right: 5px;
     display: auto;
     ;
     gap: 0px;

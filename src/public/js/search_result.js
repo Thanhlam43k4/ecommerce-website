@@ -52,11 +52,21 @@ document.querySelectorAll('.add-to-cart').forEach(button => {
 
 
 // Xử lý nút "Move All To Bag"
-document.querySelector('.btn-outline-primary').addEventListener('click', function() {
-    document.querySelectorAll('.add-to-bag-btn i').forEach(icon => {
-        icon.classList.add('text-danger');
+document.querySelector('.btn-outline-primary').addEventListener('click', function () {
+    const productElements = document.querySelectorAll('.add-to-cart');
+
+    productElements.forEach(button => {
+        const productId = button.getAttribute('data-id');
+        addToCart(productId);
+        
+        // Đổi màu icon để feedback UI
+        const icon = button.querySelector('i');
+        if (icon) {
+            icon.classList.add('text-success');
+        }
     });
-    console.log('Moved all to bag');
+
+    showToast("Tất cả sản phẩm đã được thêm vào giỏ hàng.", true);
 });
 
 // Hàm hiển thị thông báo Toast
