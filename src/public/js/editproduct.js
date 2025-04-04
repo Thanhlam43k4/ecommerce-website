@@ -54,9 +54,9 @@ document.querySelectorAll('.category-btn').forEach(button => {
 
 
 async function RemoveProduct(productId) {
-    try {   
+    try {
         // Gửi yêu cầu xóa sản phẩm theo productId
-        
+
         const response = await fetch(`/api/products/${productId}`, {
             method: 'post', // Sử dụng phương thức DELETE
             headers: { 'Content-Type': 'application/json' },
@@ -79,11 +79,42 @@ async function RemoveProduct(productId) {
         }
     } catch (err) {
         // Xử lý lỗi nếu có
-        showToast('An error occurred. Please try again:',false);
+        showToast('An error occurred. Please try again:', false);
         console.error(err);
     }
 }
+async function updateProduct(productId) {
+    const formData = new FormData();
+    formData.append('name', document.getElementById('edit-name-' + productId).value);
+    formData.append('description', document.getElementById('edit-description-' + productId).value);
+    formData.append('price', document.getElementById('edit-price-' + productId).value);
 
+    // Lấy ảnh từ input file
+    const imageInput = document.getElementById('edit-image-' + productId);
+    if (imageInput.files.length > 0) {
+        formData.append('image', imageInput.files[0]); // Đây mới là file thật
+    }
+
+    try {
+        const response = await fetch(`/api/products/${productId}`, {
+            method: 'PUT',
+            body: formData, // Gửi FormData thay vì JSON
+        });
+
+        const data = await response.json();
+        console.log(data);
+
+        if (response.ok && data.success) {
+            showToast(data.message || 'Product updated successfully!', true);
+            setTimeout(() => location.reload(), 2000);
+        } else {
+            showToast(data.message || 'Failed to update product.', false);
+        }
+    } catch (err) {
+        showToast('An error occurred. Please try again.', false);
+        console.error(err);
+    }
+}
 async function updateProduct(productId) {
     // Giả sử bạn lấy thông tin sản phẩm từ form hoặc input trong UI
     const updatedProduct = {
@@ -91,7 +122,7 @@ async function updateProduct(productId) {
         description: document.getElementById('edit-description-' + productId).value, // Lấy mô tả sản phẩm
         price: document.getElementById('edit-price-' + productId).value,             // Lấy giá sản phẩm
         image_urls: document.getElementById('edit-image-' + productId).value         // Lấy URL của ảnh (chỉ 1 ảnh)
-      };
+    };
 
     try {
         // Gửi yêu cầu PUT để cập nhật sản phẩm theo productId

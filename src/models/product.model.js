@@ -27,7 +27,7 @@ const Product = {
     const sql = `INSERT INTO products (name, description, price, stock, image_urls, category_id, seller_id) 
                  VALUES (?, ?, ?, ?, ?, ?, ?)`;
     try {
-      await db.promise().execute(sql, [name, description, price, stock, image_urls, category_id, seller_id]);
+      id = await db.promise().execute(sql, [name, description, price, stock, image_urls, category_id, seller_id]);
       return id;
     } catch (error) {
       throw error;

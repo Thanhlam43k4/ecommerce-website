@@ -35,13 +35,13 @@
 
                     <!-- Form thêm sản phẩm mới -->
                     <div class="add-product-form collapse" id="add-product-form">
-                        <form method="POST" action="/store/addproduct">
+                        <form method="POST" action="/store/addproduct" enctype="multipart/form-data">
                             <div class="row p-3 border rounded mb-2 shadow-sm">
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <div class="mb-3">
                                             <label class="form-label">Upload Image</label>
-                                            <input type="file" class="form-control" name="image_file" accept="image/*" required>
+                                            <input type="file" class="form-control" name="image" accept="image/*" required>
                                         </div>
                                     </div>
                                     <div class="mb-3">
@@ -132,12 +132,12 @@
                                     </div>
 
 
-                                    <div class="edit-form collapse" id="edit-form-<%= product.id %>">
+                                    <div class="edit-form collapse"  enctype="multipart/form-data" id="edit-form-<%= product.id %>">
                                         <div class="row p-3 border rounded mb-2 shadow-sm">
                                             <div class="col-md-6">
                                                 <div class="mb-3">
                                                     <label class="form-label">Upload Image</label>
-                                                    <input type="file" class="form-control" name="image_file" accept="image/*" required>
+                                                    <input type="file" id="edit-image-<%= product.id %>" class="form-control" name="image" accept="image/*" required>
                                                 </div>
                                                 <div class="mb-3">
                                                     <label class="form-label">Name</label>
