@@ -88,7 +88,9 @@
                               <img src="<%= products[j].image_urls %>" class="card-img-top"
                                 alt="<%= products[j].name %>">
                               <div class="icon-group">
-                                <span class="icon-circle"><i class="fa fa-heart"></i></span>
+                                <span class="icon-circle" onclick="addWhistlist('<%= products[j].id %>')">
+                                  <i class="fa fa-heart"></i>
+                                </span>
                                 <span class="icon-circle" onclick="viewProduct('<%= products[j].id %>')"><i
                                     class="fa fa-eye"></i></span>
                               </div>

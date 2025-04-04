@@ -36,7 +36,7 @@ router.put('/:productId', authenticate, upload.single('image'), async (req, res)
           price: parseFloat(price),
           image_urls: imageUrl,
       };
-      console.log(updatedProduct)
+      console.log(req.body)
       await productModel.update(productId, updatedProduct);
 
       res.json({ success: true, message: 'Product updated successfully!' });
