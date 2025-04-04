@@ -173,7 +173,7 @@ router.get('/store/editproducts', authMiddleware, async (req, res) => {
     res.status(500).json({ error: error })
   }
 });
-// add product
+//add product
 router.post('/store/addproduct', authMiddleware, upload.single('image'), async (req, res) => {
   if(!req.user){
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));

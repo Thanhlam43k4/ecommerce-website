@@ -593,15 +593,13 @@ h4.fw-bold:hover::before,
 
 .slides {
     display: flex;
-    width: 300%;
-    /* Giữ nguyên chiều rộng */
+    width: 500%; /* 5 slide (3 gốc + 2 bản sao), mỗi slide 100% */
     transition: transform 0.5s ease-in-out;
     z-index: 1;
 }
 
 .slides img {
-    width: 100vw;
-    /* Mỗi ảnh chiếm toàn bộ chiều rộng màn hình */
+    width: 100vw; /* Mỗi ảnh chiếm toàn bộ chiều rộng màn hình */
     height: 350px;
     object-fit: cover;
     z-index: 1;
