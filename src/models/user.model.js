@@ -54,6 +54,16 @@ const User = {
       throw err;
     }
   },
+  searchByEmail: async (email) => {
+    try {
+        const sql = "SELECT * FROM users WHERE email LIKE ?";
+        const [users] = await db.promise().execute(sql, [`%${email}%`]); 
+        return users;
+    } catch (error) {
+        console.error("Lỗi khi tìm kiếm user theo email:", error);
+        throw error;
+    }
+},
 
   findById: async (id) => {
     try {
