@@ -361,7 +361,6 @@ router.get('/orders', authMiddleware, async (req, res) => {
   }
   try {
     const orders = await orderController.getOrders(req, res); // Lấy danh sách đơn hàng
-    console.log(orders)
     // console.log(orders);
     res.render('order', { orders, user: req.user }); // Render trang order.ejs với data
 
@@ -376,7 +375,6 @@ router.get('/orders/:id', authMiddleware, async (req, res) => {
   }
   try {
     const orderDetails = await orderController.getOrderDetailsById(req, res);
-    console.log(orderDetails);
     res.render('order_details', { orderDetails, user: req.user });
   } catch (err) {
     console.error("Error rendering order_details page: ", err);

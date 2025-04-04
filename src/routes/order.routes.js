@@ -16,4 +16,6 @@ router.post('/',authenticate,orderController.createOrder);
 
 router.get('/all', authorizeAdmin, orderController.getAllOrders);
 
+router.delete('/:id', authenticate, orderController.deleteOrderByUserIdAndOrderId);
+
 module.exports = router;

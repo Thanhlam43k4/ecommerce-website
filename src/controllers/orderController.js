@@ -107,6 +107,22 @@ const orderController = {
       console.error("Error fetching all orders: ", err);
       return res.status(500).json({message: "Unable to fetch all orders. Please try again later."});
     }
+  },
+  // DELETE /api/orders/:id - Delete order by userId and orderId
+  deleteOrderByUserIdAndOrderId: async (req, res) => {
+    const userId = req.user.userId;  // Assuming `userId` is available from authentication
+    const orderId = req.params.id;
+    console.log(userId,orderId);
+    try {
+      // Call the delete method from the Order model
+      const result = await Order.deleteByUserIdAndOrderId(userId, orderId);
+      // If result is successful, return success message
+      
+      return res.status(200).json(result);
+    } catch (err) {
+      console.error("Error deleting order:", err);
+      return res.status(500).json({ message: "Unable to delete the order. Please try again later." });
+    }
   }
 }
 

@@ -58,8 +58,8 @@
                                         </td>
                                         <td>
                                             <a href="/orders/<%= order.id %>" class="btn btn-primary btn-sm">View</a>
-                                            <button class="btn btn-danger btn-sm cancel-order"
-                                                data-id="<%= order.id %>">Cancel</button>
+                                            <button class="btn btn-danger btn-sm cancel-order" data-id="<%= order.id %>"
+                                                onclick="cancelOrder('<%= order.id %>')">Cancel</button>
                                         </td>
                                     </tr>
                                     <% }) %>

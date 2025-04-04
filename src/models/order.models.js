@@ -18,7 +18,34 @@ const Order = {
       throw err;
     }
   },
+  // Xóa đơn hàng và các item của đơn hàng theo userId và orderId
+  deleteByUserIdAndOrderId: async (userId, orderId) => {
+    const sqlDeleteItems = `
+    DELETE FROM order_items WHERE order_id = ?
+  `; // Xóa các sản phẩm trong đơn hàng
 
+    const sqlDeleteOrder = `
+    DELETE FROM orders WHERE id = ? AND buyer_id = ?
+  `; // Xóa đơn hàng
+
+    try {
+      // Xóa các item của đơn hàng
+      await db.promise().execute(sqlDeleteItems, [orderId]);
+
+      // Xóa đơn hàng nếu có
+      const [result] = await db.promise().execute(sqlDeleteOrder, [orderId, userId]);
+
+      // Nếu không có đơn hàng nào bị xóa, ném lỗi
+      if (result.affectedRows === 0) {
+        throw new Error('No order found or unauthorized to delete this order.');
+      }
+
+      return { success: true, message: 'Order and its items deleted successfully.' };
+    } catch (err) {
+      console.error('Error deleting order:', err);
+      throw err;
+    }
+  },
   // Thêm sản phẩm vào đơn hàng
   addOrderItems: async (order_id, product_id, quantity) => {
     const sql = `
@@ -78,7 +105,7 @@ const Order = {
   },
 
   // get all orders (for admin)
-  getAll: async() => {
+  getAll: async () => {
     const sql = "SELECT * FROM orders";
     try {
       const [rows] = await db.promise().query(sql);
