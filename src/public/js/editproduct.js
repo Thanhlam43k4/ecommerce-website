@@ -84,25 +84,51 @@ async function RemoveProduct(productId) {
     }
 }
 async function updateProduct(productId) {
-    const formData = new FormData();
-    formData.append('name', document.getElementById('edit-name-' + productId).value);
-    formData.append('description', document.getElementById('edit-description-' + productId).value);
-    formData.append('price', document.getElementById('edit-price-' + productId).value);
-
-    // Lấy ảnh từ input file
+    // Lấy các phần tử input/textarea cần thiết
+    const nameEl = document.getElementById('edit-name-' + productId);
+    const priceEl = document.getElementById('edit-price-' + productId);
+    const descriptionEl = document.getElementById('edit-description-' + productId);
     const imageInput = document.getElementById('edit-image-' + productId);
-    if (imageInput.files.length > 0) {
-        formData.append('image', imageInput.files[0]); // Đây mới là file thật
+
+    // Lấy giá trị hiện tại và giá trị ban đầu (data-original)
+    const currentName = nameEl.value;
+    const originalName = nameEl.dataset.original;
+
+    const currentPrice = priceEl.value;
+    const originalPrice = priceEl.dataset.original;
+
+    const currentDescription = descriptionEl.value.trim();
+    const originalDescription = descriptionEl.dataset.original.trim();
+
+    // Kiểm tra nếu không có thay đổi và không chọn file ảnh mới
+    if (
+        currentName === originalName &&
+        currentPrice === originalPrice &&
+        currentDescription === originalDescription &&
+        imageInput.files.length === 0
+    ) {
+        showToast('No changes detected with products!', false);
+        return;
     }
-    
+
+    // Tạo FormData để gửi dữ liệu update
+    const formData = new FormData();
+    formData.append('name', currentName);
+    formData.append('description', currentDescription);
+    formData.append('price', currentPrice);
+
+    // Nếu có file mới được chọn thì thêm vào formData
+    if (imageInput.files.length > 0) {
+        formData.append('image', imageInput.files[0]);
+    }
+
     try {
         const response = await fetch(`/api/products/${productId}`, {
             method: 'PUT',
-            body: formData, // Gửi FormData thay vì JSON
+            body: formData,
         });
 
         const data = await response.json();
-        console.log(data);
 
         if (response.ok && data.success) {
             showToast(data.message || 'Product updated successfully!', true);
@@ -115,42 +141,6 @@ async function updateProduct(productId) {
         console.error(err);
     }
 }
-// async function updateProduct(productId) {
-//     // Giả sử bạn lấy thông tin sản phẩm từ form hoặc input trong UI
-//     const updatedProduct = {
-//         name: document.getElementById('edit-name-' + productId).value,            // Lấy tên sản phẩm từ input có id="edit-name-{productId}"
-//         description: document.getElementById('edit-description-' + productId).value, // Lấy mô tả sản phẩm
-//         price: document.getElementById('edit-price-' + productId).value,             // Lấy giá sản phẩm
-//         image_urls: document.getElementById('edit-image-' + productId).value         // Lấy URL của ảnh (chỉ 1 ảnh)
-//     };
-
-//     try {
-//         // Gửi yêu cầu PUT để cập nhật sản phẩm theo productId
-//         const response = await fetch(`/api/products/${productId}`, {
-//             method: 'PUT',  // Sử dụng phương thức PUT để cập nhật
-//             headers: { 'Content-Type': 'application/json' },
-//             body: JSON.stringify(updatedProduct),  // Gửi thông tin sản phẩm cập nhật
-//         });
-
-//         const data = await response.json(); // Xử lý dữ liệu trả về từ server
-//         console.log(data);
-
-//         if (response.ok && data.success) {
-//             // Nếu cập nhật thành công, hiển thị thông báo thành công
-//             showToast(data.message || 'Product updated successfully!', true);
-//             setTimeout(() => location.reload(), 2000);  // Reload trang sau 2s
-//         } else {
-//             // Nếu có lỗi, hiển thị thông báo thất bại
-//             showToast(data.message || 'Failed to update product.', true);
-//             setTimeout(() => location.reload(), 2000);  // Reload trang sau 2s
-
-//         }
-//     } catch (err) {
-//         // Xử lý lỗi nếu có
-//         showToast('An error occurred. Please try again:', false);
-//         console.error(err);
-//     }
-// }
 
 
 setTimeout(() => {

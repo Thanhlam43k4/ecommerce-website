@@ -9,7 +9,6 @@ const authMiddleware = require("../middlewares/authenticate");
 const authenticate = require("../middlewares/authenticate");
 const authorizeAdmin = require("../middlewares/authorizeAdmin"); // Middleware này kiểm tra user có quyền admin hay không
 const Wishlist = require('../models/whislist.model.js');
-const PORT = 3000
 const reviewController = require("../controllers/reviewController.js")
 const orderController = require("../controllers/orderController.js")
 const productModel = require('../models/product.model.js')
@@ -26,9 +25,8 @@ const upload = require('../config/multer.js'); // Import multer config
 
 router.get('/', authMiddleware, async (req, res) => {
   const errorMessage = req.query.errorMessage || null;
-  console.log(req.user)
   try {
-    const response = await fetch(`http://localhost:${PORT}/api/products`);
+    const response = await fetch(`http://localhost:${process.env.PORT}/api/products`);
     const products = await response.json();
     res.render("home", { products, user: req.user, errorMessage }); // user sẽ là null nếu chưa đăng nhập
 
@@ -46,16 +44,13 @@ router.get('/about', authMiddleware, async (req, res) => {
 
 })
 router.get('/cart', authMiddleware, async (req, res) => {
-  if (!req.user) {
-    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
-  }
   try {
 
     // Lấy userId từ req.user
     const userId = req.user.userId; // Tùy theo cấu trúc của user
 
     // Gọi API để lấy dữ liệu giỏ hàng với userId trong header
-    const response = await axios.get(`http://localhost:${PORT}/api/cart?userId=${userId}`);
+    const response = await axios.get(`http://localhost:${process.env.PORT}/api/cart?userId=${userId}`);
 
 
     const cartItems = response.data.cartItems;
@@ -72,10 +67,10 @@ router.get('/category/:categoryId', authMiddleware, async (req, res) => {
 
   try {
     // Gọi API để lấy danh sách sản phẩm theo danh mục
-    const response = await fetch(`http://localhost:${PORT}/api/products/category/${categoryId}`);
+    const response = await fetch(`http://localhost:${process.env.PORT}/api/products/category/${categoryId}`);
     let products = await response.json();
 
-    const response1 = await fetch(`http://localhost:${PORT}/api/products`);
+    const response1 = await fetch(`http://localhost:${process.env.PORT}/api/products`);
     const featuredProducts = await response1.json();
     // Đảm bảo dữ liệu `products` là một mảng
     if (!Array.isArray(products)) {
@@ -122,31 +117,30 @@ router.get('/product/:productId', authMiddleware, async (req, res) => {
     const productId = req.params.productId;
 
     // Gọi API lấy thông tin sản phẩm
-    const response = await fetch(`http://localhost:${PORT}/api/products/${productId}`);
+    const response = await fetch(`http://localhost:${process.env.PORT}/api/products/${productId}`);
     const product = await response.json();
-
-    if (response.status !== 200) {
-      throw new Error(product.message || "Không tìm thấy sản phẩm");
-    }
 
     // Lấy reviews từ hàm getReviewsByProductId
     const reviews = await reviewController.getReviewsByProduct(productId);
+    if (!req.user) {
+      res.render('product_info', {
+        user: null,
+        product,
+        reviews
+      });
+    }else{
+      res.render('product_info', {
+        user: req.user,
+        product,
+        reviews
+      });  
+    }
 
     // Render ra view với sản phẩm và reviews
-    res.render('product_info', {
-      user: req.user,
-      product,
-      reviews
-    });
-
+    
   } catch (error) {
     console.error("Lỗi khi lấy thông tin sản phẩm:", error.message);
-    res.render('product_info', {
-      user: req.user,
-      product: null,
-      reviews: null,
-      errorMessage: error.message
-    });
+    return res.redirect(`/?errorMessage=${encodeURIComponent(error.message)}`);
   }
 });
 
@@ -162,7 +156,7 @@ router.get('/store', authMiddleware, async (req, res) => {
   }
 })
 router.get('/store/editproducts', authMiddleware, async (req, res) => {
-  if(!req.user){
+  if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
   }
   try {
@@ -175,7 +169,7 @@ router.get('/store/editproducts', authMiddleware, async (req, res) => {
 });
 //add product
 router.post('/store/addproduct', authMiddleware, upload.single('image'), async (req, res) => {
-  if(!req.user){
+  if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
   }
   try {
@@ -230,7 +224,7 @@ router.post('/store/addproduct', authMiddleware, upload.single('image'), async (
 
 // Route GET để render trang Settings
 router.get('/settings', authMiddleware, async (req, res) => {
-  if(!req.user){
+  if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
   }
   try {
@@ -250,7 +244,7 @@ router.get('/settings', authMiddleware, async (req, res) => {
 });
 
 router.post('/settings/update-password', authMiddleware, async (req, res) => {
-  if(!req.user){
+  if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
   }
   try {
@@ -315,7 +309,7 @@ router.get('/whistlist', authMiddleware, async (req, res) => {
 })
 
 router.get('/search', authMiddleware, async (req, res) => {
-  
+
   const searchQuery = req.query.q;
 
   if (!searchQuery) {
@@ -323,7 +317,7 @@ router.get('/search', authMiddleware, async (req, res) => {
   }
 
   try {
-    const response = await fetch(`http://localhost:${PORT}/api/products/search?q=${encodeURIComponent(searchQuery)}`);
+    const response = await fetch(`http://localhost:${process.env.PORT}/api/products/search?q=${encodeURIComponent(searchQuery)}`);
     const products = await response.json();
 
     if (!Array.isArray(products) || products.length === 0) {
@@ -356,7 +350,7 @@ router.get('/search', authMiddleware, async (req, res) => {
 });
 
 router.get('/orders', authMiddleware, async (req, res) => {
-  if(!req.user){
+  if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
   }
   try {
@@ -370,7 +364,7 @@ router.get('/orders', authMiddleware, async (req, res) => {
 });
 
 router.get('/orders/:id', authMiddleware, async (req, res) => {
-  if(!req.user){
+  if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
   }
   try {
@@ -446,7 +440,7 @@ router.get('/admin', authenticate, async (req, res) => {
 
 
 router.get('/profile', authMiddleware, async (req, res) => {
-  if(!req.user){
+  if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
   }
   try {

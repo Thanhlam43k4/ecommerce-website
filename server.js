@@ -21,7 +21,7 @@ const cartRoutes = require('./src/routes/cart.routes.js')
 const viewRoutes = require('./src/routes/view.routes.js')
 const whistlistRoutes = require('./src/routes/whistlist.routes.js')
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 const app = express();
 app.use(passport.initialize());
 

@@ -32,7 +32,7 @@ const reviewController = {
 
   // GET /api/reviews/:productId - get Review 
 
-  getReviewsByProductId: async (req, res) => {
+  getReviewsByProductId: async () => {
     try {
       const {productId} = req.params;
       const reviews = await Review.getReviewByProductId(productId);

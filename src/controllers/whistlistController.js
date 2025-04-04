@@ -12,6 +12,9 @@ const getWhistlistByUserId = async (req, res) => {
 // Thêm sản phẩm vào wishlist
 // Thêm sản phẩm vào wishlist với kiểm tra
 const addToWhistlist = async (req, res) => {
+  if (!req.user) {
+   return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+  }
   try {
     const { productId } = req.body;
     if (!productId) {
@@ -24,9 +27,9 @@ const addToWhistlist = async (req, res) => {
       return res.status(400).json({ msg: "Product already in whistlist!!" });
     }
     await Wishlist.addToWishlist(req.user.userId, productId);
-    res.status(201).json({ msg: "Added to wishlist successfully!" });
+    return res.status(201).json({ msg: "Added to wishlist successfully!" });
   } catch (error) {
-    res.status(500).json({ msg: "Server Error", error: error.message });
+    return res.status(500).json({ msg: "Server Error", error: error.message });
   }
 };
 // Xóa sản phẩm khỏi wishlist

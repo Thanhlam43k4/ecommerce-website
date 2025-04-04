@@ -23,6 +23,7 @@ const getCartByUserId = async (req, res) => {
 
 // Thêm sản phẩm vào giỏ hàng
 const addToCart = async (req, res) => {
+
   try {
     const userId = req.user.userId;
     const { productId, quantity } = req.body;

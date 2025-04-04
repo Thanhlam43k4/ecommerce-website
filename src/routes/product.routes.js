@@ -17,7 +17,6 @@ router.get('/:id',productController.getProductById);
 
 router.post('/',authenticate,productController.createProduct);
 
-
 router.put('/:productId', authenticate, upload.single('image'), async (req, res) => {
   try {
       const productId = req.params.productId;

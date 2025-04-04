@@ -63,6 +63,7 @@ function increaseQuantity() {
   quantityInput.value = quantity + 1;
 }
 async function addWhistlist(productId) {
+
   try {
     const response = await fetch('/api/whistlist/add', { // Chú ý sửa đúng URL nếu cần
       method: 'POST',

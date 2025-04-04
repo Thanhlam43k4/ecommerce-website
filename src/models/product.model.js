@@ -35,12 +35,44 @@ const Product = {
   },
   // Cập nhật sản phẩm (Seller)
   update: async (id, productData) => {
-    const { name, description, price, image_urls } = productData;
-    const sql = `UPDATE products 
-                 SET name = ?, description = ?, price = ?,image_urls = ?
-                 WHERE id = ?`;
+    // Tạo mảng chứa các trường cần update
+    const updateFields = [];
+    const values = [];
+
+    // Kiểm tra và thêm các trường có giá trị hợp lệ vào updateFields và values
+    if (productData.name !== undefined && productData.name !== null) {
+      updateFields.push('name = ?');
+      values.push(productData.name);
+    }
+
+    if (productData.description !== undefined && productData.description !== null) {
+      updateFields.push('description = ?');
+      values.push(productData.description);
+    }
+
+    if (productData.price !== undefined && productData.price !== null) {
+      updateFields.push('price = ?');
+      values.push(productData.price);
+    }
+
+    if (productData.image_urls !== undefined && productData.image_urls !== null) {
+      updateFields.push('image_urls = ?');
+      values.push(productData.image_urls);
+    }
+
+    // Nếu không có trường nào cần cập nhật, trả về 0
+    if (updateFields.length === 0) {
+      return 0;
+    }
+
+    // Tạo câu lệnh SQL với các trường cần cập nhật
+    const sql = `UPDATE products SET ${updateFields.join(', ')} WHERE id = ?`;
+
+    // Thêm id vào cuối mảng values
+    values.push(id);
+
     try {
-      const [result] = await db.promise().execute(sql, [name, description, price, image_urls, id]);
+      const [result] = await db.promise().execute(sql, values);
       return result.affectedRows;
     } catch (error) {
       throw error;
@@ -82,7 +114,7 @@ const Product = {
     try {
       // Thực thi câu lệnh SQL
       const [result] = await db.promise().execute(sql, [userId, productId]);
-      
+
       // Kiểm tra số lượng dòng bị ảnh hưởng
       if (result.affectedRows > 0) {
         console.log(`Deleted ${result.affectedRows} product(s) with product_id ${productId} for seller_id ${userId}.`);
@@ -123,7 +155,7 @@ const Product = {
       throw error;
     }
   },
-  
+
 
 }
 
