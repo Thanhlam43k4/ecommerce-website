@@ -366,4 +366,26 @@ h3.fw-bold {
 
 .view-all-btn:hover {
     background-color: #e62e5b;
+}.banner-slider {
+    width: 100%;
+    height: 350px;
+    overflow: hidden;
+    position: relative;
+    z-index: 1;
+}
+
+.slides {
+    display: flex;
+    width: 300%;
+    /* Giữ nguyên chiều rộng */
+    transition: transform 0.5s ease-in-out;
+    z-index: 1;
+}
+
+.slides img {
+    width: 100vw;
+    /* Mỗi ảnh chiếm toàn bộ chiều rộng màn hình */
+    height: 350px;
+    object-fit: cover;
+    z-index: 1;
 }

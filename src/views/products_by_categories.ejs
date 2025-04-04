@@ -19,90 +19,106 @@
 
 
 <header><%- include('partials/header') %></header>
-<section class="banner-container text-center position-relative">
-  <img src="/image/phone.png" class="img-fluid w-100" alt="Banner">
-
-</section>
+<div class="banner-slider">
+  <div class="slides">
+    <img src="/image/banner1.2.png" alt="Banner 1">
+    <img src="/image/banner1.1.png" alt="Banner 2">
+    <img src="/image/banner1.3.png" alt="Banner 3">
+  </div>
+</div>
 
 <body>
-  
+
 
   <div class="container mt-5">
     <div class="best-selling-header">
       <div class="left-section">
-        <span class="highlight-text"><%= categoryName %></span>
+        <span class="highlight-text">
+          <%= categoryName %>
+        </span>
         <h2 class="best-selling-title">Best Selling Products</h2>
       </div>
     </div>
-    
-    <% if (products.length > 0) { %>
+
+    <% if (products.length> 0) { %>
       <div id="productCarousel" class="carousel slide">
         <div class="carousel-inner">
-          <% for (let i = 0; i < products.length; i += 4) { %>
+          <% for (let i=0; i < products.length; i +=4) { %>
             <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
               <div class="row">
-                <% for (let j = i; j < i + 4 && j < products.length; j++) { %>
+                <% for (let j=i; j < i + 4 && j < products.length; j++) { %>
                   <div class="col-md-3">
                     <div class="card p-3">
                       <img src="<%= products[j].image_urls %>" class="card-img-top" alt="<%= products[j].name %>">
                       <div class="icon-group">
                         <span class="icon-circle"><i class="fa fa-heart"></i></span>
-                        <span class="icon-circle" onclick="viewProduct('<%= products[j].id %>')"><i class="fa fa-eye"></i></span>
+                        <span class="icon-circle" onclick="viewProduct('<%= products[j].id %>')"><i
+                            class="fa fa-eye"></i></span>
                       </div>
                       <div class="card-body text-center">
-                        <h6><%= products[j].name %></h6>
-                        <p>$<%= products[j].price %></p>
+                        <h6>
+                          <%= products[j].name %>
+                        </h6>
+                        <p>$<%= products[j].price %>
+                        </p>
                       </div>
                     </div>
                   </div>
-                <% } %>
+                  <% } %>
               </div>
             </div>
-          <% } %>
+            <% } %>
         </div>
       </div>
-    <% } else { %>
-      <p class="text-center text-muted">No products available in this category.</p>
-    <% } %>
+      <% } else { %>
+        <p class="text-center text-muted">No products available in this category.</p>
+        <% } %>
   </div>
 
   <div class="container mt-5">
     <div class="best-selling-header">
       <div class="left-section">
-        <span class="highlight-text"><%= categoryName %></span>
+        <span class="highlight-text">
+          <%= categoryName %>
+        </span>
         <h2 class="best-selling-title">Products</h2>
       </div>
     </div>
-    
-    <% if (featuredProducts.length > 0) { %>
+
+    <% if (featuredProducts.length> 0) { %>
       <div id="featuredProductCarousel" class="carousel slide">
         <div class="carousel-inner">
-          <% for (let i = 0; i < featuredProducts.length; i += 4) { %>
+          <% for (let i=0; i < featuredProducts.length; i +=4) { %>
             <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
               <div class="row">
-                <% for (let j = i; j < i + 4 && j < featuredProducts.length; j++) { %>
+                <% for (let j=i; j < i + 4 && j < featuredProducts.length; j++) { %>
                   <div class="col-md-3">
                     <div class="card p-3">
-                      <img src="<%= featuredProducts[j].image_urls %>" class="card-img-top" alt="<%= featuredProducts[j].name %>">
+                      <img src="<%= featuredProducts[j].image_urls %>" class="card-img-top"
+                        alt="<%= featuredProducts[j].name %>">
                       <div class="icon-group">
                         <span class="icon-circle"><i class="fa fa-heart"></i></span>
-                        <span class="icon-circle" onclick="viewProduct('<%= featuredProducts[j].id %>')"><i class="fa fa-eye"></i></span>
+                        <span class="icon-circle" onclick="viewProduct('<%= featuredProducts[j].id %>')"><i
+                            class="fa fa-eye"></i></span>
                       </div>
                       <div class="card-body text-center">
-                        <h6><%= featuredProducts[j].name %></h6>
-                        <p>$<%= featuredProducts[j].price %></p>
+                        <h6>
+                          <%= featuredProducts[j].name %>
+                        </h6>
+                        <p>$<%= featuredProducts[j].price %>
+                        </p>
                       </div>
                     </div>
                   </div>
-                <% } %>
+                  <% } %>
               </div>
             </div>
-          <% } %>
+            <% } %>
         </div>
       </div>
-    <% } else { %>
-      <p class="text-center text-muted">No featured products available.</p>
-    <% } %>
+      <% } else { %>
+        <p class="text-center text-muted">No featured products available.</p>
+        <% } %>
   </div>
 
   <script>
