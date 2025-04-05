@@ -36,7 +36,7 @@
 
           <div class="row mt-3">
             <div class="col-md-6">
-              <p><strong>Ratings</strong>: <span class="text-danger">★★★★★</span></p>
+              <p><strong>Ratings</strong>: <span class="text-danger"><%= ratingNumber %></span></p>
               <p><strong>Products</strong>: <span class="text-danger" id="productCount">0</span></p>
             </div>
             <div class="col-md-6">
@@ -118,20 +118,40 @@
                 <% } %>
 
                   <!-- Reviews Section -->
-                  <div class="mt-5 p-4 border rounded bg-light">
-                    <h5 class="text-danger">Reviews</h5>
-                    <textarea class="form-control mb-2" placeholder="Write your review here"></textarea>
-                    <div class="d-flex align-items-center">
-                      <div class="me-auto text-warning">★★★★★</div>
-                      <button class="btn btn-danger">Send Review</button>
-                    </div>
-                    <div class="mt-4 border-top pt-3">
-                      <p><strong>10293029302</strong></p>
-                      <p>15/2/2023</p>
-                      <p class="text-warning">★★★★★</p>
-                      <p>Good Product.</p>
-                    </div>
+                  <div id="reviewsContainer" class="mt-5 p-4 border rounded bg-light">
+                    <h5 class="text-danger">Some reviews</h5>
+        
+                    <% if (bestReviews && bestReviews.length> 0) { %>
+                        <% bestReviews.forEach(review=> { %>
+                            <div class="review-item mb-3">
+                                <div class="review-item mb-3 d-flex align-items-center">
+                                    <img src="/image/avatar.jpg" alt="User Avatar" class="rounded-circle me-2"
+                                        style="width: 60px; height: 60px;">
+                                    <h5 class="mb-0"><strong>
+                                            <%= review.buyer_username %>
+                                        </strong></h5>
+                                </div>
+                                <p>
+                                  Product: <%= review.product_name %>
+                                </p>
+                                <p>
+                                    <%= new Date(review.created_at).toLocaleString() %>
+                                </p>
+                              
+                                <p class="text-warning">
+                                    <%= '★' .repeat(review.rating) %>
+                                        <%= '☆' .repeat(5 - review.rating) %>
+                                </p>
+                                <p>
+                                    <%= review.comment %>
+                                </p>
+                            </div>
+                            <% }); %>
+                                <% } else { %>
+                                    <p>No reviews for this product yet.</p>
+                                    <% } %>
                   </div>
+        
           </div>
 
           <script src="/js/store.js"></script>

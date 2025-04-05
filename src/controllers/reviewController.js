@@ -54,6 +54,16 @@ const reviewController = {
     }
   },
 
+  getReviewsBySeller: async (sellerId) => {
+    try {
+      const reviews = await Review.getReviewsBySellerId(sellerId);
+      console.log(reviews)
+      return reviews
+    } catch (error) {
+      throw error;
+    }
+  }
+
 }
 
 
