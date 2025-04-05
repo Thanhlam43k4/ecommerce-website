@@ -84,18 +84,57 @@
         </div>
 
         <div id="productCarousel" class="carousel slide">
-            <!-- Điều hướng ở góc phải trên cùng -->
-            <div class="carousel-controls">
-                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel"
-                    data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                </button>
-                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel"
-                    data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                </button>
+            <% if (prd && prd.length> 0) { %>
+                <div id="productCarousel" class="carousel slide">
+                    <div class="carousel-controls">
+                        <button class="carousel-control-next" type="button"
+                            data-bs-target="#productCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-prev" type="button"
+                            data-bs-target="#productCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                    </div>
 
-            </div>
+                    <div class="carousel-inner">
+                        <% for (let i=0; i < prd.length; i +=4) { %>
+                            <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
+                                <div class="row">
+                                    <% for (let j=i; j < i + 4 && j < prd.length; j++) { %>
+                                        <div class="col-md-3">
+                                            <div class="card p-3">
+                                                <img src="<%= prd[j].image_urls %>"
+                                                    class="card-img-top" alt="<%= prd[j].name %>">
+                                                <div class="icon-group">
+                                                    <span class="icon-circle"
+                                                        onclick="addWhistlist('<%= prd[j].id %>')">
+                                                        <i class="fa fa-heart"></i>
+                                                    </span>
+                                                    <span class="icon-circle"
+                                                        onclick="viewProduct('<%= prd[j].id %>')"><i
+                                                            class="fa fa-eye"></i></span>
+                                                </div>
+                                                <div class="card-body text-center">
+                                                    <h6>
+                                                        <%= prd[j].name %>
+                                                    </h6>
+                                                    <p>$<%= prd[j].price %>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <% } %>
+                                </div>
+                            </div>
+                            <% } %>
+                    </div>
+                </div>
+                <% } else { %>
+                    <div class="alert alert-warning text-center mt-3">
+                        No products available at the moment.
+                    </div>
+                    <% } %>
         </div>
 
         <!-- Phần Reviews -->

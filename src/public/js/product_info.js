@@ -94,3 +94,6 @@ setTimeout(() => {
     setTimeout(() => errorToast.remove(), 500); // Xóa khỏi DOM sau 0.5s
   }
 }, 1000); // Tự động tắt sau 1 giây
+function viewProduct(productId) {
+  window.location.href = `/product/${productId}`;
+}
