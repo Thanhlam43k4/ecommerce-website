@@ -113,34 +113,38 @@ router.get('/cart/checkout', authMiddleware, async (req, res) => {
 });
 
 router.get('/product/:productId', authMiddleware, async (req, res) => {
+  let prd = [];
   try {
     const productId = req.params.productId;
-
     // Gọi API lấy thông tin sản phẩm
     const response = await fetch(`http://localhost:${process.env.PORT}/api/products/${productId}`);
     const product = await response.json();
+    
+    if (response.status !== 200) {
+      throw new Error(product.message || "Không tìm thấy sản phẩm");
+    }
 
     // Lấy reviews từ hàm getReviewsByProductId
     const reviews = await reviewController.getReviewsByProduct(productId);
-    if (!req.user) {
-      res.render('product_info', {
-        user: null,
-        product,
-        reviews
-      });
-    } else {
-      res.render('product_info', {
-        user: req.user,
-        product,
-        reviews
-      });
-    }
+    prd = await productModel.getAll(); // Lấy tất cả sản phẩm để hiển thị ở sidebar
 
     // Render ra view với sản phẩm và reviews
+    res.render('product_info', {
+      user: req.user,
+      product,
+      prd,
+      reviews
+    });
 
   } catch (error) {
     console.error("Lỗi khi lấy thông tin sản phẩm:", error.message);
-    return res.redirect(`/?errorMessage=${encodeURIComponent(error.message)}`);
+    res.render('product_info', {
+      user: req.user,
+      product: null,
+      prd,
+      reviews: null,
+      errorMessage: error.message
+    });
   }
 });
 
