@@ -91,44 +91,45 @@
                             </div>
 
                             <div class="carousel-inner">
-                                <% for (let i=0; i < products.length; i +=4) { %>
+                                <% for (let i = 0; i < products.length; i += 4) { %>
                                     <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
                                         <div class="row">
-                                            <% for (let j=i; j < i + 4 && j < products.length; j++) { %>
+                                            <% for (let j = 0; j < 4; j++) {
+                                                const index = (i + j) % products.length;
+                                            %>
                                                 <div class="col-md-3">
                                                     <div class="card p-3">
-                                                        <img src="<%= products[j].image_urls %>" class="card-img-top"
-                                                            alt="<%= products[j].name %>">
+                                                        <img src="<%= products[index].image_urls %>" class="card-img-top"
+                                                            alt="<%= products[index].name %>">
                                                         <div class="icon-group">
                                                             <% if (user) { %>
                                                                 <span class="icon-circle"
-                                                                    onclick="addWhistlist('<%= products[j].id %>')">
+                                                                    onclick="addWhistlist('<%= products[index].id %>')">
                                                                     <i class="fa fa-heart"></i>
                                                                 </span>
-                                                                <% } else { %>
-                                                                    <span class="icon-circle"
-                                                                        onclick="window.location.href='/api/auth/login'">
-                                                                        <i class="fa fa-heart"></i>
-                                                                    </span>
-                                                                    <% } %>
-                                                                        <span class="icon-circle"
-                                                                            onclick="viewProduct('<%= products[j].id %>')"><i
-                                                                                class="fa fa-eye"></i></span>
+                                                            <% } else { %>
+                                                                <span class="icon-circle"
+                                                                    onclick="window.location.href='/api/auth/login'">
+                                                                    <i class="fa fa-heart"></i>
+                                                                </span>
+                                                            <% } %>
+                                                            <span class="icon-circle"
+                                                                onclick="viewProduct('<%= products[index].id %>')">
+                                                                <i class="fa fa-eye"></i>
+                                                            </span>
                                                         </div>
                                                         <div class="card-body text-center">
-                                                            <h6>
-                                                                <%= products[j].name %>
-                                                            </h6>
-                                                            <p>$<%= products[j].price %>
-                                                            </p>
+                                                            <h6><%= products[index].name %></h6>
+                                                            <p>$<%= products[index].price %></p>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <% } %>
+                                            <% } %>
                                         </div>
                                     </div>
-                                    <% } %>
+                                <% } %>
                             </div>
+
                         </div>
                         <% } else { %>
                             <div class="alert alert-warning text-center mt-3">
@@ -167,49 +168,49 @@
             </div>
 
             <div class="carousel-inner">
-                <% for (let i=0; i < products.length; i +=4) { %> <!-- Hiển thị 4 sản phẩm mỗi slide -->
+                <% for (let i = 0; i < products.length; i += 4) { %>
                     <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
                         <div class="row">
-                            <% for (let j=i + 4; j < i + 8 && j < products.length; j++) { %>
+                            <% for (let j = 0; j < 4; j++) {
+                                const index = (i + j) % products.length; // Lặp tròn nếu thiếu
+                            %>
                                 <div class="col-md-3">
                                     <div class="card p-3">
-                                        <img src="<%= products[j].image_urls %>" class="card-img-top"
-                                            alt="<%= products[j].name %>">
+                                        <img src="<%= products[index].image_urls %>" class="card-img-top"
+                                            alt="<%= products[index].name %>">
                                         <div class="icon-group">
                                             <% if (user) { %>
                                                 <span class="icon-circle"
-                                                    onclick="addWhistlist('<%= products[j].id %>')">
+                                                    onclick="addWhistlist('<%= products[index].id %>')">
                                                     <i class="fa fa-heart"></i>
                                                 </span>
-                                                <% } else { %>
-                                                    <span class="icon-circle"
-                                                        onclick="window.location.href='/api/auth/login'">
-                                                        <i class="fa fa-heart"></i>
-                                                    </span>
-                                                    <% } %>
-                                                        <span class="icon-circle"
-                                                            onclick="viewProduct('<%= products[j].id %>')">
-                                                            <i class="fa fa-eye"></i>
-                                                        </span>
+                                            <% } else { %>
+                                                <span class="icon-circle"
+                                                    onclick="window.location.href='/api/auth/login'">
+                                                    <i class="fa fa-heart"></i>
+                                                </span>
+                                            <% } %>
+                                            <span class="icon-circle"
+                                                onclick="viewProduct('<%= products[index].id %>')">
+                                                <i class="fa fa-eye"></i>
+                                            </span>
                                         </div>
                                         <div class="card-body text-center">
-                                            <h6>
-                                                <%= products[j].name %>
-                                            </h6>
-                                            <p>$<%= products[j].price %>
-                                            </p>
+                                            <h6><%= products[index].name %></h6>
+                                            <p>$<%= products[index].price %></p>
                                             <p class="text-warning">
-                                                <%= '★' .repeat(products[j].stock % 5) + '☆' .repeat(5 -
-                                                    products[j].stock % 5) %>
+                                                <%= '★'.repeat(products[index].stock % 5) + '☆'.repeat(5 - (products[index].stock % 5)) %>
                                             </p>
                                         </div>
                                     </div>
                                 </div>
-                                <% } %>
+                            <% } %>
                         </div>
                     </div>
-                    <% } %>
+                <% } %>
             </div>
+            
+
         </div>
     </div>
     </div>

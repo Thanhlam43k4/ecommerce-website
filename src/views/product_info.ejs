@@ -116,37 +116,38 @@
                     </div>
 
                     <div class="carousel-inner">
-                        <% for (let i=0; i < prd.length; i +=4) { %>
+                        <% for (let i = 0; i < prd.length; i += 4) { %>
                             <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
                                 <div class="row">
-                                    <% for (let j=i; j < i + 4 && j < prd.length; j++) { %>
+                                    <% for (let j = 0; j < 4; j++) {
+                                        const index = (i + j) % prd.length; // Lặp tròn nếu thiếu
+                                    %>
                                         <div class="col-md-3">
                                             <div class="card p-3">
-                                                <img src="<%= prd[j].image_urls %>"
-                                                    class="card-img-top" alt="<%= prd[j].name %>">
+                                                <img src="<%= prd[index].image_urls %>" class="card-img-top"
+                                                    alt="<%= prd[index].name %>">
                                                 <div class="icon-group">
                                                     <span class="icon-circle"
-                                                        onclick="addWhistlist('<%= prd[j].id %>')">
+                                                        onclick="addWhistlist('<%= prd[index].id %>')">
                                                         <i class="fa fa-heart"></i>
                                                     </span>
                                                     <span class="icon-circle"
-                                                        onclick="viewProduct('<%= prd[j].id %>')"><i
-                                                            class="fa fa-eye"></i></span>
+                                                        onclick="viewProduct('<%= prd[index].id %>')">
+                                                        <i class="fa fa-eye"></i>
+                                                    </span>
                                                 </div>
                                                 <div class="card-body text-center">
-                                                    <h6>
-                                                        <%= prd[j].name %>
-                                                    </h6>
-                                                    <p>$<%= prd[j].price %>
-                                                    </p>
+                                                    <h6><%= prd[index].name %></h6>
+                                                    <p>$<%= prd[index].price %></p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <% } %>
+                                    <% } %>
                                 </div>
                             </div>
-                            <% } %>
+                        <% } %>
                     </div>
+                    
                 </div>
                 <% } else { %>
                     <div class="alert alert-warning text-center mt-3">
