@@ -57,10 +57,6 @@ router.post("/login", async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
 
-
-
-
-    console.log(password);
     if (!isMatch) return res.status(401).json({ message: "Mật khẩu không đúng" });
 
     // Tạo token JWT

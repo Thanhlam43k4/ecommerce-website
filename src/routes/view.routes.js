@@ -128,16 +128,16 @@ router.get('/product/:productId', authMiddleware, async (req, res) => {
         product,
         reviews
       });
-    }else{
+    } else {
       res.render('product_info', {
         user: req.user,
         product,
         reviews
-      });  
+      });
     }
 
     // Render ra view với sản phẩm và reviews
-    
+
   } catch (error) {
     console.error("Lỗi khi lấy thông tin sản phẩm:", error.message);
     return res.redirect(`/?errorMessage=${encodeURIComponent(error.message)}`);
@@ -437,7 +437,6 @@ router.get('/admin', authenticate, async (req, res) => {
     });
   }
 });
-
 
 router.get('/profile', authMiddleware, async (req, res) => {
   if (!req.user) {
