@@ -172,6 +172,7 @@
                         <div class="row">
                             <% for (let j=i + 4; j < i + 8 && j < products.length; j++) { %>
                                 <div class="col-md-3">
+
                                     <div class="card p-3">
                                         <img src="<%= products[j].image_urls %>" class="card-img-top"
                                             alt="<%= products[j].name %>">
@@ -192,16 +193,16 @@
                                                             <i class="fa fa-eye"></i>
                                                         </span>
                                         </div>
+                                        <div class="installment-badge">Trả góp 0%</div>
+
                                         <div class="card-body text-center">
+                                            
                                             <h6>
                                                 <%= products[j].name %>
                                             </h6>
                                             <p>$<%= products[j].price %>
                                             </p>
-                                            <p class="text-warning">
-                                                <%= '★' .repeat(products[j].stock % 5) + '☆' .repeat(5 -
-                                                    products[j].stock % 5) %>
-                                            </p>
+
                                         </div>
                                     </div>
                                 </div>

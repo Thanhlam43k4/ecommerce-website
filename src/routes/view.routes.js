@@ -154,6 +154,7 @@ router.get('/store', authMiddleware, async (req, res) => {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
 
   } else {
+    // const reviews = await reviewController.getReviewsByProduct(productId);
     const products = await userModel.getProductsBySellerId(req.user.userId)
 
     res.render('store', { products: products, user: req.user })
