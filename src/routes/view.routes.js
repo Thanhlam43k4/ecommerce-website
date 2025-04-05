@@ -150,14 +150,16 @@ router.get('/product/:productId', authMiddleware, async (req, res) => {
 
 router.get('/store', authMiddleware, async (req, res) => {
   if (!req.user) {
-
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
 
   } else {
     // const reviews = await reviewController.getReviewsByProduct(productId);
     const products = await userModel.getProductsBySellerId(req.user.userId)
+    const storeReviews = await reviewController.getReviewsBySeller(req.user.userId);
+    const bestReviews = storeReviews.slice(0, 5);
+    const ratingNumber = storeReviews.length;
 
-    res.render('store', { products: products, user: req.user })
+    res.render('store', { products: products, ratingNumber: ratingNumber, bestReviews: bestReviews,  user: req.user })
   }
 })
 router.get('/store/editproducts', authMiddleware, async (req, res) => {

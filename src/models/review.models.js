@@ -55,6 +55,30 @@ const Review = {
     }
   },
 
+  getReviewsBySellerId: async(sellerId) => {
+    const sql = `
+      SELECT 
+        p.seller_id,
+        p.name AS product_name,
+        u.username AS buyer_username, 
+        r.rating,
+        r.comment,
+        r.created_at
+      FROM products AS p
+      JOIN reviews AS r ON r.product_id = p.id
+      JOIN users AS u ON u.id = r.buyer_id
+      WHERE p.seller_id = ?
+      ORDER BY rating DESC
+    `
+    try {
+      const [rows] = await db.promise().execute(sql, [sellerId]);
+      console.log(rows)
+      return rows.length > 0 ? rows : null;
+    } catch (error) {
+      throw error;
+    }
+  },
+
   // Thêm đánh giá mới
   create: async (productId, buyerId, rating, comment) => {
     const sql = "INSERT INTO reviews (product_id, buyer_id, rating, comment) VALUES (?, ?, ?, ?)";
