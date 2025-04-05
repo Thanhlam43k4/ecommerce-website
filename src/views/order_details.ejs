@@ -44,41 +44,23 @@
                                     <p class="text-muted">Price: $<%= item.price %> each</p>
                                     
                                     <div class="review-section">
-                                        <% if (item.rating) { %>
-                                            <div class="stars">
-                                                <% for (let i = 0; i < 5; i++) { %>
-                                                    <% if (i < item.rating) { %>
-                                                        <i class="fa fa-star"></i>
-                                                    <% } else { %>
-                                                        <i class="fa fa-star"></i>
-                                                    <% } %>
+                                        <form class="reviewForm" data-product-id="<%= item.product_id %>">
+                                            <input type="hidden" name="product_id" value="<%= item.product_id %>">
+                                            <div class="mb-2">
+                                              <label>Rating:</label>
+                                              <div class="star-rating">
+                                                <% for (let i = 1; i <= 5; i++) { %>
+                                                  <i class="fa fa-star star" data-value="<%= i %>" style="cursor: pointer; color: gray;"></i>
                                                 <% } %>
+                                                <input type="hidden" name="rating" value="0">
+                                              </div>
                                             </div>
-                                        <% } %>
-                                        <% if (item.comment) { %>
-                                            <p class="review-comment mt-2"><em>"<%= item.comment %>"</em></p>
-                                        <% } %>
-                                        <% if (!item.rating && !item.comment) { %>
-                                            <form class="reviewForm" data-product-id="<%= item.product_id %>">
-                                              <input type="hidden" name="product_id" value="<%= item.product_id %>">
-                                              <div class="mb-2">
-                                                <label>Rating:</label>
-                                                <div class="star-rating">
-                                                  <% for (let i = 1; i <= 5; i++) { %>
-                                                    <i class="fa fa-star star" data-value="<%= i %>" style="cursor: pointer; color: gray;"></i>
-                                                  <% } %>
-                                                  <input type="hidden" name="rating" value="0">
-                                                </div>
-                                              </div>
-                                              <div class="mb-2">
-                                                <label>Comment:</label>
-                                                <textarea name="comment" class="form-control" placeholder="Write your review here"></textarea>
-                                              </div>
-                                              <button type="submit" class="btn btn-danger">Send Review</button>
-                                            </form>
-                                          <% } %>
-                                                                                                           
-                                        
+                                            <div class="mb-2">
+                                              <label>Comment:</label>
+                                              <textarea name="comment" class="form-control" placeholder="Write your review here"></textarea>
+                                            </div>
+                                            <button type="submit" class="btn btn-danger">Send Review</button>
+                                          </form>                                        
                                     </div>
                                     
                                 </div>
