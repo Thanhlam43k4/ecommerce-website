@@ -9,7 +9,7 @@
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="/css/style.css">
-    <link rel="icon" type="image/x-icon" href="/image/uet.jpeg">
+    <link rel="icon" type="image/x-icon" href="/image/uet.png">
 </head>
 
 <body>
@@ -17,7 +17,18 @@
     <div class="page-wrapper">
         <header>
             <%- include('partials/header') %>
+            <% if (successMessage) { %>
+                <div class="alert alert-success text-center mt-4">
+                    <strong>Success!</strong> <%= successMessage %>
+                </div>
+            <% } %>
+            <% if (cancelMessage) { %>
+                <div class="alert alert-warning text-center mt-4">
+                    <strong>Cancelled!</strong> <%= cancelMessage %>
+                </div>
+            <% } %>
         </header>
+        
         <div class="content">
             <!-- Main Content -->
             <div class="container mt-4">
@@ -47,10 +58,11 @@
                                         </td>
                                         <td>
                                             <span
-                                                class="badge bg-<%= order.status === 'Completed' ? 'warning' : 'success' %>">
-                                                Success
+                                                class="badge bg-<%= order.status === 'pending' ? 'warning' : 'success' %>">
+                                                <%= order.status.charAt(0).toUpperCase() + order.status.slice(1) %>
                                             </span>
                                         </td>
+
                                         <td>$<%= order.total_price %>
                                         </td>
                                         <td>
@@ -60,6 +72,17 @@
                                             <a href="/orders/<%= order.id %>" class="btn btn-primary btn-sm">View</a>
                                             <button class="btn btn-danger btn-sm cancel-order" data-id="<%= order.id %>"
                                                 onclick="cancelOrder('<%= order.id %>')">Cancel</button>
+                                            <% if (order.status==='pending' ) { %>
+                                                <div class="actions-container">
+                                                    <form action="/orders/payment/<%= order.id %>" method="POST">
+                                                        <!-- Add product details and total amount as hidden fields -->
+                                                        <input type="hidden" name="total_price"
+                                                            value="<%= order.total_price %>">
+                                                        <button type="submit"
+                                                            class="btn btn-success btn-sm">Payment</button>
+                                                    </form>
+                                                </div>
+                                                <% } %>
                                         </td>
                                     </tr>
                                     <% }) %>

@@ -43,7 +43,7 @@ CREATE TABLE orders (
     id INT AUTO_INCREMENT PRIMARY KEY,
     buyer_id INT,
     total_price DECIMAL(10,2) NOT NULL,
-    status ENUM('pending', 'confirmed', 'shipped', 'completed', 'cancelled') NOT NULL DEFAULT 'pending',
+    status ENUM('pending', 'success') NOT NULL DEFAULT 'pending',
     full_name VARCHAR(100) NOT NULL,
     phone VARCHAR(20) NOT NULL,
     street VARCHAR(255) NOT NULL,

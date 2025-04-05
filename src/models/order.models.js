@@ -100,7 +100,26 @@ const Order = {
       throw err;
     }
   },
-
+  updateStatusToSuccess: async (orderId) => {
+    const sql = `
+      UPDATE orders 
+      SET status = 'success' 
+      WHERE id = ? AND status = 'pending'`;  // Chỉ cập nhật nếu trạng thái hiện tại là 'pending'
+  
+    try {
+      const [result] = await db.promise().execute(sql, [orderId]);
+      
+      // Kiểm tra nếu có bản ghi bị ảnh hưởng (update thành công)
+      if (result.affectedRows === 0) {
+        throw new Error('No matching order found or order is already processed.');
+      }
+  
+      return { success: true, message: 'Order status updated to success.' };
+    } catch (err) {
+      console.error('Error updating order status:', err);
+      throw err;
+    }
+  },
   // get all orders (for admin)
   getAll: async () => {
     const sql = "SELECT * FROM orders";

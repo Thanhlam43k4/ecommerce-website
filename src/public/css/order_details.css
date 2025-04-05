@@ -52,3 +52,8 @@
     color: gold;
     font-size: 20px;
 }
+/* CSS tùy chỉnh cho chữ lớn hơn */
+.status-text {
+    font-size: 1.5rem; /* Hoặc có thể điều chỉnh tùy ý */
+    font-weight: bold; /* Làm cho chữ đậm nếu bạn muốn */
+}

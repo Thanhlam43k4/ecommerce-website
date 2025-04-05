@@ -20,6 +20,7 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 const upload = require('../config/multer.js'); // Import multer config
+const stripe = require('stripe')(process.env.SECRET_KEY_STRIPE);
 
 
 
@@ -44,6 +45,9 @@ router.get('/about', authMiddleware, async (req, res) => {
 
 })
 router.get('/cart', authMiddleware, async (req, res) => {
+  if (!req.user) {
+    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+  }
   try {
 
     // Lấy userId từ req.user
@@ -119,7 +123,7 @@ router.get('/product/:productId', authMiddleware, async (req, res) => {
     // Gọi API lấy thông tin sản phẩm
     const response = await fetch(`http://localhost:${process.env.PORT}/api/products/${productId}`);
     const product = await response.json();
-    
+
     if (response.status !== 200) {
       throw new Error(product.message || "Không tìm thấy sản phẩm");
     }
@@ -159,7 +163,7 @@ router.get('/store', authMiddleware, async (req, res) => {
     const bestReviews = storeReviews.slice(0, 5);
     const ratingNumber = storeReviews.length;
 
-    res.render('store', { products: products, ratingNumber: ratingNumber, bestReviews: bestReviews,  user: req.user })
+    res.render('store', { products: products, ratingNumber: ratingNumber, bestReviews: bestReviews, user: req.user })
   }
 })
 router.get('/store/editproducts', authMiddleware, async (req, res) => {
@@ -304,7 +308,6 @@ router.get('/whistlist', authMiddleware, async (req, res) => {
 
   try {
     const products = await Wishlist.getWishlistByUserId(req.user.userId);
-    console.log(products);
     res.render('whistlist', { products: products, user: req.user });
   } catch (error) {
     console.error('Error fetching wishlist:', error);
@@ -357,16 +360,18 @@ router.get('/search', authMiddleware, async (req, res) => {
 });
 
 router.get('/orders', authMiddleware, async (req, res) => {
+  const successMessage = req.query.successMessage || null;
+  const cancelMessage = req.query.cancelMessage || null;
   if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
   }
   try {
     const orders = await orderController.getOrders(req, res); // Lấy danh sách đơn hàng
     // console.log(orders);
-    res.render('order', { orders, user: req.user }); // Render trang order.ejs với data
+    res.render('order', { orders, user: req.user, successMessage: successMessage, cancelMessage : cancelMessage }); // Render trang order.ejs với data
 
   } catch (error) {
-    console.error("Error rendering orders page:", error);
+    res.redirect('/?errorMessage=' + encodeURIComponent(error));
   }
 });
 
@@ -461,6 +466,67 @@ router.get('/profile', authMiddleware, async (req, res) => {
   }
 });
 
+
+// Xử lý tạo thanh toán
+router.post('/orders/payment/:orderId', authMiddleware, async (req, res) => {
+  const { orderId } = req.params;
+  const { total_price } = req.body;
+  const session = await stripe.checkout.sessions.create({
+    payment_method_types: ['card'],
+    line_items: [{
+      price_data: {
+        currency: 'usd',
+        product_data: {
+          name: `Order #${orderId} - Test Product`,
+          // buyer_name: `Buyer ${buyer_name}`
+        },
+        unit_amount: total_price * 100, // 20 USD
+      },
+      quantity: 1,
+    }],
+    mode: 'payment',
+    success_url: `${req.protocol}://${req.get('host')}/orders/success/${orderId}`,
+    cancel_url: `${req.protocol}://${req.get('host')}/orders/cancel/${orderId}`,
+  });
+
+  res.redirect(303, session.url); // Điều hướng đến Stripe checkout
+});
+
+router.get('/orders/success/:orderId', authMiddleware, async (req, res) => {
+  if (!req.user) {
+    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+  }
+  const orderId = req.params.orderId;
+
+  try {
+    // Gọi phương thức để cập nhật trạng thái đơn hàng
+    const result = await orderModel.updateStatusToSuccess(orderId);
+
+    // Nếu cập nhật thành công
+    const successMessage = `Thanh toán thành công cho đơn hàng: #${orderId}`;
+    res.redirect(`/orders?successMessage=${encodeURIComponent(successMessage)}`);
+
+  } catch (err) {
+    // Nếu có lỗi trong quá trình cập nhật trạng thái
+    console.error('Error updating order status:', err);
+
+    // Trả về thông báo lỗi cho người dùng
+    const errorMessage = 'Không thể cập nhật trạng thái đơn hàng hoặc đơn hàng đã được xử lý.';
+    res.redirect(`/orders?successMessage=${encodeURIComponent(errorMessage)}`);
+  }
+});
+
+router.get('/orders/cancel/:orderId', authMiddleware,async (req, res) => {
+  if (!req.user) {
+    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+  }
+
+  const orderId = req.params.orderId;
+  const cancelMessage = `Hủy Thanh toán đơn hàng: #${orderId}`;
+
+  // Sau khi hủy đơn hàng thành công, redirect với query string chứa thông báo
+  res.redirect(`/orders?cancelMessage=${encodeURIComponent(cancelMessage)}`);
+});
 
 router.get('/errorPage', async (req, res) => {
   res.render('errorpage')
