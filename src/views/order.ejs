@@ -73,15 +73,15 @@
                                             <button class="btn btn-danger btn-sm cancel-order" data-id="<%= order.id %>"
                                                 onclick="cancelOrder('<%= order.id %>')">Cancel</button>
                                             <% if (order.status==='pending' ) { %>
-                                                <div class="actions-container">
-                                                    <form action="/orders/payment/<%= order.id %>" method="POST">
+                                                
+                                                    <form action="/orders/payment/<%= order.id %>" method="POST" class="d-inline">
                                                         <!-- Add product details and total amount as hidden fields -->
                                                         <input type="hidden" name="total_price"
                                                             value="<%= order.total_price %>">
                                                         <button type="submit"
                                                             class="btn btn-success btn-sm">Payment</button>
                                                     </form>
-                                                </div>
+                                                
                                                 <% } %>
                                         </td>
                                     </tr>

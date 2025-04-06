@@ -213,7 +213,7 @@ header {
     color: black;
     padding: 5px;
     border-radius: 5px;
-    transition: all 0.3s ease-in-out;
+    
 }
 
 /* Hiệu ứng khi di chuột vào icon người dùng */
@@ -263,7 +263,7 @@ header {
 .user-menu:hover .sub-menu-user {
     transform: translateY(0);
     visibility: visible;
-    transition: 1s;
+    
     z-index: 10;
 }
 
