@@ -534,4 +534,28 @@ router.get('/errorPage', async (req, res) => {
 })
 
 
+
+router.get('/adminv2',authMiddleware, async (req, res) => {
+  if (!req.user) {
+    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+  }
+  res.render('adminv2', {
+      user: req.user,
+      orders: 1587,
+      revenue: 46782,
+      avgPrice: 15.9,
+      productsSold: 1890,
+      monthlyEarnings: [
+          { name: 'Total Income', value: 56241 },
+          { name: 'Marketplace', value: 23651 },
+          { name: 'Total Income', value: 89425 },
+          { name: 'Marketplace', value: 56210 },
+          { name: 'Last Month', value: 8974 },
+          { name: 'Marketplace', value: 2548 },
+          { name: 'Total Income', value: 6985 }
+      ]
+  });
+});
+
+
 module.exports = router;
