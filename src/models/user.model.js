@@ -17,7 +17,21 @@ const User = {
       throw err;
     }
   },
-
+  checkUserAdmin: async (userId) => {
+    try {
+      const sql = "SELECT role FROM users WHERE id = ?";
+      const [rows] = await db.promise().execute(sql, [userId]);
+  
+      if (rows.length > 0) {
+        return rows[0].role === 'admin';
+      } else {
+        return false; // Không tìm thấy user
+      }
+    } catch (error) {
+      console.error("Lỗi khi kiểm tra role:", error);
+      throw error;
+    }
+  },
   // Cập nhật mật khẩu
   updatePassword: async (userId, newPassword) => {
     try {

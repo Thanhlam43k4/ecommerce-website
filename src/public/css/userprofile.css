@@ -83,3 +83,59 @@ h5.text-danger {
         padding: 8px 15px;
     }
 }
+.content h5.text-danger {
+    font-weight: bold;
+    font-size: 1.6rem;
+    color: #dc3545;
+    border-bottom: 2px solid #dc3545;
+    padding-bottom: 5px;
+    margin-bottom: 20px;
+}
+
+.list-group-item {
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease-in-out;
+}
+
+.list-group-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-admin.card-body-admin {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px dashed #dee2e6;
+}
+
+.sidebar-menu li a {
+    display: block;
+    padding: 10px 15px;
+    font-weight: 500;
+    color: #333;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.sidebar-menu li a.active,
+.sidebar-menu li a:hover {
+    background-color: #dc3545;
+    color: white;
+}
+
+.input-group input.form-control {
+    border: 1px solid #dc3545;
+}
+
+.input-group button {
+    background-color: #dc3545;
+    color: white;
+}
+
+.input-group button:hover {
+    background-color: #bb2d3b;
+}

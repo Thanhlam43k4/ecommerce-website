@@ -14,9 +14,10 @@ router.post("/register", async (req, res) => {
   try {
     const { name, email, password, confirmPassword } = req.body;
     console.log(req.body);
-    
+
     if (password !== confirmPassword) {
-      return res.render("signup", { errorMessage: "Mật khẩu không khớp!",user:null,  });
+      return res.redirect('/api/auth/register?errorMessage=' + encodeURIComponent('Confirm Password is not matching!!!'));
+
     }
 
     // ✅ Gọi controller register và nhận lại user hoặc errorMessage
@@ -24,7 +25,8 @@ router.post("/register", async (req, res) => {
 
     // ✅ Nếu có lỗi (ví dụ: email tồn tại)
     if (errorMessage) {
-      return res.render("register", { error: errorMessage, user : null }); // Chuyển về trang login
+      return res.redirect('/api/auth/register?errorMessage=' + encodeURIComponent(errorMessage));
+
     }
 
     const SECRET_KEY = process.env.SECRET_KEY;
@@ -40,12 +42,14 @@ router.post("/register", async (req, res) => {
 
   } catch (error) {
     console.error("🔥 Lỗi khi đăng ký:", error);
-    res.render("signup", { error: "Lỗi server! Vui lòng thử lại." });
+    return res.redirect('/api/auth/register?errorMessage=' + encodeURIComponent(error));
+
   }
 });
 
 router.get("/register", (req, res) => {
-  res.render("signup", { errorMessage: null, user: req.user});
+  const errorMessage = req.query.errorMessage || null;
+  res.render("signup", { errorMessage: errorMessage, user: req.user });
 });
 
 router.post("/login", async (req, res) => {
@@ -65,7 +69,7 @@ router.post("/login", async (req, res) => {
     });
 
     res.cookie("token", token, { httpOnly: true, maxAge: 3600000 }); // Lưu JWT vào cookie
-  
+
     res.redirect("/"); // Chuyển hướng về trang chủ
 
   } catch (error) {
@@ -82,15 +86,15 @@ router.get("/login", async (req, res) => {
 
 })
 
-router.get("/logout", async(req,res) =>{
+router.get("/logout", async (req, res) => {
 
   res.clearCookie("token", { httpOnly: true, secure: false, sameSite: "lax" }); // Xóa cookie token
-  
+
   res.redirect("/api/auth/login"); // Chuyển hướng về trang đăng nhập
 
 })
 // Route đăng nhập bằng Google
-router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'],session : false }));
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'], session: false }));
 
 // Callback từ Google
 router.get('/google/callback', passport.authenticate('google', { session: false }), (req, res) => {
