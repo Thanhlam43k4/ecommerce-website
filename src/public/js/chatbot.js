@@ -79,7 +79,7 @@ function selectOption(option) {
   switch (option) {
       case 'info':
           message = "Introduce your website";
-          response = "Tk88 - UET Store is an e-commerce platform specializing in smart electronic products. It is also a marketplace where you can buy or sell various items.";
+          response = "UET Store is an e-commerce platform specializing in smart electronic products. It is also a marketplace where you can buy or sell various items.";
           break;
       case 'usage':
           message = "How to Use the Website";

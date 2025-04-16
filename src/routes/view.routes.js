@@ -48,21 +48,36 @@ router.get('/cart', authMiddleware, async (req, res) => {
   if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
   }
+  
   try {
+    const userId = req.user.userId;
 
-    // Lấy userId từ req.user
-    const userId = req.user.userId; // Tùy theo cấu trúc của user
-
-    // Gọi API để lấy dữ liệu giỏ hàng với userId trong header
     const response = await axios.get(`http://localhost:${process.env.PORT}/api/cart?userId=${userId}`);
-
-
     const cartItems = response.data.cartItems;
-    req.session.cartItems = cartItems;
-    res.render('cart', { user: req.user, cartItems });
+
+    const updatedCartItems = await Promise.all(cartItems.map(async (item) => {
+      try {
+        const stockResponse = await axios.get(`http://localhost:${process.env.PORT}/api/products/${item.product_id}`);
+        const stock = stockResponse.data.stock;
+
+        return {
+          ...item,
+          stock: stock
+        };
+      } catch (error) {
+        console.error(`Error fetching stock for product ID ${item.product_id}:`, error);
+        return {
+          ...item,
+          stock: 0  // Default to 0 if there's an error fetching stock
+        };
+      }
+    }));
+
+    req.session.cartItems = updatedCartItems;
+    res.render('cart', { user: req.user, cartItems: updatedCartItems });
 
   } catch (error) {
-    console.error(error);
+    console.error('Error loading cart items:', error);
     res.render('cart', { user: req.user, cartItems: [], errorMessage: 'Failed to load cart items' });
   }
 });
@@ -85,7 +100,7 @@ router.get('/category/:categoryId', authMiddleware, async (req, res) => {
     let categoryName = await categoryModel.getCatNameById(categoryId);
 
     // Nếu không tìm thấy danh mục, đặt tên mặc định
-    categoryName = categoryName || 'Danh mục không tồn tại';
+    categoryName = categoryName || 'Category does not exsist';
 
     // Render trang với danh sách sản phẩm và tên danh mục
     res.render('products_by_categories', { products, categoryName, user: req.user, featuredProducts });
@@ -93,7 +108,7 @@ router.get('/category/:categoryId', authMiddleware, async (req, res) => {
     console.error('Lỗi khi lấy danh sách sản phẩm theo danh mục:', error);
 
     // Render trang với danh mục rỗng nếu có lỗi
-    res.render('products_by_categories', { products: [], categoryName: 'Danh mục không tồn tại', user: req.user });
+    res.render('products_by_categories', { products: [], categoryName: 'Category does not exist', user: req.user });
   }
 })
 router.get('/cart/checkout', authMiddleware, async (req, res) => {
@@ -125,7 +140,7 @@ router.get('/product/:productId', authMiddleware, async (req, res) => {
     const product = await response.json();
 
     if (response.status !== 200) {
-      throw new Error(product.message || "Không tìm thấy sản phẩm");
+      throw new Error(product.message || "Product not found");
     }
 
     // Lấy reviews từ hàm getReviewsByProductId
@@ -155,17 +170,26 @@ router.get('/product/:productId', authMiddleware, async (req, res) => {
 router.get('/store', authMiddleware, async (req, res) => {
   if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+  }
 
-  } else {
-    // const reviews = await reviewController.getReviewsByProduct(productId);
-    const products = await userModel.getProductsBySellerId(req.user.userId)
-    const storeReviews = await reviewController.getReviewsBySeller(req.user.userId);
+  try {
+    const products = await userModel.getProductsBySellerId(req.user.userId);
+    const storeReviews = await reviewController.getReviewsBySeller(req.user.userId) || [];
     const bestReviews = storeReviews.slice(0, 5);
     const ratingNumber = storeReviews.length;
 
-    res.render('store', { products: products, ratingNumber: ratingNumber, bestReviews: bestReviews, user: req.user })
+    return res.render('store', {
+      products,
+      ratingNumber,
+      bestReviews,
+      user: req.user
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Error when fetching review.');
   }
-})
+});
+
 router.get('/store/editproducts', authMiddleware, async (req, res) => {
   if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
@@ -263,19 +287,19 @@ router.post('/settings/update-password', authMiddleware, async (req, res) => {
 
     // Kiểm tra mật khẩu mới và xác nhận có khớp không
     if (newPassword !== confirmPassword) {
-      throw new Error('Mật khẩu mới và xác nhận không khớp');
+      throw new Error('New password and confirmation do not match');
     }
 
     // Lấy thông tin user từ database
     const user = await userModel.findById(req.user.userId);
     if (!user) {
-      throw new Error('Không tìm thấy người dùng');
+      throw new Error('Not found user information');
     }
 
     // Kiểm tra mật khẩu hiện tại
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      throw new Error('Mật khẩu hiện tại không đúng');
+      throw new Error('The current password is incorrect');
     }
 
     // Mã hóa mật khẩu mới
@@ -285,19 +309,19 @@ router.post('/settings/update-password', authMiddleware, async (req, res) => {
     // Cập nhật mật khẩu
     const updated = await userModel.updatePassword(req.user.userId, hashedNewPassword);
     if (!updated) {
-      throw new Error('Không thể cập nhật mật khẩu');
+      throw new Error('Can not update password');
     }
 
     res.render('setting', {
       user: req.user,
-      successMessage: 'Cập nhật mật khẩu thành công!',
+      successMessage: 'Update password successfully!',
       errorMessage: null
     });
   } catch (error) {
     res.render('setting', {
       user: req.user,
       successMessage: null,
-      errorMessage: error.message || 'Không thể cập nhật mật khẩu'
+      errorMessage: error.message || 'Can not update password'
     });
   }
 });
@@ -323,7 +347,7 @@ router.get('/search', authMiddleware, async (req, res) => {
   const searchQuery = req.query.q;
 
   if (!searchQuery) {
-    return res.redirect('/?errorMessage=' + encodeURIComponent('Vui lòng nhập từ khóa tìm kiếm'));
+    return res.redirect('/?errorMessage=' + encodeURIComponent('Plese type keyword for searching'));
   }
 
   try {
@@ -334,7 +358,7 @@ router.get('/search', authMiddleware, async (req, res) => {
       return res.render('search_result', {
         products: [],
         user: req.user,
-        errorMessage: 'Không tìm thấy sản phẩm nào',
+        errorMessage: 'Product not found',
         searchQuery,
       });
     }
@@ -353,7 +377,7 @@ router.get('/search', authMiddleware, async (req, res) => {
     res.render('search_result', {
       products: [],
       user: req.user,
-      errorMessage: 'Lỗi khi tìm kiếm sản phẩm',
+      errorMessage: 'Error when searching product',
       searchQuery,
     });
   }
@@ -390,9 +414,9 @@ router.get('/orders/:id', authMiddleware, async (req, res) => {
 //admin
 router.get('/admin', async (req, res) => {
   // Kiểm tra xác thực
-  // if (!req.user) {
-  //   return res.redirect('/?errorMessage=' + encodeURIComponent('Bạn cần đăng nhập trước'));
-  // }
+  if (!req.user) {
+    return res.redirect('/?errorMessage=' + encodeURIComponent('you need to login first'));
+  }
 
   // Lấy các tham số query
   const type = req.query.type || 'users'; // Mặc định là users
@@ -414,7 +438,7 @@ router.get('/admin', async (req, res) => {
     } else if (type === 'products') {
       if (searchQuery) {
         data = await productModel.searchByQuery(searchQuery); // Chỉ tìm theo tên
-        message = `Tìm thấy ${data.length} sản phẩm với tên: ${searchQuery}`;
+        message = `Found ${data.length} product: ${searchQuery}`;
       } else {
         data = await productModel.getAll();
       }
@@ -445,7 +469,7 @@ router.get('/admin', async (req, res) => {
       searchEmail: searchEmail,
       searchQuery: searchQuery,
       buyer_id: buyer_id,
-      errorMessage: `Lỗi khi tải danh sách ${type}`
+      errorMessage: `Error when loading list ${type}`
     });
   }
 });
@@ -504,7 +528,7 @@ router.get('/orders/success/:orderId', authMiddleware, async (req, res) => {
     const result = await orderModel.updateStatusToSuccess(orderId);
 
     // Nếu cập nhật thành công
-    const successMessage = `Thanh toán thành công cho đơn hàng: #${orderId}`;
+    const successMessage = `Payment successful for the order: #${orderId}`;
     res.redirect(`/orders?successMessage=${encodeURIComponent(successMessage)}`);
 
   } catch (err) {
@@ -512,7 +536,7 @@ router.get('/orders/success/:orderId', authMiddleware, async (req, res) => {
     console.error('Error updating order status:', err);
 
     // Trả về thông báo lỗi cho người dùng
-    const errorMessage = 'Không thể cập nhật trạng thái đơn hàng hoặc đơn hàng đã được xử lý.';
+    const errorMessage = 'Unable to update the order status or the order has already been processed';
     res.redirect(`/orders?successMessage=${encodeURIComponent(errorMessage)}`);
   }
 });
@@ -523,7 +547,7 @@ router.get('/orders/cancel/:orderId', authMiddleware, async (req, res) => {
   }
 
   const orderId = req.params.orderId;
-  const cancelMessage = `Hủy Thanh toán đơn hàng: #${orderId}`;
+  const cancelMessage = `Cancel payment for order: #${orderId}`;
 
   // Sau khi hủy đơn hàng thành công, redirect với query string chứa thông báo
   res.redirect(`/orders?cancelMessage=${encodeURIComponent(cancelMessage)}`);

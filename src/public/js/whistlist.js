@@ -27,11 +27,11 @@ function validateAmount(productId, stock) {
 
 
     if (!/^\d+$/.test(value)) {
-        showToast("Vui lòng chỉ nhập số nguyên dương!", false);
+        showToast("Please enter a positive integer!", false);
     }
     else if (parseInt(value, 10) > stock) {
         input.value = stock;
-        showToast(`Số lượng không thể vượt quá ${stock}!`, false);
+        showToast(`Quantity cannot exceed${stock}!`, false);
     }
     else if (parseInt(value, 10) < 1) {
         input.value = 1;

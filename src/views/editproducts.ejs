@@ -54,14 +54,14 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Price</label>
-                                        <input type="number" class="form-control" name="price" step="0.01"
+                                        <input type="number" class="form-control" name="price" step="0.01" min="0"
                                             placeholder="Enter price" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="mb-3">
                                         <label class="form-label">Quantity</label>
-                                        <input type="number" class="form-control" name="stock"
+                                        <input type="number" class="form-control" name="stock" min="0"
                                             placeholder="Enter quantity" required>
                                     </div>
                                     <div class="mb-3">
@@ -156,7 +156,7 @@
                                                     <input type="number" id="edit-price-<%= product.id %>"
                                                         class="form-control edit-price"
                                                         data-original="<%= product.price %>"
-                                                        value="<%= product.price %>" step="0.01"
+                                                        value="<%= product.price %>" step="0.01" min="0"
                                                         placeholder="Enter price" required>
                                                 </div>
                                             </div>
@@ -164,7 +164,7 @@
                                                 <div class="mb-3">
                                                     <label class="form-label">Quantity</label>
                                                     <input type="number" id="edit-quantity-<%= product.id %>"
-                                                        class="form-control edit-quantity" value="<%= product.stock %>"
+                                                        class="form-control edit-quantity" value="<%= product.stock %>" min="0"
                                                         placeholder="Enter quantity" readonly>
                                                 </div>
                                                 <div class="mb-3">

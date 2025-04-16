@@ -6,20 +6,20 @@ const validateUserProfile = (req, res, next) => {
 
   // Kiểm tra số điện thoại (10-15 chữ số)
   if (!/^\d{10,15}$/.test(phone)) {
-    errors.push("Số điện thoại phải có từ 10 đến 15 chữ số.");
+    errors.push("Phone number must be between 10 and 15 digits.");
   }
 
   // Kiểm tra địa chỉ, thành phố, mã bưu điện không rỗng
   if (!address.trim()) {
-    errors.push("Địa chỉ không được để trống.");
+    errors.push("Address cannot be empty.");
   }
 
   if (!city.trim()) {
-    errors.push("Thành phố không được để trống.");
+    errors.push("City cannot be empty.");
   }
 
   if (!postalCode.trim() || isNaN(postalCode)) {
-    errors.push("Mã bưu điện phải là số và không được để trống.");
+    errors.push("Postal code must be numeric and cannot be empty.");
   }
 
   // Nếu có lỗi, trả về phản hồi JSON hoặc render trang với thông báo lỗi
