@@ -75,18 +75,16 @@ const orderController = {
     },
 
   //GET /api/orders/details/:id - get all order items from orderId
-  getOrderDetailsById: async(req, res) => {
+  getOrderDetailsById: async(orderId) => {
     try {
-      const orderId = req.params.id;
-      
       const order = await Order.getOrderById(orderId);
       if (!order) {
-        return res.status(404).json({message: "Order not found."});
+        console.log("Order not found.");
       }
       
       const orderItems = await Order.getOrderItemsByOrderId(orderId);
       if (!orderItems || orderItems.length === 0) {
-        return res.status(404).json({message: "No items found in this order."});
+        console.log("No items found in this order.");
       }
       
       return {
@@ -96,7 +94,7 @@ const orderController = {
       
     } catch(err) {
       console.error("Error fetching all order items", err);
-      return res.status(500).json({message: "Unable to fetch order details. Please try again later."});
+      console.log("Unable to fetch order details. Please try again later.");
     }
   },
 

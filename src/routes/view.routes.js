@@ -11,6 +11,7 @@ const authorizeAdmin = require("../middlewares/authorizeAdmin"); // Middleware n
 const Wishlist = require('../models/whislist.model.js');
 const reviewController = require("../controllers/reviewController.js")
 const orderController = require("../controllers/orderController.js")
+const userController = require("../controllers/userController.js")
 const productModel = require('../models/product.model.js')
 const orderModel = require('../models/order.models.js')
 const productController = require('../controllers/productController.js')
@@ -404,7 +405,8 @@ router.get('/orders/:id', authMiddleware, async (req, res) => {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
   }
   try {
-    const orderDetails = await orderController.getOrderDetailsById(req, res);
+    const orderId = req.params.id;
+    const orderDetails = await orderController.getOrderDetailsById(orderId);
     res.render('order_details', { orderDetails, user: req.user });
   } catch (err) {
     console.error("Error rendering order_details page: ", err);
@@ -559,25 +561,128 @@ router.get('/errorPage', async (req, res) => {
 
 
 router.get('/adminv2',authMiddleware, async (req, res) => {
-  if (!req.user) {
-    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
-  }
-  res.render('adminv2', {
+  // if (!req.user) {
+  //   return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+  // }
+  try {
+    const userResponse = await fetch(`http://localhost:${process.env.PORT}/api/admin/user`);
+    const users = await userResponse.json();
+
+    const ordersResponse = await fetch(`http://localhost:${process.env.PORT}/api/order/all`);
+    const orders = await ordersResponse.json();
+
+    const numberOfUser = users.length;
+    const numberOfOrders = orders.length;
+    let totalProductsSold = 0;
+    let totalRevenue = 0;
+
+    for (const order of orders) {
+      const status = order.status;
+      const orderId = order.id;
+      if (status === 'success') {
+        totalRevenue += parseFloat(order.total_price);
+        const details = await orderController.getOrderDetailsById(orderId);
+        for (const item of details.items) {
+          totalProductsSold += item.quantity
+        }
+      }
+    }
+
+    const now = new Date();
+    const month = now.getMonth() - 1;
+    const currentYear = now.getFullYear();
+    const daysInMonth = new Date(currentYear, month, 0).getDate();
+
+    const dailyLabels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
+    const dailyUsers = Array(daysInMonth).fill(0);
+    const dailyOrders = Array(daysInMonth).fill(0);
+    const dailyRevenue = Array(daysInMonth).fill(0);
+
+    for (const order of orders) {
+      const orderDate = new Date(order.created_at);
+      const isSameMonth =
+        orderDate.getFullYear() === currentYear &&
+        orderDate.getMonth() === month;
+
+      if (isSameMonth) {
+        const day = orderDate.getDate() - 1;
+        if (day >= 0 && day < daysInMonth) {
+          dailyOrders[day] += 1;
+          if (order.status === 'success') {
+            const price = parseFloat(order.total_price || 0);
+            dailyRevenue[day] += price;
+          }
+        }
+
+      }
+    }
+
+    for (const user of users) {
+      const userDate = new Date(user.created_at);
+      const isSameMonth =
+        userDate.getFullYear() === currentYear &&
+        userDate.getMonth() === month;
+
+      if (isSameMonth) {
+        const day = userDate.getDate() - 1;
+        if (day >= 0 && day < daysInMonth) {
+          dailyUsers[day] += 1;
+        }        
+      }
+    }
+
+    console.log(dailyRevenue);
+
+    res.render('adminv2', {
+        user: req.user,
+        totalUser: numberOfUser,
+        orders: numberOfOrders,
+        revenue: totalRevenue,
+        avgPrice: 15.9,
+        productsSold: totalProductsSold,
+        mostRecentlyMonth: {
+          label:dailyLabels,
+          users: dailyUsers,
+          revenue: dailyRevenue,
+          orders: dailyOrders
+        },
+        monthlyEarnings: [
+            { name: 'Total Income', value: 56241 },
+            { name: 'Marketplace', value: 23651 },
+            { name: 'Total Income', value: 89425 },
+            { name: 'Marketplace', value: 56210 },
+            { name: 'Last Month', value: 8974 },
+            { name: 'Marketplace', value: 2548 },
+            { name: 'Total Income', value: 6985 }
+        ]
+     });
+  } catch (error) {
+    console.error(`Lỗi khi tải danh sách :`, error);
+    res.render('adminv2', {
       user: req.user,
-      orders: 1587,
-      revenue: 46782,
-      avgPrice: 15.9,
-      productsSold: 1890,
+      totalUser: 0,
+      orders: 0,
+      revenue: 0,
+      avgPrice: 0,
+      productsSold: 0,
+      mostRecentlyMonth: {
+        label:Array(31).fill(0),
+        users: Array(31).fill(0),
+        revenue: Array(31).fill(0),
+        orders: Array(31).fill(0)
+      },
       monthlyEarnings: [
-          { name: 'Total Income', value: 56241 },
-          { name: 'Marketplace', value: 23651 },
-          { name: 'Total Income', value: 89425 },
-          { name: 'Marketplace', value: 56210 },
-          { name: 'Last Month', value: 8974 },
-          { name: 'Marketplace', value: 2548 },
-          { name: 'Total Income', value: 6985 }
+          { name: 'Total Income', value: 0 },
+          { name: 'Marketplace', value: 0 },
+          { name: 'Total Income', value: 0 },
+          { name: 'Marketplace', value: 0 },
+          { name: 'Last Month', value: 0 },
+          { name: 'Marketplace', value: 0 },
+          { name: 'Total Income', value: 0 }
       ]
-  });
+    });
+  }
+  
 });
 
 
