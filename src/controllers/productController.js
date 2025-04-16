@@ -105,7 +105,7 @@ const productController = {
   searchProducts: async (req, res) => {
     const searchQuery = req.query.q;
     if (!searchQuery) {
-      return res.status(400).json({ message: "Vui lòng cung cấp từ khóa tìm kiếm" });
+      return res.status(400).json({ message: "Please provide your key word" });
     }
     try {
       const products = await Product.searchByQuery(searchQuery);
