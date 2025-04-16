@@ -393,7 +393,7 @@ router.get('/orders', authMiddleware, async (req, res) => {
   try {
     const orders = await orderController.getOrders(req, res); // Lấy danh sách đơn hàng
     // console.log(orders);
-    res.render('order', { orders, user: req.user, successMessage: successMessage, cancelMessage : cancelMessage }); // Render trang order.ejs với data
+    res.render('order', { orders, user: req.user, successMessage: successMessage, cancelMessage: cancelMessage }); // Render trang order.ejs với data
 
   } catch (error) {
     res.redirect('/?errorMessage=' + encodeURIComponent(error));
@@ -414,7 +414,7 @@ router.get('/orders/:id', authMiddleware, async (req, res) => {
 });
 
 //admin
-router.get('/admin', authenticate, async (req, res) => {
+router.get('/admin', async (req, res) => {
   // Kiểm tra xác thực
   if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('you need to login first'));
@@ -503,10 +503,11 @@ router.post('/orders/payment/:orderId', authMiddleware, async (req, res) => {
       price_data: {
         currency: 'usd',
         product_data: {
-          name: `Order #${orderId} - Test Product`,
+          name: `Order #${orderId}`,
           // buyer_name: `Buyer ${buyer_name}`
         },
-        unit_amount: total_price * 100, // 20 USD
+        unit_amount: Math.round(total_price * 100),
+        // 20 USD
       },
       quantity: 1,
     }],
@@ -542,7 +543,7 @@ router.get('/orders/success/:orderId', authMiddleware, async (req, res) => {
   }
 });
 
-router.get('/orders/cancel/:orderId', authMiddleware,async (req, res) => {
+router.get('/orders/cancel/:orderId', authMiddleware, async (req, res) => {
   if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
   }
@@ -561,9 +562,9 @@ router.get('/errorPage', async (req, res) => {
 
 
 router.get('/adminv2',authMiddleware, async (req, res) => {
-  // if (!req.user) {
-  //   return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
-  // }
+  if (!req.user) {
+    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+  }
   try {
     const userResponse = await fetch(`http://localhost:${process.env.PORT}/api/admin/user`);
     const users = await userResponse.json();

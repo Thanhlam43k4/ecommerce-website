@@ -128,10 +128,17 @@
                                                 <img src="<%= prd[index].image_urls %>" class="card-img-top"
                                                     alt="<%= prd[index].name %>">
                                                 <div class="icon-group">
-                                                    <span class="icon-circle"
-                                                        onclick="addWhistlist('<%= prd[index].id %>')">
-                                                        <i class="fa fa-heart"></i>
-                                                    </span>
+                                                    <% if (user) { %>
+                                                                <span class="icon-circle"
+                                                                    onclick="addWhistlist('<%= prd[index].id %>')">
+                                                                    <i class="fa fa-heart"></i>
+                                                                </span>
+                                                            <% } else { %>
+                                                                <span class="icon-circle"
+                                                                    onclick="window.location.href='/api/auth/login'">
+                                                                    <i class="fa fa-heart"></i>
+                                                                </span>
+                                                            <% } %>
                                                     <span class="icon-circle"
                                                         onclick="viewProduct('<%= prd[index].id %>')">
                                                         <i class="fa fa-eye"></i>
