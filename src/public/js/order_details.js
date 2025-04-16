@@ -34,15 +34,15 @@ async function handleReviewSubmit(form) {
     });
 
     if (res.ok) {
-      alert("Review added successfully!");
-      window.location.reload();
+      showToast("Review added successfully!", true);
+      setTimeout(() => location.reload(), 2000);
     } else {
       const errorData = await res.json();
-      alert(errorData.message || "Failed to submit review");
+      showToast("Failed to submit review", false);
     }
   } catch (err) {
     console.error("Error while submitting review:", err);
-    alert("Error while submitting review");
+    showToast("Error while submitting review", false);
   }
 }
 
@@ -70,3 +70,22 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+function showToast(message, isSuccess = true) {
+  const toastElement = document.getElementById('toastNotification');
+  const toastMessage = document.getElementById('toastMessage');
+  const bsToast = new bootstrap.Toast(toastElement);
+
+  // Đổi màu dựa trên trạng thái thành công/thất bại
+  if (isSuccess) {
+      toastElement.classList.remove('text-bg-danger');
+      toastElement.classList.add('text-bg-success');
+  } else {
+      toastElement.classList.remove('text-bg-success');
+      toastElement.classList.add('text-bg-danger');
+  }
+
+  // Cập nhật thông báo
+  toastMessage.textContent = message;
+  bsToast.show(); // Hiển thị toast
+}

@@ -58,6 +58,8 @@ const orderController = {
           if (!product) {
             return res.status(400).json({ message: `Product with ID ${productId} does not exist.` });
           }
+          product.stock -= quantity;
+          await Product.update(product.id, product)
 
           // Add the item to order_items table
           await Order.addOrderItems(orderId, productId, quantity);

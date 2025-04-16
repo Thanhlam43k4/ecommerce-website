@@ -45,23 +45,46 @@ async function addToCart(productId, amount) {
     console.error(err);
   }
 }
-function decreaseQuantity() {
+function checkStockLimit() {
   const quantityInput = document.getElementById('quantity');
-  let quantity = parseInt(quantityInput.value, 10);
+  const addToCartBtn = document.getElementById('addToCartBtn');
+  const stock = parseInt(quantityInput.getAttribute('data-stock'), 10);
+  const currentQty = parseInt(quantityInput.value, 10);
 
-  // Giảm số lượng chỉ khi số lượng > 1
-  if (quantity > 1) {
-    quantityInput.value = quantity - 1;
+  if (currentQty > stock) {
+    addToCartBtn.disabled = true;
+    addToCartBtn.textContent = `Only ${stock} left`;
+    addToCartBtn.classList.add('btn-secondary');
+    addToCartBtn.classList.remove('btn-danger');
+  } else {
+    addToCartBtn.disabled = false;
+    addToCartBtn.textContent = 'Add To Cart';
+    addToCartBtn.classList.add('btn-danger');
+    addToCartBtn.classList.remove('btn-secondary');
   }
 }
 
 function increaseQuantity() {
   const quantityInput = document.getElementById('quantity');
   let quantity = parseInt(quantityInput.value, 10);
-
-  // Tăng số lượng
   quantityInput.value = quantity + 1;
+  checkStockLimit();
 }
+
+function decreaseQuantity() {
+  const quantityInput = document.getElementById('quantity');
+  let quantity = parseInt(quantityInput.value, 10);
+  if (quantity > 1) {
+    quantityInput.value = quantity - 1;
+    checkStockLimit();
+  }
+}
+
+// Kiểm tra lần đầu khi trang load
+document.addEventListener('DOMContentLoaded', () => {
+  checkStockLimit();
+  document.getElementById('quantity').addEventListener('input', checkStockLimit);
+});
 async function addWhistlist(productId) {
 
   try {

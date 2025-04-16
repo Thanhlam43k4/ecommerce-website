@@ -16,6 +16,23 @@ function updateSubtotal(selectElement, price, itemId) {
         .then(data => console.log(data))
         .catch(err => console.error(err));
 }
+function validateAmount(productId, stock) {
+    const input = document.getElementById(`amount-${productId}`);
+    let value = input.value.trim();
+
+
+    if (!/^\d+$/.test(value)) {
+        showToast("Please enter a positive integer!", false);
+    }
+    else if (parseInt(value, 10) > stock) {
+        input.value = stock;
+        showToast(`Quantity cannot exceed${stock}!`, false);
+    }
+    else if (parseInt(value, 10) < 1) {
+        input.value = 1;
+        showToast("Value must be at least 1.", false);
+    }
+}
 function showToast(message, isSuccess = true) {
     const toastElement = document.getElementById('toastNotification');
     const toastMessage = document.getElementById('toastMessage');

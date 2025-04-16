@@ -41,7 +41,7 @@
                                     </span>
                                     <% } %>
                         </div>
-                        <p class="text-warning">★★★★★ (1 Reviews) | <span class="text-success">In Stock</span></p>
+                        <p class="text-warning">★★★★★ (1 Reviews) | <span class="text-success">In Stock: <%= product.stock %></span></p>
                         <h4 class="text-danger">$<%= product.price %>
                         </h4>
                         <p>
@@ -60,20 +60,19 @@
                                         <button type="button" class="btn btn-outline-secondary"
                                             onclick="decreaseQuantity()">-</button>
                                         <input type="text" id="quantity" name="quantity"
-                                            class="form-control text-center mx-2" style="width: 50px;" value="1">
+                                            class="form-control text-center mx-2" style="width: 50px;" value="1" data-stock="<%= product.stock %>">
                                         <button type="button" class="btn btn-outline-secondary"
                                             onclick="increaseQuantity()">+</button>
                                     </div>
 
                                     <% if (user) { %>
-                                        <button type="button" class="btn btn-danger mt-3"
+                                        <button type="button" class="btn btn-danger mt-3" id="addToCartBtn"
                                             onclick="addToCart('<%= product.id %>', document.getElementById('quantity').value)">
                                             Add To Cart
                                         </button>
                                         <% } else { %>
-                                            <p class="text-danger mt-3">Bạn cần <a href="/api/auth/login">đăng nhập</a>
-                                                để mua
-                                                hàng.</p>
+                                            <p class="text-danger mt-3">You need to <a href="/api/auth/login">login</a>
+                                                to order.</p>
                                             <% } %>
                         </form>
 

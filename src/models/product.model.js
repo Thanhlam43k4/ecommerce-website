@@ -50,6 +50,11 @@ const Product = {
       values.push(productData.description);
     }
 
+    if (productData.stock !== undefined && productData.stock !== null) {
+      updateFields.push('stock = ?');
+      values.push(productData.stock);
+    }
+
     if (productData.price !== undefined && productData.price !== null) {
       updateFields.push('price = ?');
       values.push(productData.price);
