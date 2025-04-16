@@ -388,11 +388,11 @@ router.get('/orders/:id', authMiddleware, async (req, res) => {
 });
 
 //admin
-router.get('/admin', authenticate, async (req, res) => {
+router.get('/admin', async (req, res) => {
   // Kiểm tra xác thực
-  if (!req.user) {
-    return res.redirect('/?errorMessage=' + encodeURIComponent('Bạn cần đăng nhập trước'));
-  }
+  // if (!req.user) {
+  //   return res.redirect('/?errorMessage=' + encodeURIComponent('Bạn cần đăng nhập trước'));
+  // }
 
   // Lấy các tham số query
   const type = req.query.type || 'users'; // Mặc định là users
@@ -535,10 +535,10 @@ router.get('/errorPage', async (req, res) => {
 
 
 
-router.get('/adminv2',authMiddleware, async (req, res) => {
-  if (!req.user) {
-    return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
-  }
+router.get('/adminv2', async (req, res) => {
+  // if (!req.user) {
+  //   return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
+  // }
   res.render('adminv2', {
       user: req.user,
       orders: 1587,
