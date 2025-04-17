@@ -109,7 +109,7 @@ router.get('/category/:categoryId', authMiddleware, async (req, res) => {
     console.error('Lỗi khi lấy danh sách sản phẩm theo danh mục:', error);
 
     // Render trang với danh mục rỗng nếu có lỗi
-    res.render('products_by_categories', { products: [], categoryName: 'Category does not exist', user: req.user });
+    res.render('products_by_categories', { products: [], categoryName: 'Category does not exist', user: req.user,featuredProducts });
   }
 })
 router.get('/cart/checkout', authMiddleware, async (req, res) => {
