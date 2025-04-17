@@ -10,7 +10,7 @@ CREATE TABLE users (
     phone VARCHAR(20),
     address TEXT,
     city VARCHAR(100),
-    postal_code VARCHAR(20);
+    postal_code VARCHAR(20),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
