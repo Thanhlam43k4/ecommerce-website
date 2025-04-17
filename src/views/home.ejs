@@ -155,6 +155,7 @@
 
         <div id="productCarousel11" class="carousel slide">
             <!-- Điều hướng ở góc phải trên cùng -->
+            <% if (products && products.length> 0) { %>
             <div class="carousel-controls">
                 <button class="carousel-control-next" type="button" data-bs-target="#productCarousel11"
                     data-bs-slide="next">
@@ -214,7 +215,11 @@
                     </div>
                 <% } %>
             </div>
-            
+            <% } else { %>
+                <div class="alert alert-warning text-center mt-3">
+                    No products available at the moment.
+                </div>
+                <% } %>
 
         </div>
     </div>

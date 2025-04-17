@@ -9,10 +9,10 @@ const router = express.Router();
 
 
 // Lấy danh sách user (chỉ admin mới có quyền truy cập)
-router.get("/user", authenticate, authorizeAdmin, adminController.getAllUsers);
+router.get("/user", authenticate, adminController.getAllUsers);
 
 // Xóa user theo id (chỉ admin mới có quyền truy cập)
-router.delete("/users/:id", authenticate, authorizeAdmin, adminController.deleteUser);
+router.delete("/users/:id", authenticate,  adminController.deleteUser);
 
 // Tìm kiếm người dùng theo số điện thoại
 // router.get("/search_user", authenticate, authorizeAdmin, adminController.searchUsersByPhone);

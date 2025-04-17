@@ -10,7 +10,7 @@ const router = express.Router();
 
 router.get('/',authenticate,orderController.getOrders);
 
-router.get('/all', authorizeAdmin, orderController.getAllOrders);
+router.get('/all', authenticate, orderController.getAllOrders);
 
 router.get('/:id',authenticate,orderController.getOrderById);
 
