@@ -590,50 +590,46 @@ router.get('/adminv2',authMiddleware, async (req, res) => {
     }
 
     const now = new Date();
-    const month = now.getMonth() - 1;
-    const currentYear = now.getFullYear();
-    const daysInMonth = new Date(currentYear, month, 0).getDate();
-
-    const dailyLabels = Array.from({ length: daysInMonth }, (_, i) => i + 1);
-    const dailyUsers = Array(daysInMonth).fill(0);
-    const dailyOrders = Array(daysInMonth).fill(0);
-    const dailyRevenue = Array(daysInMonth).fill(0);
-
+    const past30Days = 30;
+    
+    const dailyLabels = Array.from({ length: past30Days }, (_, i) => {
+      const date = new Date();
+      date.setDate(now.getDate() - (past30Days - 1 - i));
+      return date.toISOString().split('T')[0]; 
+    });
+    
+    const dailyUsers = Array(past30Days).fill(0);
+    const dailyOrders = Array(past30Days).fill(0);
+    const dailyRevenue = Array(past30Days).fill(0);
+    
+    const getDateIndex = (dateString) => {
+      return dailyLabels.indexOf(dateString);
+    };
+    
     for (const order of orders) {
       const orderDate = new Date(order.created_at);
-      const isSameMonth =
-        orderDate.getFullYear() === currentYear &&
-        orderDate.getMonth() === month;
-
-      if (isSameMonth) {
-        const day = orderDate.getDate() - 1;
-        if (day >= 0 && day < daysInMonth) {
-          dailyOrders[day] += 1;
-          if (order.status === 'success') {
-            const price = parseFloat(order.total_price || 0);
-            dailyRevenue[day] += price;
-          }
+      const orderDateString = orderDate.toISOString().split('T')[0];
+      const index = getDateIndex(orderDateString);
+    
+      if (index !== -1) {
+        dailyOrders[index] += 1;
+        if (order.status === 'success') {
+          const price = parseFloat(order.total_price || 0);
+          dailyRevenue[index] += price;
         }
-
       }
     }
-
+    
     for (const user of users) {
       const userDate = new Date(user.created_at);
-      const isSameMonth =
-        userDate.getFullYear() === currentYear &&
-        userDate.getMonth() === month;
-
-      if (isSameMonth) {
-        const day = userDate.getDate() - 1;
-        if (day >= 0 && day < daysInMonth) {
-          dailyUsers[day] += 1;
-        }        
+      const userDateString = userDate.toISOString().split('T')[0];
+      const index = getDateIndex(userDateString);
+    
+      if (index !== -1) {
+        dailyUsers[index] += 1;
       }
     }
-
-    console.log(dailyRevenue);
-
+    
     res.render('adminv2', {
         user: req.user,
         totalUser: numberOfUser,
