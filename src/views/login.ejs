@@ -25,6 +25,11 @@
   <div class="login-bg">
     <div class="login-body">
       <h2 class="text-center mb-4">Login</h2>
+      <% if (errorMessage) { %>
+        <div class="alert alert-danger text-center" role="alert">
+            <%= errorMessage %>
+        </div>
+        <% } %>
 
       <form action="/api/auth/login" method="POST">
 

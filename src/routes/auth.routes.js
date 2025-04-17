@@ -57,11 +57,12 @@ router.post("/login", async (req, res) => {
 
   try {
     const user = await User.findByEmail(email);
-    if (!user) return res.status(401).json({ message: "Email không tồn tại" });
 
     const isMatch = await bcrypt.compare(password, user.password);
 
-    if (!isMatch) return res.status(401).json({ message: "Mật khẩu không đúng" });
+    if (!user || !isMatch) {
+      return res.redirect('/api/auth/login?errorMessage=' + encodeURIComponent('Incorrect email or password'));
+    } 
 
     // Tạo token JWT
     const token = jwt.sign({ userId: user.id, role: user.role, email: user.email, username: user.username }, process.env.SECRET_KEY, {
@@ -81,8 +82,8 @@ router.post("/login", async (req, res) => {
 });
 
 router.get("/login", async (req, res) => {
-
-  res.render("login", { user: req.user });
+  const errorMessage = req.query.errorMessage || null;
+  res.render("login", { errorMessage: errorMessage, user: req.user });
 
 })
 
