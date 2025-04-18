@@ -55,7 +55,7 @@ router.get("/register", (req, res) => {
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
 
-  if(email == 'admin@gmail.com'){
+  if(email === 'admin@gmail.com'){
     return res.redirect('/adminv2')
   }
   try {
