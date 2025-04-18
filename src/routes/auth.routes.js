@@ -74,7 +74,7 @@ router.post("/login", async (req, res) => {
 
     res.cookie("token", token, { httpOnly: true, maxAge: 3600000 }); // Lưu JWT vào cookie
 
-    res.redirect("/"); // Chuyển hướng về trang chủ
+    return res.redirect('/?errorMessage=' + encodeURIComponent('Loggin Error'));
 
   } catch (error) {
 
