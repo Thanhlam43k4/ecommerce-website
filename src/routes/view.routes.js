@@ -7,7 +7,7 @@ const categoryModel = require('../models/category.models.js'); // Điều chỉn
 const userModel = require('../models/user.model.js')
 const authMiddleware = require("../middlewares/authenticate");
 const authenticate = require("../middlewares/authenticate");
-const authorizeAdmin = require("../middlewares/authorizeAdmin"); // Middleware này kiểm tra user có quyền admin hay không
+const authAdminMiddleware = require("../middlewares/authorizeAdmin"); // Middleware này kiểm tra user có quyền admin hay không
 const Wishlist = require('../models/whislist.model.js');
 const reviewController = require("../controllers/reviewController.js")
 const orderController = require("../controllers/orderController.js")
@@ -561,7 +561,7 @@ router.get('/errorPage', async (req, res) => {
 
 
 
-router.get('/adminv2',authMiddleware, async (req, res) => {
+router.get('/adminv2',authAdminMiddleware, async (req, res) => {
   if (!req.user) {
     return res.redirect('/?errorMessage=' + encodeURIComponent('You need to log in first'));
   }
