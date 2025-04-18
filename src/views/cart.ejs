@@ -54,7 +54,7 @@
                                     </td>
                                     <td>
                                         <div class="input-group input-group-sm">
-                                            <input type="number" class="form-control" id="amount-<%= item.id %>" value="1"
+                                            <input type="number" class="form-control" id="amount-<%= item.id %>" value="<%= item.quantity %>"
                                                 min="1" max="<%= item.stock %>"
                                                 oninput="validateAmount('<%= item.id %>', '<%= item.stock %>')">
                                             <span class="input-group-text">/ <%= item.stock %></span>
