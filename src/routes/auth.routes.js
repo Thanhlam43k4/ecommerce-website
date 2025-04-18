@@ -79,7 +79,7 @@ router.post("/login", async (req, res) => {
   } catch (error) {
 
     console.error("Lỗi đăng nhập:", error);
-
+    res.redirect('/login');
     res.status(500).json({ message: "Lỗi server" });
   }
 });
